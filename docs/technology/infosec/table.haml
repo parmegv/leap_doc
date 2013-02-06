@@ -1,0 +1,233 @@
+:ruby
+
+  if table_type == :small
+    ##
+    ## SMALL TABLE
+    ##
+    columns = [:p2p, :ssilo, :sfed]
+    column_data = {
+      :ssilo  => [:silo, :encrypted],
+      :sfed   => [:federation, :encrypted],
+      :p2p    => [:peer_to_peer, :encrypted]
+    }
+    rows = [:availability, :usability, :compatibility, :authenticity, :control, :anonymity]
+    row_groups = []
+    footer = false
+    cells = {
+      :ssilo => {
+        :control         => [:lower],
+        :compatibility   => [:lower],
+        :usability       => [:higher],
+        :authenticity    => [:lower],
+        :availability    => [:higher],
+        :anonymity       => [:lower]
+      },
+      :sfed => {
+        :control         => [:higher],
+        :compatibility   => [:higher],
+        :usability       => [:lower],
+        :authenticity    => [:higher],
+        :availability    => [:lower],
+        :anonymity       => [:lower]
+      },
+      :p2p => {
+        :control         => [:higher],
+        :compatibility   => [:lower],
+        :usability       => [:lower],
+        :authenticity    => [:higher],
+        :availability    => [:lower],
+        :anonymity       => [:higher]
+      }
+    }
+  elsif table_type == :big
+    ##
+    ## BIG TABLE
+    ##
+    columns = [:silo, :fed, :ssilo, :sfed, :p2p]
+    column_data = {
+      :silo   => [:silo, :cleartext, :silo_example],
+      :fed    => [:federation, :cleartext, :fed_example],
+      :ssilo  => [:silo, :encrypted, :ssilo_example],
+      :sfed   => [:federation, :encrypted, :sfed_example],
+      :p2p    => [:peer_to_peer, :encrypted, :p2p_example],
+      :spacer  => [:spacer, :spacer, :spacer]
+    }
+    rows = [
+      :control, :compatibility, :usability,
+      :anonymity, :unmappability, :authenticity,
+      :availability, :confidentiality, :integrity
+    ]
+    row_groups = [:message_security, :identity_security, :user_freedom]
+    row_groups_data = {
+      :user_freedom      => [:control, :compatibility, :usability],
+      :identity_security => [:authenticity, :anonymity, :unmappability],
+      :message_security  => [:confidentiality, :integrity, :availability]
+    }
+    footer = true
+    cells = {
+      :silo => {
+        :control         => [:none],
+        :compatibility   => [:none],
+        :usability       => [:high],
+        :anonymity       => [:none],
+        :unmappability   => [:none],
+        :authenticity    => [:none],
+        :availability    => [:high],
+        :confidentiality => [:none],
+        :integrity       => [:none]
+      },
+      :fed => {
+        :control         => [:medium],
+        :compatibility   => [:high],
+        :usability       => [:medium],
+        :anonymity       => [:none],
+        :unmappability   => [:none],
+        :authenticity    => [:none],
+        :availability    => [:medium],
+        :confidentiality => [:none],
+        :integrity       => [:none]
+      },
+      :ssilo => {
+        :control         => [:none],
+        :compatibility   => [:none],
+        :usability       => [:high],
+        :anonymity       => [:low],
+        :unmappability   => [:none],
+        :authenticity    => [:none],
+        :availability    => [:high],
+        :confidentiality => [:high],
+        :integrity       => [:high]
+      },
+      :sfed => {
+        :control         => [:medium],
+        :compatibility   => [:medium],
+        :usability       => [:low],
+        :anonymity       => [:low],
+        :unmappability   => [:none],
+        :authenticity    => [:low],
+        :availability    => [:medium],
+        :confidentiality => [:high],
+        :integrity       => [:high]
+      },
+      :p2p => {
+        :control         => [:high],
+        :compatibility   => [:none],
+        :usability       => [:low],
+        :anonymity       => [:medium],
+        :unmappability   => [:medium],
+        :authenticity    => [:low],
+        :availability    => [:low],
+        :confidentiality => [:high],
+        :integrity       => [:high]
+      },
+      :spacer => {
+        :control         => [:spacer],
+        :compatibility   => [:spacer],
+        :usability       => [:spacer],
+        :anonymity       => [:spacer],
+        :unmappability   => [:spacer],
+        :authenticity    => [:spacer],
+        :availability    => [:spacer],
+        :confidentiality => [:spacer],
+        :integrity       => [:spacer]
+      }
+    }
+  elsif table_type == :leap
+    ##
+    ## LEAP TABLE
+    ##
+    columns = [:fed, :sfed, :leap]
+    column_data = {
+      :ssilo  => [:silo, :encrypted],
+      :sfed   => [:federation, :encrypted],
+      :p2p    => [:peer_to_peer, :encrypted],
+      :fed    => [:federation, :cleartext],
+      :leap   => [:leap, :encrypted]
+    }
+    rows = [
+      :control, :compatibility, :usability,
+      :anonymity, :unmappability, :authenticity,
+      :availability, :confidentiality, :integrity
+    ]
+    row_groups = [:message_security, :identity_security, :user_freedom]
+    row_groups_data = {
+      :user_freedom      => [:control, :compatibility, :usability],
+      :identity_security => [:authenticity, :anonymity, :unmappability],
+      :message_security  => [:confidentiality, :integrity, :availability]
+    }
+    footer = false
+    cells = {
+      :fed => {
+        :control         => [:medium],
+        :compatibility   => [:high],
+        :usability       => [:medium],
+        :anonymity       => [:none],
+        :unmappability   => [:none],
+        :authenticity    => [:none],
+        :availability    => [:medium],
+        :confidentiality => [:none],
+        :integrity       => [:none]
+      },
+      :sfed => {
+        :control         => [:medium],
+        :compatibility   => [:medium],
+        :usability       => [:low],
+        :anonymity       => [:low],
+        :unmappability   => [:none],
+        :authenticity    => [:low],
+        :availability    => [:medium],
+        :confidentiality => [:high],
+        :integrity       => [:high]
+      },
+      :leap => {
+        :control         => [:medium],
+        :compatibility   => [:worse],
+        :usability       => [:better],
+        :anonymity       => [:low],
+        :unmappability   => [:better],
+        :authenticity    => [:better],
+        :availability    => [:medium],
+        :confidentiality => [:high],
+        :integrity       => [:high]
+      }
+    }
+  end
+
+%table.infosec
+  %tr
+    %th.first
+    - if row_groups.any?
+      %th.second
+    - columns.each do |column|
+      - if column == :spacer
+        %th.spacer
+      - else
+        %th.cell
+          = I18n.t column_data[column][0], :scope => 'infosec'
+          %br<>
+          %span.normal
+            = I18n.t column_data[column][1], :scope => 'infosec'
+  - if row_groups.any?
+    - row_groups.each do |row_group|
+      %tbody
+        - rows = row_groups_data[row_group]
+        - rows.each do |row|
+          %tr
+            - if rows.first == row
+              %td{:rowspan=>3}= I18n.t(row_group, :scope => 'infosec').sub(' ', '<br/>').html_safe
+            %td= I18n.t row, :scope => 'infosec'
+            - columns.each do |column|
+              %td.cell{:class => cells[column][row]}= I18n.t cells[column][row].first, :scope => 'infosec'
+  - else
+    - rows.each do |row|
+      %tbody
+        %tr
+          %td= I18n.t row, :scope => 'infosec'
+          - columns.each do |column|
+            %td.cell{:class => cells[column][row]}= I18n.t(cells[column][row].first, :scope => 'infosec')
+  - if footer
+    %tr.footer
+      %td{:colspan=>2}= I18n.t :for_example, :scope => 'infosec'
+      - columns.each do |column|
+        %td= I18n.t column_data[column][2], :scope => 'infosec'
+

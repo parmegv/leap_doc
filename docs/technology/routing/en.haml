@@ -1,0 +1,52 @@
+%h1.first A social graph is highly sensitive data
+
+%p As the field of network analysis has advanced in recent years, the social graph has become highly sensitive and critical information. Knowledge of the social graph can give an attacker a blueprint into the inner workings of an organization or reveal surprisingly intimate personal details, such as sexual orientation or even health status.
+
+%p Unfortunately, existing technologies for secure routing, such as StartTLS for email or chat, are insufficient in today's environment and easily thwarted. StartTLS also does little to protect a service provider from being required to keep association records of its users.
+
+%h1 Map resistant routing
+
+%p One of the major goals of LEAP is to make message routing that is resistant to social graph mapping.
+
+-# The LEAP design includes an improved method of encrypted transport negotiation and an system for aliased message routing to protect the social graph from even the service providers themselves.
+
+%p How would this work? Imagine users Alice and Bob. Alice wants to correspond with Bob but doesn't want either her service provider or Bob's service provider to be able to record the association. She also doesn't want a network observer to be able to map the association.
+
+%p When Alice first sends a message to Bob, Alice's client will initiate the following chain of events on her behalf, automatically and behind the scenes.
+
+%ol
+  %li Alice's client requests a new alias from her service provider. If her normal address is alice@domain.org, she receives an alias hjj3fpwv84fn@domain.org that will forward messages to her account.
+  %li Alice's client uses automatic key discovery and validation to find Bob's public key and discover if Bob's service provider supports map resistant routing.
+  %li If Bob does support it, Alice's client will then send a special message, encrypted to Bob's key, that contains Alice's public address and her private alias.
+  %li When Bob's client encounters this special message, it records a mapping between Alice's public address (alice@domain.org) and the private alias she has created for Bob's use (hjj3fpwv84fn@domain.org).
+  %li Bob's client then creates an alias for Bob and sends it to Alice.
+  %li Alice's client receives this alias, and records the mapping between Bob's public address and his private alias.
+  %li Alice's client then relays the original message to Bob's alias.
+
+Subsequently, whenever Alice or Bob want to communicate, they use the normal public addresses for one another, but behind the scenes their clients will rewrite the source and recipient of the messages to use the private aliases.
+
+This scheme is backwards compatible with existing messaging protocols, such as SMTP and XMPP.
+
+%h1 Limitations
+
+%p There are four major limitations to this scheme:
+
+%ol
+  %li
+    %b Timing attacks:
+    a statistical analysis of the time that messages of a particular size are sent, received, and relayed by both service providers could reveal the map of associations.
+  %li
+    %b Log correlation problem:
+    a powerful attacker could gain access to the logs of both service providers, and thereby reconstruct the associations between the two providers.
+  %li
+    %b Single provider problem:
+    this scheme does not protect associations between people on the same service provider.
+  %li
+    %b Client problem:
+    if the user's device is compromised, the record of their actual associations can be discovered.
+
+%p At this point, we feel that it is OK to live with these limitations in order to be backward compatible with existing messaging protocols. The first two attacks are only possible by a very powerful adversary. One so powerful that association mapping is probably the least of your worries.
+
+%p This scheme is designed to prevent the casual, mass surveillance of all communication that currently takes place in repressive and democratic countries alike, by both governments and corporations. It greatly reduces the capacity for association mapping of both traffic over the wire and in stored communication. It is not designed to make a particular user anonymous in the face of a powerful adversary.
+
+%p However, a service provider using this scheme that has sufficient traffic will be in a very good position to be able to aggregate and time-shift the messages it relays in order to disrupt timing attacks&mdash;once researchers have a better understanding of how to effectively counter timing attacks.

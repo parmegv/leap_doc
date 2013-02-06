@@ -1,0 +1,59 @@
+%style
+  :sass
+    table.properties
+      td
+        vertical-align: top
+        padding-bottom: 0.75em
+      th
+        vertical-align: top
+        padding-right: 1em
+        text-align: right
+        font-weight: normal
+        font-style: italic
+
+    table.infosec
+      width: 100%
+      border-collapse: collapse
+      tbody
+        border-top: 1px solid black
+        border-bottom: 1px solid black
+      th span.normal
+        font-weight: normal
+      th.first, th.second, th.cell
+        width: 14.285714286%
+      th.spacer, td.spacer
+        width: 1px !important
+        padding: 0 !important
+        background: black
+        // border: 1px dotted black
+        //border: 0 !important
+      //th.second
+      //  width: 0%
+      //th.cell
+      //  width: 20%
+      td.cell
+        border-top: 1px solid black
+        border-bottom: 1px solid black
+        //border-right: 1px dotted rgba(0,0,0,.1)
+        border-left: 1px dotted rgba(0,0,0,.1)
+        text-align: center
+        padding: 4px
+        &.none
+          //background-color: #ccc
+          background: #888
+        &.low, &.lower, &.worse
+          //background-color: #FFCCCC
+          background: #aaa
+        &.medium, &.higher
+          //background-color: #FFFFCC
+          background: #ccc
+        &.high, &.better
+          //background-color: #CCFFCC
+          background: #e6e6e6
+        &.better, &.worse
+          font-weight: bold
+      tr.footer td
+        border-left: 1px dotted rgba(0,0,0,.1)
+        text-align: center
+        font-size: 0.8em
+

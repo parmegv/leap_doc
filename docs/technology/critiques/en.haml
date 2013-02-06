@@ -1,0 +1,57 @@
+%h1.first Anticipated Critiques
+
+:textile
+  h2. Isn't LEAP too ambitious?
+
+  Yes. However, someone needs to be working on a long term plan to add real security and usability to federated messaging architectures. It will not be easy, but we think it is possible.
+
+  h2. Isn't LEAP just like FreedomBox?
+
+  LEAP and FreedomBox share a similar goal of ensuring that everyone has the right to communicate securely and without censorship. However, the projects use different strategies for achieving this goal.
+
+  * *FreedomBox:* Empower every user to control the hardware on which all their data is stored. Users become their own service providers, running their own hardware.
+  * *LEAP:* Allow service providers to deploy a cloud-based infrastructure that can scale and is easily maintained. In addition to the performance and usability found in traditional cloud services, LEAP services are also designed to bring a very high level of security to everyday users.
+
+  FreedomBox is an important project. It faces, however, some significant hurdles. Most users demand high availability, but current technology does not allow for hardware or software that is self healing. If it did, sysadmins would be out of work. Things go wrong all the time. Take, for example, email: it is very common for an email server to get spam-bombed, or added to a blacklist, or any number of other problems that require manual intervention by a system administrator to fix. Also, most ISPs block the port needed for  email rely.
+
+  In the long run, FreedomBox has a lot of potential. But for the foreseeable future, we think it is important to also pursue the LEAP strategy.
+
+  h2. We should not encourage users to store any data in the cloud, encrypted or not
+
+  Even the best encryption is no guarantee of confidentiality; data in the cloud always has the potential to be decrypted by a determined attacker.
+
+  The entire issue boils down to a matter of degree. Although there is no necessary trade off between security and convenience, you can usually achieve a higher level of security in any system by sacrificing some convenience. But what level of protection and convenience is appropriate for a particular user?
+
+  There are very few people for whom client-encrypted data stored in the cloud will be the weakest link in the confidentiality of their communication and stored data. Most likely, there will be many aspects of their communication that are much more attractive targets to a determined adversary.
+
+  If a person has a threat model that includes an adversary with the resources to both acquire the user's cloud data and to decrypt it, then there is little that LEAP or any other third party can do for them. They will need to become highly proficient at managing and protecting all their own data.
+
+  There are many tools and projects out there to help a user do this. LEAP is designed for a different audience, one not adequately addressed by existing technology: people who want high security but don't have the capacity to become highly skilled in self-managing their encryption. There is room--and need--for both approaches, and it is likely that the amount of people who want high security but do not have the time or skills to adequately self-manage their own environment is already large and increasingly rapidly.
+
+  h2. If you make your system architecture public, then you have given adversaries a blueprint to attack you
+
+  This is, of course, similar to the arguments about the security of FLOSS. Openness can indeed lead to attacks, but more eyes leads to better security.
+
+  In the case of an entire service provider infrastructure, however, it could be argued that things are different. We are not talking about a single piece of software, but the whole integration across many servers and services. A related critique is the potential problem of monoculture: if LEAP is successful, then a high percentage of the secure service providers will be using systems with the same vulnerabilities.
+
+  Monoculture and openness are both interesting issues that could pose problems for the future. We can only be diligent in assessing LEAP once it is deployed by a variety of organizations. With enough flexibility in configuration, it may be that each LEAP deployment is sufficiently distinct from the others to mitigate these concerns.
+
+  h2. Users will not be willing to download a custom client
+
+  This will indeed be the case for a large number of potential users. Because meaningful levels of security cannot be achieved using current technology without a custom client, our hope is that a critical mass of users can be induced to use one. There are two parts to this inducement: increasing awareness as to why an extra step to ensure security is worthwhile, and decreasing the difficulty in actually taking this step. With sufficient education and an improved user experience, many users should be willing to install a custom client.
+
+  On the other hand, rapid developments in Javascript and web browser technology have raised the possibility of running advanced client applications within the browser itself. In this case, a user would not have to install any additional software. However, in-browser crypto is still an area of active research but is currently not safe for deployment, with some areas still to be worked out (like sufficient entropy). LEAP does not depend upon the presence of cryptography in the browser, but would benefit from this should it become viable. The lead W3C employee who began the standardization of Javascript Cryptography is on the board of LEAP, and he will liaise tightly with LEAP as the work matures.
+
+  h2. Users who need security often don't have their own device or access to the internet
+
+  This is absolutely true. The digital divide is alive and well, and LEAP does nothing to bridge the gap between the technological haves and have-nots. However, in the long run, IP-based communication--dependent upon advanced devices such as smart phones--is likely to replace most other forms of communication. The cost of such IP-based communication devices and their connectivity is declining rapidly. It behooves us to lay the groundwork now for a secure IP-based communication infrastructure, both for the people who currently rely on the internet and for the next billion who will gain access to the internet in the near future.
+
+  h2. Client encryption is excessive for most people
+
+  The argument against client encryption is something like this: a secure connection is good enough, so long as the service provider is located in a country with adequate legal protection and without repressive laws.
+
+  There are many reasons why users should be put in control of their data and should not be made to rely on a third party to safeguard it. Third parties have proven to be highly undeserving of trust--They might close shop, bow to pressure from local government, become compromised by external attacks, or accidentally leak sensitive data due to carelessness.
+
+  Our goal is to make secure communication the default for a critical mass of users worldwide. A vital part of this strategy is cooperation with ISPs and service providers who speak the local language of their users and who are attuned to the needs of a particular context. These local service providers don't have the luxury of determining which government's jurisdiction they fall under. However, so long as encryption technology itself is not outlawed, local providers using the LEAP platform will be able to provide a high level of security for their users.
+
+  By requiring client encryption for all services, LEAP also helps to mitigate against the myriad vulnerabilities inherent with most devices. While the LEAP client cannot defend against keyloggers, malware, or penetration of the host OS, it can ensure that all the LEAP cloud data synced by the device is stored in an encrypted format.
