@@ -17,7 +17,20 @@ Alternately, you can install `leap` from source:
     git clone git://leap.se/leap_cli.git
     cd leap_cli
     rake build
+
+Install as unprivileged user:
+
     rake install
+    # watch out for the directory leap is installed to, then i.e.
+    ln -s ~/.gem/ruby/1.9.1/bin/leap /usr/local/bin/leap
+
+Install as root user (recommended):
+
+    sudo rake install
+
+With both methods, you can use now /usr/local/bin/leap, 
+which in most cases will be in your $PATH.
+
 
 Create a provider instance
 ---------------------------------------
