@@ -21,7 +21,7 @@ A "provider instance" is a directory tree (typically tracked in git) containing 
 
 A minimal provider instance directory looks like this:
 
-    └── bitmask                 # provider instance directory
+    └── rewire                 # provider instance directory
         ├── common.json         # settings common to all nodes
         ├── Leapfile            # specifies which platform recipe directory to use
         ├── provider.json       # global settings of the provider

@@ -13,6 +13,7 @@ Install the `leap` command:
 
 Alternately, you can install `leap` from source:
 
+    sudo apt-get install rake
     git clone git://leap.se/leap_cli.git
     cd leap_cli
     rake build
@@ -21,14 +22,14 @@ Alternately, you can install `leap` from source:
 Create a provider instance
 ---------------------------------------
 
-A provider instance is a directory tree, usually stored in git, that contains everything you need to manage an infrastructure for a service provider. In this case, we create one for bitmask.net and call the instance directory 'bitmask'.
+A provider instance is a directory tree, usually stored in git, that contains everything you need to manage an infrastructure for a service provider. In this case, we create one for rewire.net and call the instance directory 'rewire'.
 
-    mkdir -p ~/leap/bitmask
+    mkdir -p ~/leap/rewire
 
 Now, we will initialize this directory to make it a provider instance. Your provider instance will need to know where it can find local copy of the git repository leap_platform, which holds the puppet recipes you will need to manage your servers. Typically, you will not need to modify leap_platform.
 
-    cd ~/leap/bitmask
-    leap init --domain bitmask.net --name Bitmask --platform ../leap_platform .
+    cd ~/leap/rewire
+    leap init --domain rewire.net --name rewire --platform ../leap_platform .
 
 In this case, `../leap_platform` will be created if it does not exist.
 
@@ -36,11 +37,18 @@ You may want to poke around and see what is in the files we just created. For ex
 
     cat provider.json
 
+If you are familiar with git, you might want to have the your provider directory under 
+version control:
+
+    git init
+    git add .
+    git commit -m"initial commit"
+
 Now add yourself as a privileged sysadmin who will have access to deploy to servers:
 
     leap add-user --self
 
-NOTE: in most cases, `leap` must be run from within a provider instance directory tree (e.g. ~/leap/bitmask).
+NOTE: in most cases, `leap` must be run from within a provider instance directory tree (e.g. ~/leap/rewire).
 
 Now generate required X509 certificates and keys:
 
@@ -52,7 +60,6 @@ To see details about the keys and certs that the prior two commands created, you
     leap inspect files/ca/ca.crt
 
 Create nodes
-----------------------------------------
 
 A "node" is a server that is part of your infrastructure. Every node can have one or more services associated with it. Some nodes are "local" and used only for testing. These local nodes exist only as virtual machines on your computer and cannot be accessed from outside (see `leap help local` for more information).
 
@@ -67,6 +74,7 @@ This created a node configuration file, but it did not create the virtual machin
 Now that the virtual machine for web1 is running, you need to initialize it and then deploy the recipes to it. You only need to initialize a node once, but there is no harm in doing it multiple times. These commands will take a while to run the first time, as it needs to update the package cache on the new virtual machine.
 
     leap node init web1
+    leap cert update
     leap deploy web1
 
 That is it, you should now have your first running node. However, the LEAP web application requires a database to run, so let's add a "couchdb" node:
