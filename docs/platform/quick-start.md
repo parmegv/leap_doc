@@ -73,10 +73,12 @@ To see details about the keys and certs that the prior two commands created, you
     leap inspect files/ca/ca.crt
 
 
-Edit configuration files and provide some information for new provider, 
-these are the files you need to touch:
+Edit configuration files
+------------------------
 
-* common.json
+Provide some information for new provider, these are the variables you need to set:
+ 
+* common.json: contact_email (used for tor directory listing if you deploy a tor relay)
 
 
 Create nodes
