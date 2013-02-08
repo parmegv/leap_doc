@@ -20,6 +20,7 @@ Alternately, you can install `leap` from source:
     sudo apt-get install rake
     git clone git://leap.se/leap_cli.git
     cd leap_cli
+    bundle install
     rake build
 
 * Install as root user (recommended):
