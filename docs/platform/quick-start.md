@@ -55,7 +55,7 @@ version control:
 
     git init
     git add .
-    git commit -m"initial commit"
+    git commit -m "initial commit"
 
 Now add yourself as a privileged sysadmin who will have access to deploy to servers:
 
