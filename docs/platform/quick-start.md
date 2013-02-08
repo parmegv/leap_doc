@@ -81,11 +81,10 @@ To see details about the keys and certs that the prior two commands created, you
 Edit provider configuration
 --------------------------------------
 
-Provide some information for new provider, these are the variables you need to set:
+Provide some global information for new provider, these are the variables you need to set:
  
-* common.json: contact_email (used for tor directory listing if you deploy a tor relay)
-
-
+* `common.json`: `contact_email` (used amonh other things for tor directory listing 
+  if you deploy a tor relay)
 
 
 Create nodes
