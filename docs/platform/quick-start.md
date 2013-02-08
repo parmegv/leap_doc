@@ -82,6 +82,7 @@ Provide some information for new provider, these are the variables you need to s
 
 
 Create nodes
+------------
 
 A "node" is a server that is part of your infrastructure. Every node can have one or more services associated with it. Some nodes are "local" and used only for testing. These local nodes exist only as virtual machines on your computer and cannot be accessed from outside (see `leap help local` for more information).
 
