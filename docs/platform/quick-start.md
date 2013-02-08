@@ -3,7 +3,11 @@ Installation
 
 Install prerequisites:
 
-    sudo apt-get install git ruby ruby-dev rsync openssh-client openssl
+    sudo apt-get install git ruby ruby-dev rsync openssh-client openssl rake
+
+Install prerequisites to test Leap Platform locally with vagrant:
+
+    sudo apt-get install virtualbox
 
 This tutorial should work with ruby1.8, but has only been tested using ruby1.9.
 
@@ -18,15 +22,15 @@ Alternately, you can install `leap` from source:
     cd leap_cli
     rake build
 
-Install as unprivileged user:
+* Install as root user (recommended):
+
+    sudo rake install
+
+* Install as unprivileged user:
 
     rake install
     # watch out for the directory leap is installed to, then i.e.
     ln -s ~/.gem/ruby/1.9.1/bin/leap /usr/local/bin/leap
-
-Install as root user (recommended):
-
-    sudo rake install
 
 With both methods, you can use now /usr/local/bin/leap, 
 which in most cases will be in your $PATH.
@@ -73,12 +77,14 @@ To see details about the keys and certs that the prior two commands created, you
     leap inspect files/ca/ca.crt
 
 
-Edit configuration files
-------------------------
+Edit provider configuration
+--------------------------------------
 
 Provide some information for new provider, these are the variables you need to set:
  
 * common.json: contact_email (used for tor directory listing if you deploy a tor relay)
+
+
 
 
 Create nodes
