@@ -20,7 +20,6 @@ Alternately, you can install `leap` from source:
     sudo apt-get install rake
     git clone git://leap.se/leap_cli.git
     cd leap_cli
-    bundle install
     rake build
 
 * Install as root user (recommended):
@@ -31,11 +30,9 @@ Alternately, you can install `leap` from source:
 
     rake install
     # watch out for the directory leap is installed to, then i.e.
-    ln -s ~/.gem/ruby/1.9.1/bin/leap /usr/local/bin/leap
+    sudo ln -s ~/.gem/ruby/1.9.1/bin/leap /usr/local/bin/leap
 
-With both methods, you can use now /usr/local/bin/leap, 
-which in most cases will be in your $PATH.
-
+With both methods, you can use now /usr/local/bin/leap, which in most cases will be in your $PATH.
 
 Create a provider instance
 ---------------------------------------
@@ -55,7 +52,7 @@ You may want to poke around and see what is in the files we just created. For ex
 
     cat provider.json
 
-If you are familiar with git, you might want to have the your provider directory under 
+If you are familiar with git, you might want to have the your provider directory under
 version control:
 
     git init
@@ -82,8 +79,8 @@ Edit provider configuration
 --------------------------------------
 
 Provide some global information for new provider, these are the variables you need to set:
- 
-* `common.json`: `contact_email` (used amonh other things for tor directory listing 
+
+* `common.json`: `contact_email` (used amonh other things for tor directory listing
   if you deploy a tor relay)
 
 
