@@ -1,3 +1,16 @@
+LEAP Platform Quick Start
+=====================================================
+
+This is a very minimal tutorial that will walk you through the process of creating and deploying a service provider running the LEAP platform.
+
+All the commands in this tutorial are run on your home desktop or laptop computer, or whatever machine you want to do your system administration from.
+
+What you will need:
+
+* A machine running Debian (or derivatives)
+* At least 4gb of RAM
+* A fast internet connection
+
 Installation
 --------------------------------
 
@@ -5,9 +18,9 @@ Install prerequisites:
 
     sudo apt-get install git ruby ruby-dev rsync openssh-client openssl rake
 
-Install prerequisites to test Leap Platform locally with vagrant:
+Install Vagrant in order to be able to test with local virtual machines (typically optional, but required for this tutorial):
 
-    sudo apt-get install virtualbox
+    sudo apt-get install vagrant virtualbox
 
 This tutorial should work with ruby1.8, but has only been tested using ruby1.9.
 
@@ -22,11 +35,11 @@ Alternately, you can install `leap` from source:
     cd leap_cli
     rake build
 
-* Install as root user (recommended):
+Then, install as root user (recommended):
 
     sudo rake install
 
-* Install as unprivileged user:
+Or, install as unprivileged user:
 
     rake install
     # watch out for the directory leap is installed to, then i.e.
@@ -105,7 +118,7 @@ Create a local node, with the service "webapp":
 
     leap node add --local web1 services:webapp
 
-This created a node configuration file, but it did not create the virtual machine. In order to test our node "web1", we need to first spin up a virtual machine. The next command will probably take a very long time, because it will need to download an image to create the virtual machine (about 700mb).
+This created a node configuration file, but it did not create the virtual machine. In order to test our node "web1", we need to first spin up a virtual machine. The next command will probably take a very long time, because it will need to download a VM image (about 700mb).
 
     leap local start
 
@@ -120,6 +133,8 @@ That is it, you should now have your first running node. However, the LEAP web a
     leap local start
     leap node init db1
     leap deploy db1
+
+NOTE: You probably want a machine with at least 8gb of RAM when running more than a few local virtual machines.
 
 What is going on here?
 --------------------------------------------
