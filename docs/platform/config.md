@@ -127,6 +127,6 @@ Direct access:
 
 Filters:
 
-    nodes[:public_dns => true]                            # all nodes where public_dns == true
-    nodes[:services => 'openvpn', :services => 'tor']     # openvpn OR tor
+    nodes[:public_dns => true] # all nodes where public_dns == true
+    nodes[:services => 'openvpn', :services => 'tor'] # openvpn OR tor
     nodes[:services => 'openvpn'][:tags => 'production']  # openvpn AND production

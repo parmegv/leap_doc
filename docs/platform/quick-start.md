@@ -134,8 +134,6 @@ That is it, you should now have your first running node. However, the LEAP web a
     leap node init db1
     leap deploy db1
 
-NOTE: You probably want a machine with at least 8gb of RAM when running more than a few local virtual machines.
-
 What is going on here?
 --------------------------------------------
 
