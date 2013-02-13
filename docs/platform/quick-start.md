@@ -137,7 +137,20 @@ That is it, you should now have your first running node. However, the LEAP web a
 What is going on here?
 --------------------------------------------
 
-(explain about hiera files, general deploy process)
+First, some background terminology:
+
+* **puppet**: Puppet is a system for automating deployment and management of servers (called nodes).
+* **hiera files**: In puppet, you can use something called a 'hiera file' to seed a node with a few configuration values. In LEAP, we go all out and put *every* configuration value needed for a node in the hiera file, and automatically compile a custom hiera file for each node.
+
+When you run `leap deploy`, a bunch of things happen, in this order:
+
+1. **Compile hiera files**: The hiera configuration file for each node is compiled in YAML format and saved in the directory `hiera`. The source material for this hiera file consists of all the JSON configuration files imported or inherited by the node's JSON config file.
+* **Copy required files to node**: All the files needed for puppet to run are rsync'ed to each node. This includes the entire leap_platform directory, as well as the node's hiera file and other files needed by puppet to set up the node (keys, binary files, etc).
+* **Puppet is run**: Once the node is ready, leap connects to the node via ssh and runs `puppet apply`. Puppet is applied locally on the node, without a daemon or puppetmaster.
+
+You can run `leap -v2 deploy` to see exactly what commands are being executed.
+
+<!-- See [under the hood](under-the-hood) for more details. -->
 
 Additional commands
 -------------------------------------------
