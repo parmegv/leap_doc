@@ -30,7 +30,6 @@ Install the `leap` command:
 
 Alternately, you can install `leap` from source:
 
-    sudo apt-get install rake
     git clone git://leap.se/leap_cli.git
     cd leap_cli
     rake build
