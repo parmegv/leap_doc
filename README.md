@@ -3,6 +3,7 @@ LEAP DOCUMENTATION
 
 Files in the directory "docs" show up automatically at https://leap.se/docs when this repository is pushed.
 
+
 Directory structure
 ---------------------------------
 
@@ -31,11 +32,44 @@ The order in menu.txt determines the order in the navigation.
 Localization
 ---------------------------------
 
-The strings for titles and navigation menu are loaded from locales/*.yaml files. (alas, not yet in this repo, still in leap_website)
+The strings for (default) titles and navigation menu are loaded from locales/*.yaml files. If you want, you can safely ignore this and just use the properties @title and @nav_title instead (see below).
 
-Supported syntax
+
+Supported syntaxes
 ---------------------------------
 
-* .haml -- parsed as HAML file.
-* .md -- parsed a Markdown.
+Depending the the file extension, the file with be parsed like so:
 
+    .haml       -- HAML
+    .md         -- Markdown
+    .markdown   -- Markdown
+    .txt        -- Textile
+    .textile    -- Textile
+    .rst        -- ReStructuredText
+    .latex      -- LaTeX
+    .pandoc     -- Pandoc
+
+The flavor of Markdown used is slightly non-standard. See http://manpages.ubuntu.com/manpages/precise/man5/pandoc_markdown.5.html
+
+
+Setting page properties
+---------------------------------
+
+HAML files are rendered as templates, but the other lightweight markup files are treated as static files.
+
+The one exception is that every file can have a "properties header". It looks like this:
+
+    @title = "A fine page"
+    @toc = false
+
+    continue on here with body text.
+
+The properties start with '@' and are stripped out of the source file before it is rendered. Property header lines are evaluated as ruby. All properties are optional and they are inherited, including `@title`.
+
+Available properties:
+
+* `@title` -- The title for the page, appearing as in an H1 on the top of the page and as the HTML title. Also used for navigation title if `@nav_title` is not set. The inline H1 title does not appear unless `@title` is explicitly set for this page (i.e. the inherited value of `@title` does not trigger the automatic H1).
+* `@nav_title` -- The title for the navigation to this page, as well as the HTML title if @title is not set.
+* `@toc` -- If set to `false`, don't include a table of contents when rendering the file. This only applies to .rst and .md files.
+* `@layout` -- Manually set the layout template to use for rendering this page.
+* `@author` -- The author credit for the page.
