@@ -1,5 +1,4 @@
-Configuration files
-===================================
+@title = "Configuration Files"
 
 File format
 -------------------------------------------

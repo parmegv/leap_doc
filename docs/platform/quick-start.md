@@ -1,5 +1,5 @@
-LEAP Platform Quick Start
-=====================================================
+@title = 'LEAP Platform Quick Start'
+@nav_title = 'Quick Start'
 
 This is a very minimal tutorial that will walk you through the process of creating and deploying a service provider running the LEAP platform.
 

@@ -1,5 +1,6 @@
-LEAP Platform Tools
-=================================
+@title = 'LEAP Platform for Service Providers'
+@nav_title = 'Provider Platform'
+@toc = true
 
 If you have ever been a sysadmin for an organization or company that provides communication services to end users, you have probably screamed this many times:
 
@@ -36,13 +37,14 @@ A "provider instance" is a directory tree (typically tracked in git) containing 
 
 A minimal provider instance directory looks like this:
 
-    └── myprovider           # provider instance directory
-        ├── common.json      # settings common to all nodes
-        ├── Leapfile         # specifies which platform recipe directory to use
-        ├── provider.json    # global settings of the provider
-        ├── files/           # keys, certificates, and other files.
-        ├── nodes/           # a directory for node configurations, one node per file
-        └── users/           # public key information for privileged sysadmins
+    └── bitmask                 # provider instance directory.
+        ├── common.json         # settings common to all nodes.
+        ├── Leapfile            # various settings for this instance.
+        ├── provider.json       # global settings of the provider.
+        ├── files/              # keys, certificates, and other files.
+        ├── nodes/              # a directory for node configurations.
+        └── users/              # public key information for privileged sysadmins.
+
 
 A provider instance directory contains everything needed to manage all the servers that compose a provider's infrastructure. Because of this, you can use normal git development work-flow to manage your provider instance.
 
@@ -73,6 +75,6 @@ Getting started
 We recommend you read the platform documentation in this order:
 
 1. [quick start tutorial](platform/quick-start).
-* platform [examples](platform/examples).
-* the `leap` [command reference](platform/command).
-* [configuration format](platform/config).
+2. platform [examples](platform/examples).
+3. the `leap` [command reference](platform/command).
+4. [configuration format](platform/config).

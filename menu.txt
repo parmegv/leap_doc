@@ -4,3 +4,4 @@ docs
   platform
     quick-start
     config
+  client
