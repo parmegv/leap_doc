@@ -28,13 +28,6 @@ A page does not show up in the navigation unless it appears in menu.txt.
 
 The order in menu.txt determines the order in the navigation.
 
-
-Localization
----------------------------------
-
-The strings for (default) titles and navigation menu are loaded from locales/*.yaml files. If you want, you can safely ignore this and just use the properties @title and @nav_title instead (see below).
-
-
 Supported syntaxes
 ---------------------------------
 
@@ -46,11 +39,8 @@ Depending the the file extension, the file with be parsed like so:
     .txt        -- Textile
     .textile    -- Textile
     .rst        -- ReStructuredText
-    .latex      -- LaTeX
-    .pandoc     -- Pandoc
 
-The flavor of Markdown used is slightly non-standard. See http://manpages.ubuntu.com/manpages/precise/man5/pandoc_markdown.5.html
-
+Markdown is rendered using RDiscount, Textile is rendered using RedCloth, and RST is rendered using docutils. Markdown is recommended, because it supports table of contents, although the markup is limited.
 
 Setting page properties
 ---------------------------------

@@ -5,3 +5,7 @@ docs
     quick-start
     config
   client
+    user-guide
+    bleeding-edge
+    dev-guide
+    packaging
