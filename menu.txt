@@ -4,6 +4,7 @@ docs
   platform
     quick-start
     config
+    commands
   client
     user-guide
     bleeding-edge

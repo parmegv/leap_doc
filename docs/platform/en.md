@@ -51,7 +51,7 @@ A provider instance directory contains everything needed to manage all the serve
 Command line program (leap_cli)
 ------------------------------------------
 
-The [command line program](command) `leap` is used by sysadmins to manage everything about a service provider's infrastructure. Except when creating an new provider instance, `leap` is run from within the directory tree of a provider instance.
+The [command line program](commands) `leap` is used by sysadmins to manage everything about a service provider's infrastructure. Except when creating an new provider instance, `leap` is run from within the directory tree of a provider instance.
 
 The `leap` command line has many capabilities, including:
 
@@ -67,14 +67,14 @@ One other significant difference between LEAP and typical system automation is h
 
 These two approaches, masterless push and pre-compiled static configuration, allow the sysadmin to manage a set of LEAP servers using traditional software development techniques of branching and merging, to more easily create local testing environments using virtual servers, and to deploy without the added complexity and failure potential of a master server.
 
-The repository for the `leap` command is `git://leap.se/leap_cli`.
+The repository for the `leap` command is `git://leap.se/leap_cli`. It can be installed with `sudo gem install leap_cli`.
 
 Getting started
 ----------------------------------
 
 We recommend you read the platform documentation in this order:
 
-1. [quick start tutorial](platform/quick-start).
-2. platform [examples](platform/examples).
-3. the `leap` [command reference](platform/command).
-4. [configuration format](platform/config).
+1. [Quick start tutorial](platform/quick-start).
+2. Platform [examples](platform/examples).
+3. The `leap` [command reference](platform/commands).
+4. [Configuration format](platform/config).
