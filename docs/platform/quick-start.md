@@ -7,9 +7,10 @@ All the commands in this tutorial are run on your home desktop or laptop compute
 
 What you will need:
 
-* A machine running Debian (or derivatives)
-* At least 4gb of RAM
-* A fast internet connection
+* A real machine with virtualization support in the CPU (VT-x or AMD-V). In other words, not a virtual machine.
+* Debian operating system (or derivatives like Ubuntu, Mint, etc).
+* At least 4gb of RAM.
+* A fast internet connection (because you will be downloading a lot of big files).
 
 Installation
 --------------------------------

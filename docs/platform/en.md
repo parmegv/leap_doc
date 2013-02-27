@@ -21,7 +21,7 @@ The LEAP platform recipes define an abstract service provider. It consists of pu
 
 Typically, a system administrator will not need to modify the LEAP platform recipes, although they are free to fork and merge as desired. Most service providers using the LEAP platform will use the same platform recipes.
 
-The recipes are abstract. In order to configure settings for a particular service provider, a system administrator creates a provider instance. The platform recipes also include a base provider that provider instances inherit from.
+The recipes are abstract. In order to configure settings for a particular service provider, a system administrator creates a provider instance (see below).
 
 The repository for the platform recipes is `git://leap.se/leap_platform`.
 
