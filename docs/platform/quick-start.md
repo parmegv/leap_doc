@@ -16,7 +16,7 @@ Installation
 
 Install prerequisites:
 
-    sudo apt-get install git ruby ruby-dev rsync openssh-client openssl rake
+    sudo apt-get install git ruby ruby-dev rsync openssh-client openssl rake make
 
 Install Vagrant in order to be able to test with local virtual machines (typically optional, but required for this tutorial):
 
