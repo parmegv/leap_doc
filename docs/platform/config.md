@@ -8,11 +8,13 @@ A `Leapfile` defines options for the `leap` command and lives at the root of you
     @platform_directory_path = '../leap_platform'
     @log = '/var/log/leap.log'
 
+Additionally, you can create a `~/.leaprc` file that is loaded after `Leapfile` and is evaluated the same way.
+
 Platform options:
 
 * `@platform_directory_path` (required). This must be set to the path where `leap_platform` lives. The path may be relative.
 * `@platform_branch`. If set, a check is preformed before running any command to ensure that the currently checked out branch of `leap_platform` matches the value set for `@platform_branch`. This is useful if you have a stable branch of your provider that you want to ensure runs off the master branch of `leap_platform`.
-* `@filter`. If set, this value is appended to every command that accepts a FILTER argument. For example, you could add `@filter = "+development"` to a develop branch to ensure that you won't accidentally deploy to production nodes from a development branch.
+* `@allow_production_deploy`. By default, you can only deploy to production nodes if the current branch is 'master' or if the provider directory is not a git repository. This option allows you to override this behavior.
 
 Vagrant options:
 
@@ -21,7 +23,7 @@ Vagrant options:
 
 Logging options:
 
-* `@log`. If set, all command invocation and results are logged to the specified file.
+* `@log`. If set, all command invocation and results are logged to the specified file. This is the same as the switch `--log FILE`, except that the command line switch will override the value in the Leapfile.
 
 
 Configuration files
@@ -135,7 +137,7 @@ The following methods are available to the evaluated ruby:
 
 `file(filename)`
 
-  > Inserts the full contents of the file. If the file is an erb template, it is rendered. The filename can either be one of the pre-defined file symbols, are it can be a path relative to the "files" directory in your provider instance. E.g, `file :ca_cert` or `files 'ca/ca.crt'`.
+  > Inserts the full contents of the file. If the file is an erb template, it is rendered. The filename can either be one of the pre-defined file symbols, or it can be a path relative to the "files" directory in your provider instance. E.g, `file :ca_cert` or `files 'ca/ca.crt'`.
 
 `file_path(filename)`
 
