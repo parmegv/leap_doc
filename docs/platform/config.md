@@ -36,20 +36,21 @@ All configuration files, other than `Leapfile`, are in the JSON format. For exam
 
 Keys should match `/[a-z0-9_]/`
 
-Unlike traditional JSON, comments are allowed. If the first non-whitespace characters are '//' the line is treated as a comment.
+Unlike traditional JSON, comments are allowed. If the first non-whitespace characters are `//` then the line is treated as a comment.
 
     // this is a comment
     {
       // this is a comment
-      "key": "value"  # this is an error
+      "key": "value"  // this is an error
     }
 
-Options in the configuration files might be nested hashes or arrays. For example:
+Options in the configuration files might be nested hashes, arrays, numbers, strings, or boolean. Numbers and boolean values should **not** be quoted. For example:
 
     {
       "openvpn": {
         "ip_address": "1.1.1.1",
         "protocols": ["tcp", "udp"],
+        "ports": [80, 53],
         "options": {
           "public_ip": false,
           "adblock": true
@@ -88,19 +89,18 @@ Suppose you have a node configuration for `bitmask/nodes/willamette.json` like s
 This node will have hostname "willamette" and it will inherit from the following files (in this order):
 
 1. common.json
-  - load defaults: `provider_base/common.json`
-  - load provider: `bitmask/common.json`
+    - load defaults: `provider_base/common.json`
+    - load provider: `bitmask/common.json`
 2. service "webapp"
-  - load defaults: `provider_base/services/webapp.json`
-  - load provider: `bitmask/services/webapp.json`
+    - load defaults: `provider_base/services/webapp.json`
+    - load provider: `bitmask/services/webapp.json`
 3. tag "production"
-  - load defaults: `provider_base/tags/production.json`
-  - load provider: `bitmask/tags/production.json`
+    - load defaults: `provider_base/tags/production.json`
+    - load provider: `bitmask/tags/production.json`
 4. tag "northwest-us"
-  - load defaults: none
-  - load provider: `bitmask/tags/northwest-us.json`
+    - load: `bitmask/tags/northwest-us.json`
 5. finally, load node "willamette"
-  - load: `bitmask/nodes/willamette.json`
+    - load: `bitmask/nodes/willamette.json`
 
 The `provider_base` directory is under the `leap_platform` specified in the file `Leapfile`.
 
