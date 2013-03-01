@@ -1,9 +1,33 @@
 @title = "Configuration Files"
 
-File format
+Leapfile
 -------------------------------------------
 
-All configuration files are in JSON format. For example
+A `Leapfile` defines options for the `leap` command and lives at the root of your provider directory. `Leapfile` is evaluated as ruby, so you can include whatever weird logic you want in this file. In particular, there are several variables you can set that modify the behavior of leap. For example:
+
+    @platform_directory_path = '../leap_platform'
+    @log = '/var/log/leap.log'
+
+Platform options:
+
+* `@platform_directory_path` (required). This must be set to the path where `leap_platform` lives. The path may be relative.
+* `@platform_branch`. If set, a check is preformed before running any command to ensure that the currently checked out branch of `leap_platform` matches the value set for `@platform_branch`. This is useful if you have a stable branch of your provider that you want to ensure runs off the master branch of `leap_platform`.
+* `@filter`. If set, this value is appended to every command that accepts a FILTER argument. For example, you could add `@filter = "+development"` to a develop branch to ensure that you won't accidentally deploy to production nodes from a development branch.
+
+Vagrant options:
+
+* `@vagrant_network`. Allows you to override the default network used for local nodes. It should include a netmask like `@vagrant_network = '10.0.0.0/24'`.
+* `@custom_vagrant_vm_line`. Insert arbitrary text into the auto-generated Vagrantfile. For example, `@custom_vagrant_vm_line = "config.vm.boot_mode = :gui"`.
+
+Logging options:
+
+* `@log`. If set, all command invocation and results are logged to the specified file.
+
+
+Configuration files
+-------------------------------------------
+
+All configuration files, other than `Leapfile`, are in the JSON format. For example:
 
     {
       "key1": "value1",
@@ -12,11 +36,11 @@ All configuration files are in JSON format. For example
 
 Keys should match `/[a-z0-9_]/`
 
-Unlike traditional JSON, comments are allowed. If the first non-whitespace character is '#' the line is treated as a comment.
+Unlike traditional JSON, comments are allowed. If the first non-whitespace characters are '//' the line is treated as a comment.
 
-    # this is a comment
+    // this is a comment
     {
-      # this is a comment
+      // this is a comment
       "key": "value"  # this is an error
     }
 
@@ -33,7 +57,7 @@ Options in the configuration files might be nested hashes or arrays. For example
       }
     }
 
-If the value string is prefixed with an '=' character, the value is evaluated as ruby. For example:
+If the value string is prefixed with an '=' character, the result is evaluated as ruby. For example:
 
     {
       "domain": {
@@ -42,34 +66,45 @@ If the value string is prefixed with an '=' character, the value is evaluated as
       "api_domain": "= 'api.' + domain.public"
     }
 
-In this case, "api_domain" will be set to "api.domain.org".
+In this case, the property "api_domain" will be set to "api.domain.org". So long as you do not create unresolvable circular dependencies, you can reference other properties in evaluated ruby that are themselves evaluated ruby.
 
-Inheritance
+See "Macros" below for information on the special macros available to the evaluated ruby.
+
+TIP: In rare cases, you might want to force the evaluation of a value to happen in a later pass after most of the other properties have been evaluated. To do this, prefix the value string with "=>" instead of "=".
+
+Node inheritance
 ----------------------------------------
 
-Suppose you have a node configuration for `bitmask/nodes/dns_europe.json` like so:
+Every node inherits from common.json and also any of the services or tags attached to the node. Additionally, the `leap_platform` contains a directory `provider_base` that defines the default values for tags, services and common.json.
+
+Suppose you have a node configuration for `bitmask/nodes/willamette.json` like so:
 
     {
-       "services": "dns",
-       "tags": ["production", "europe"],
+       "services": "webapp",
+       "tags": ["production", "northwest-us"],
        "ip_address": "1.1.1.1"
     }
 
-This node will have hostname "dns-europe" and it will inherit from the following files (in this order):
+This node will have hostname "willamette" and it will inherit from the following files (in this order):
 
-    1. provider_base/common.json
-    2. bitmask/common.json
-    3. provider_base/services/dns.json
-    4. bitmask/services/dns.json
-    5. provider_base/tags/production.json
-    6. bitmask/tags/production.json
-    7. provider_base/tags/europe.json
-    8. bitmask/tags/europe.json
-    9. bitmask/nodes/dns_europe.json
+1. common.json
+  - load defaults: `provider_base/common.json`
+  - load provider: `bitmask/common.json`
+2. service "webapp"
+  - load defaults: `provider_base/services/webapp.json`
+  - load provider: `bitmask/services/webapp.json`
+3. tag "production"
+  - load defaults: `provider_base/tags/production.json`
+  - load provider: `bitmask/tags/production.json`
+4. tag "northwest-us"
+  - load defaults: none
+  - load provider: `bitmask/tags/northwest-us.json`
+5. finally, load node "willamette"
+  - load: `bitmask/nodes/willamette.json`
 
 The `provider_base` directory is under the `leap_platform` specified in the file `Leapfile`.
 
-To see all the variables a node has inherited, you could run `leap inspect dns_europe`.
+To see all the variables a node has inherited, you could run `leap inspect willamette`.
 
 Macros
 ----------------------------------------
@@ -88,11 +123,11 @@ The following methods are available to the evaluated ruby:
 
 `global.services`
 
-  > A hash of all services, e.g. `global.services['openvpn']`.
+  > A hash of all services, e.g. `global.services['openvpn']` would return the "openvpn" service.
 
 `global.tags`
 
-  > A hash of all tags, e.g. `global.tags['production']`.
+  > A hash of all tags, e.g. `global.tags['production']` would return the "production" tag.
 
  `global.provider`
 
@@ -112,7 +147,7 @@ The following methods are available to the evaluated ruby:
 
 `variable.variable`
 
-  > Any variable defined or inherited by a particular node configuration is available by just referencing it using either hash notation or object field notation (e.g. `['domain']['public']` or `domain.public`). Circular references are not allowed, but otherwise it is OK to nest evaluated values in other evaluated values. If a value has not been defined, the hash notation will return nil but the field notation will raise an exception.
+  > Any variable defined or inherited by a particular node configuration is available by just referencing it using either hash notation or object field notation (e.g. `['domain']['public']` or `domain.public`). Circular references are not allowed, but otherwise it is OK to nest evaluated values in other evaluated values. If a value has not been defined, the hash notation will return nil but the field notation will raise an exception. Properties of services, tags, and the global provider can all be referenced the same way. For example, `global.services['openvpn'].x509.dh`.
 
 Using hashes
 -----------------------------------------
