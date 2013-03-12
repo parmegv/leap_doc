@@ -3,6 +3,7 @@ docs
   development
   platform
     quick-start
+    guide
     config
     commands
   client

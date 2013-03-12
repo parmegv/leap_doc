@@ -75,6 +75,6 @@ Getting started
 We recommend you read the platform documentation in this order:
 
 1. [Quick start tutorial](platform/quick-start).
-2. Platform [examples](platform/examples).
-3. The `leap` [command reference](platform/commands).
-4. [Configuration format](platform/config).
+2. [Platform Guide](platform/guide).
+3. [Configuration format](platform/config).
+4. The `leap` [command reference](platform/commands).

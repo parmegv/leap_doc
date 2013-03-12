@@ -12,10 +12,12 @@ What you will need:
 * At least 4gb of RAM.
 * A fast internet connection (because you will be downloading a lot of big files).
 
-Installation
+Install prerequisites
 --------------------------------
 
-Install prerequisites:
+*Debian & Ubuntu*
+
+Install core prerequisites:
 
     sudo apt-get install git ruby ruby-dev rsync openssh-client openssl rake make
 
@@ -23,9 +25,15 @@ Install Vagrant in order to be able to test with local virtual machines (typical
 
     sudo apt-get install vagrant virtualbox
 
-This tutorial should work with ruby1.8, but has only been tested using ruby1.9.
+*Mac OS*
 
-Install the `leap` command:
+1. Install rubygems from https://rubygems.org/pages/download (unless the `gem` command is already installed).
+2. Install Vagrant.dmg from http://downloads.vagrantup.com/
+
+Install leap
+---------------------
+
+Install the `leap` command as a gem:
 
     sudo gem install leap_cli
 
@@ -46,6 +54,7 @@ Or, install as unprivileged user:
     sudo ln -s ~/.gem/ruby/1.9.1/bin/leap /usr/local/bin/leap
 
 With both methods, you can use now /usr/local/bin/leap, which in most cases will be in your $PATH.
+
 
 Create a provider instance
 ---------------------------------------
