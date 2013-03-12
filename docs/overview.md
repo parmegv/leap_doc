@@ -120,7 +120,7 @@ There are three "main" databases:
 
 Additionally, each user may have multiple databases for storing client-encrypted data, such as email messages.
 
-Like many NoSQL databases, BigCouch is inspired by "Amazon's Dynamo paper":http://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf and works by sharding each database among many servers using a circular ring hash. The number of shards might be greater than the number of servers, in which case each server would have multiple shards of the same database. Each server in the BigCouch cluster appears to contain the entire database, but actually it will just proxy the request to the actual database that has the content (if it does not have the document itself).
+Like many NoSQL databases, BigCouch is inspired by [Amazon's Dynamo paper](http://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf) and works by sharding each database among many servers using a circular ring hash. The number of shards might be greater than the number of servers, in which case each server would have multiple shards of the same database. Each server in the BigCouch cluster appears to contain the entire database, but actually it will just proxy the request to the actual database that has the content (if it does not have the document itself).
 
 Important BigCouch constants:
 
