@@ -42,6 +42,11 @@ Depending the the file extension, the file with be parsed like so:
 
 Markdown is rendered using RDiscount, Textile is rendered using RedCloth, and RST is rendered using docutils. Markdown is recommended, because it supports table of contents, although the markup is limited.
 
+There are a couple options to preview your source files without needing to run the web server:
+
+* Markdown preview for Chrome: https://chrome.google.com/webstore/detail/markdown-preview/jmchmkecamhbiokiopfpnfgbidieafmd
+* Markdown preview for Sublime: https://github.com/revolunet/sublimetext-markdown-preview
+
 Setting page properties
 ---------------------------------
 
