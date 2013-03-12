@@ -1,6 +1,9 @@
-Notes on Puppet Usage in Leap Platform
-======================================
+@title = "Under the hood"
 
+This page contains various details on the how the platform is implemented. You can safely ignore this page, although it may be useful if you plan to make modifications to the platform.
+
+Puppet Details
+======================================
 
 Run stages
 ----------
