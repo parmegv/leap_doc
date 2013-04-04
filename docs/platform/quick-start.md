@@ -1,16 +1,19 @@
 @title = 'LEAP Platform Quick Start'
 @nav_title = 'Quick Start'
 
-This is a very minimal tutorial that will walk you through the process of creating and deploying a service provider running the LEAP platform.
+This tutorial that will walk you through the initial process of creating and deploying a service provider running the LEAP platform.
 
-All the commands in this tutorial are run on your home desktop or laptop computer, or whatever machine you want to do your system administration from.
+First, a few definitions:
 
-What you will need:
+* **node:** A server that is part of the service provider's infrastructure. All nodes are running the Debian GNU/Linux operating system.
+* **sysadmin:** This is you.
+* **sysadmin machine:** Your desktop or laptop computer that you use to control the nodes. This machine can be running any variant of Unix, Linux, or Mac OS (however, only Debian derivatives are supported at the moment).
 
-* A real machine with virtualization support in the CPU (VT-x or AMD-V). In other words, not a virtual machine.
-* Debian operating system (or derivatives like Ubuntu, Mint, etc).
-* At least 4gb of RAM.
-* A fast internet connection (because you will be downloading a lot of big files).
+All the commands in this tutorial are run on your sysadmin machine. In order to complete the tutorial, the sysadmin machine must:
+
+* Be a real machine with virtualization support in the CPU (VT-x or AMD-V). In other words, not a virtual machine.
+* Have at least 4gb of RAM.
+* Have a fast internet connection (because you will be downloading a lot of big files, like virtual machine images).
 
 Install prerequisites
 --------------------------------
@@ -25,19 +28,28 @@ Install Vagrant in order to be able to test with local virtual machines (typical
 
     sudo apt-get install vagrant virtualbox
 
+<!--
 *Mac OS*
 
 1. Install rubygems from https://rubygems.org/pages/download (unless the `gem` command is already installed).
 2. Install Vagrant.dmg from http://downloads.vagrantup.com/
+-->
 
 Install leap
 ---------------------
 
-Install the `leap` command as a gem:
+<!--Install the `leap` command as a gem:
 
     sudo gem install leap_cli
 
 Alternately, you can install `leap` from source:
+
+    git clone git://leap.se/leap_cli.git
+    cd leap_cli
+    rake build
+-->
+
+Install `leap` command from source:
 
     git clone git://leap.se/leap_cli.git
     cd leap_cli
@@ -127,7 +139,7 @@ Create a local node, with the service "webapp":
 
     leap node add --local web1 services:webapp
 
-This created a node configuration file, but it did not create the virtual machine. In order to test our node "web1", we need to first spin up a virtual machine. The next command will probably take a very long time, because it will need to download a VM image (about 700mb).
+This created a node configuration file in `nodes/web1.json`, but it did not create the virtual machine. In order to test our node "web1", we need to first spin up a virtual machine. The next command will probably take a very long time, because it will need to download a VM image (about 700mb).
 
     leap local start
 
@@ -142,6 +154,23 @@ That is it, you should now have your first running node. However, the LEAP web a
     leap local start
     leap node init db1
     leap deploy db1
+
+Access the web application
+--------------------------------------------
+
+You should now have two local virtual machines running, one for the web application and one for the database. In order to connect to the web application in your browser, you need to point your domain at the IP address of the web application node (named web1 in this example).
+
+There are a lot of different ways to do this, but one easy way is to modify your `/etc/hosts` file. First, find the IP address of the webapp node:
+
+    leap list webapp --print ip_address
+
+Then modify `/etc/hosts` like so:
+
+    10.5.5.47   DOMAIN
+
+Replacing 'DOMAIN' with whatever you specified as the `domain` in the `leap new` command.
+
+Next, you can connect to the web application either using a web browser or via the API using the LEAP client. To use a browser, connect to https://DOMAIN. Your browser will complain about an untrusted cert, but for now just bypass this. From there, you should be able to register a new user and login.
 
 What is going on here?
 --------------------------------------------
@@ -205,15 +234,12 @@ The steps required to initialize and deploy to nodes on the public internet are 
 
 For example:
 
-    leap node add vpn1 tags:production services:openvpn ip_address:4.4.4.4
+    leap node add db1 tags:production services:couchdb ip_address:4.4.4.4
 
 Also, running `leap node init NODE_NAME` on a real server will prompt you to verify the fingerprint of the SSH host key and to provide the root password of the server NODE_NAME. You should only need to do this once.
 
-What services do I need
+What's next
 -----------------------------------
 
-Run `leap list` to see a list of available services.
-
-TODO: link to another document that details the different service types and which are required.
-
+Read the [LEAP platform guide](guide) to learn about planning and securing your infrastructure.
 
