@@ -1,5 +1,6 @@
 @nav_title = "Overview"
 @title = "Overview of LEAP architecture"
+@summary = "Bird's eye view of how all the pieces fit together."
 
 The LEAP Platform allows an organization to deploy and manage a complete infrastructure for providing user communication services.
 

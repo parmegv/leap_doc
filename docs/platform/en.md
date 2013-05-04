@@ -1,5 +1,6 @@
 @title = 'LEAP Platform for Service Providers'
 @nav_title = 'Provider Platform'
+@summary = 'Software platform to automate the process of running a communication service provider.'
 @toc = true
 
 If you have ever been a sysadmin for an organization or company that provides communication services to end users, you have probably screamed this many times:

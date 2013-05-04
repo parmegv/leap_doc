@@ -1,6 +1,10 @@
 docs
-  overview
-  development
+  design
+    overview
+    nicknym
+    soledad
+#    cuttlefish
+  source
   platform
     quick-start
     guide
