@@ -39,7 +39,7 @@ Goals
 
 **Non-goals**
 
-* Nicknym does not try to create a decentralized or peer-to-peer identity system.
+* Nicknym does not try to create a decentralized peer-to-peer identity system. Nicknym is federated, akin to the way email is federatred.
 
 The binding problem
 =============================================
