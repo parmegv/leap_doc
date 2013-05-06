@@ -5,7 +5,7 @@
 Introduction
 =====================
 
-Soledad is a system for to allow client applications the ability to securely share synchronized document databases. Soledad is based on Ubuntu's U1DB, "a cross-platform, cross-device, syncable database API", but with the addition of client-side encryption of documents stored on the server, and encryption of the local database replica. Soledad is an acronym of "Synchronization of Locally Encrypted Documents Among Devices" and means "solitude" in Spanish.
+Soledad is a system for to allow client applications the ability to securely share synchronized document databases. Soledad is based on Ubuntu's U1DB, "a cross-platform, cross-device, syncable database API", but with the addition of client-side encryption of documents stored on the server, and encryption of the local database replica.
 
 Key aspects of Soledad include:
 
@@ -15,6 +15,8 @@ Key aspects of Soledad include:
 * **Document database:** An application using the Soledad client library is presented with a document-centric database API for storage and sync. Documents may be indexed, searched, and versioned.
 
 The current reference implementation of Soledad is written in Python and distributed under a GPLv3 license.
+
+Soledad is an acronym of "Synchronization of Locally Encrypted Documents Among Devices" and means "solitude" in Spanish.
 
 Goals
 ======================
@@ -111,11 +113,7 @@ The `storage_secret` is shared among all devices with access to a particular use
 
 We don't use the derived_key as the storage_secret because we want the user to be able to change their password without needing to re-key.
 
-TO DO: settle on a block cipher.
-
-Unresolved:
-
-* How do devices receive updates if the storage_secret changes?
+TO DO: Settle on a block cipher. Define how changes to storage secret are sync'ed.
 
 Document API
 -----------------------------------
@@ -155,7 +153,8 @@ Other variables:
 
 When receiving a document with the above structure from the server, Soledad client will decrypt the `ciphertext` to find `content`, verify that the mac is correct, and then store `content` as a cleartext document in the local database replica.
 
-Soledad client will verify that the mac is correct, decrypt the `ciphertext` to find `content`, and then store `content` as a document in the local database replica.
+TO DO: determine supported ciphers
+TO DO: determine HMAC method
 
 Document synchronization
 -----------------------------------
@@ -171,9 +170,6 @@ Document IDs
 --------------------
 
 Like U1DB, Soledad allows the programmer to use whatever ID they choose for each document. However, it is best practice to let the library choose random IDs for each document so as to ensure you don't leak information. In other words, leave the second argument to `create_doc()` empty.
-
-UNRESOLVED: perhaps Soledad should forbid custom document IDs.
-chiiph: I don't think we should forbid this, it's handy for certain cases and the downside isn't too problematic.
 
 Re-keying
 -----------
@@ -227,13 +223,13 @@ About these fields:
 
 **Authentication**
 
-Like other Soledad functions, access to the recovery database requires token authentication. However, the recovery database is shared among all users. Any user can query for any `doc_id`. The purpose of this is to allow the server to not know which user corresponds to which recovery document.
+Unlike other Soledad requests, access to the recovery database does not require authentication. Anyone may query for any `doc_id`. The purpose of this is to prevent the server from tracking which recovery document corresponds to which user.
 
 To mitigate the vulnerabily created by this design, the response to queries of the discovery database have a very long delay.
 
-TODO: come up with a better authentication scheme.
-TODO: determine the response delay.
-
+TO DO: determine the response delay.
+TO DO: come up with a better abuse prevention scheme (maybe blind signature by the provider).
+TO DO: determine what HMAC to use.
 
 Client Reference Implementation
 ===================================
@@ -361,7 +357,3 @@ Tests
 ===================
 
 To be sure the new implemented backends work correctly, we included in Soledad the U1DB tests that are relevant for the new pieces of code (backends, document, http(s) and sync tests). We also added specific tests to the new functionalities we are building.
-
-salt = SCrypt::Engine.generate_salt(:max_time => 10)
-SCrypt::Engine.hash_secret "my grand secret", salt
-

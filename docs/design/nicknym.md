@@ -40,7 +40,7 @@ Goals
 The binding problem
 =============================================
 
-Nicknym attempts to solve the problem of binding a human memorable identifer to a cryptographic key. If you have the identifier, you should be able to get the key with a high level of confidence, and vice versa. The goal is to have decentralized, human memorable, globally unique public keys. In other words, to violate [Zooko's triangle](https://en.wikipedia.org/wiki/Zooko's_triangle) by making a few consessions.
+Nicknym attempts to solve the problem of binding a human memorable identifer to a cryptographic key. If you have the identifier, you should be able to get the key with a high level of confidence, and vice versa. The goal is to have federated, human memorable, globally unique public keys. In other words, to somewhat violate [Zooko's triangle](https://en.wikipedia.org/wiki/Zooko's_triangle) by relying on the DNS system to partition a global namespace.
 
 There are a number of established methods for binding identifier to key:
 
@@ -56,9 +56,11 @@ There are a number of established methods for binding identifier to key:
 
 The methods differ widely, but they all try to solve the same general problem of proving that a person or organization is in control of a particular key.
 
-Nicknym uses a combination of these methods, utilizing TOFU, X.509, Network Perspective, and additional methods we call "Provider Keys" and "Federated Web of Trust" (FWOT).
+**Nicknym overview**
 
-1. Nicknym starts with TOFU of user keys, because it is easy to do and backward compatible with legacy providers. In TOFU, your client naively accept the key of another user when it first encounters it. When you TOFU a user key, you are making a bet that possible attackers against you did not have the foresight to specifically target you with a false key during discovery.
+Nicknym solves the binding problem by using a combination of methods, utilizing TOFU, X.509, Network Perspective, and additional methods we call "Provider Keys" and "Federated Web of Trust" (FWOT).
+
+1. Nicknym starts with TOFU of user keys, because it is easy to do and backward compatible with legacy providers. In TOFU, your client naively accept the key of another user when it first encounters it. When you accept a key via TOFU, you are making a bet that possible attackers against you did not have the foresight to specifically target you with a false key during discovery.
 2. Next, we add X.509. For those providers that publish the public keys of their users, we require that these keys be fetched over validated TLS. This makes third party attacks against TOFU more difficult, but also places a lot of trust in the providers (and the Certificate Authorities).
 3. Next, we add a simple form of Network Perspective where the client can ask one provider what key another provider is distributing. This allows a user's client to be able to audit their provider and keep them honest in an automated manner. If a service provider distributes bogus keys, their users and other providers will be quickly alerted to the problem.
 4. Next, we add Provider Keys. If a service provider has a provider key, the public keys of its users are additionally signed by the provider with the "provider key". If your client has the correct provider key, you no longer need to TOFU the keys of the provider's users. This has the benefit making it possible for a user to issue new keys, and to add support for very short-lived keys rather than trying to use key revocation. A service provider is much less likely to lose their private key or have it compromised, a significant problem with TOFU of user keys.
@@ -117,8 +119,8 @@ Definitions
 * **user key**: A public/private key pair associated with a user address. If not specified, "user key" refers to the public key.
 * **provider key**: A public/private key pair owned by the provider. The address associated with this key is just the domain of the service provider.
 * **validated key**: A key is "validated" if the nickagent has bound the user address to a public key.
-* **nickagent**: Client side program that manages a user's contact list, the public keys they have encountered and validated, and the user's own key pairs.
-* **nickserver**: Server side daemon run by providers who support Nicknym.
+* **nickagent**: Client side program that manages a user's contact list, the public keys they have encountered and validated, and the user's own key pairs. The nickagent may also expose an API for other local applications to query for a public key.
+* **nickserver**: Server side daemon run by providers who support Nicknym. A nickserver is responsible for answering the question "what public key do you see for this address"?
 
 Nickserver requests
 -----------------------
@@ -162,7 +164,7 @@ For example:
 
     https://nicknym.domain.org:6425/?address=otherdomain.org
 
-1. First, check the nickserver's cache database of discovered keys. If the cache is not old, return this key.
+1. First, check the nickserver's cache database of discovered keys. If the cache is not old, return this key. This step is skipped if the request is encrypted to the foreign provider's key.
 2. Otherwise, fetch provider key from the provider's nickserver, cache the result, and return it.
 
 **Foreign, User Key request**
@@ -171,7 +173,7 @@ For example:
 
     https://nicknym.domain.org:6425/?address=bob@otherdomain.org
 
-* First, check the nickserver's database cache of nicknyms. If the cache is not old, return the key information found in the cache.
+* First, check the nickserver's database cache of nicknyms. If the cache is not old, return the key information found in the cache. This step is skipped if the request is encrypted to a foreign provider key.
 * Otherwise, attempt to contact a nickserver run by the provider of the requested address. If the nickserver exists, query that nickserver, cache the result, and return it in the response.
 * Otherwise, fall back to querying existing SKS keyservers, cache the result and return it.
 * Otherwise, return a 404 error.
@@ -218,10 +220,13 @@ When querying https://nicknym.domain.org, nickagent must validate the TLS connec
 
 Optionally, a nickagent may make an encrypted query like so:
 
-0. Suppose the nickagent wants to make an encrypted query regarding the address alice@x.org.
-1. Nickagent discovers the public key for nicknym@domain.org
-2. Nickagent uses the OpenPGP key for nicknym@domain.org to encrypt the body of the request (using POST). The request body should consist of the address being queried and the second line a randomly generated 128 bit symmetric key. The request can be foreign or local.
-3. The body of the nickserver' response is encrypted using AES128 using the symmetric key.
+0. Suppose the nickagent wants to make an encrypted query regarding the address alice@domain-x.org.
+1. Nickagent discovers the public key for nicknym@domain-y.org.
+2. The nickagent makes a POST request to a nickserver with two fields: address and ciphertext.
+3. The address only contains the domain part of the address (unlike an unencrypted request).
+4. The ciphertext field is encrypted to the public key for nicknym@domain-y.org. The corresponding cleartext contains the full address on the first line followed by randomly generated symmetric key on the second line.
+5. If the request was local, the nickserver handles the request. If the request for foreign, the nickserver proxies the request to the domain specified in the address field.
+6. When the request gets to the right nickserver, the body of the nickserver response is encrypted using using the symmetric key. The first line of the response specifies the cipher and mode used (allowed ciphers TBD).
 
 Comment: although it may seem excessive to encrypt both the request via TLS and the request body via OpenPGP, the reason for this is that many requests will not use OpenPGP.
 
@@ -236,7 +241,7 @@ Nicknym supports three different levels of key validation:
 * Level 2 - provider signed: The key has been signed by a provider key for the same domain, but the provider key is not validated using a trust path (i.e. it is only registered)
 * Level 1 - registered: The key has been encountered and saved, it has no signatures (that are meaningful to the nickagent).
 
-nickagent will try to validate using the highest level possible.
+A nickagent will try to validate using the highest level possible.
 
 Automatic renewal
 -----------------------------
@@ -303,14 +308,20 @@ Possible attacks:
 * Attack: A provider tracks all the requests for key discovery in order to build a map of association.
 * Countermeasure: By performing foreign key queries via third party nickservers, an agent can prevent any particular entity from tracking their queries.
 
+Preventing denial of service attacks
+------------------------------------------
+
+To be written.
 
 Future enhancements
 ---------------------
 
-Should we support additional discovery mechanisms:
+**Additional discovery mechanisms**
 
-* Webfinger includes a standard mechanism for distributing a user's public key via a simple HTTP request. This is very easy to implement on the server, and very easy to consume on the client side.
-* There are multiple competing standards for key discovery via DNS. When and if one of these emerges predominate, Nicknym should attempt to use this method when available. DNS discovery, however, has some problems. DNS discovery of keys is much harder to implement, because the service provider must run their own customized authoritative nameserver. Also, since (RSA) keys can be too big for domain UDP packets, any future-proof DNS method relies on an HTTP request, thus undermining the potential benefit of decentralization you might get from using DNS rather than webfinger.
+In addition to nickservers and SKS keyservers, there are two other potential methods for discovering public keys:
+
+* **Webfinger** includes a standard mechanism for distributing a user's public key via a simple HTTP request. This is very easy to implement on the server, and very easy to consume on the client side, but there are not many webfinger servers with public keys in the wild.
+* **DNS** is used by multiple competing standards for key discovery. When and if one of these emerges predominate, Nicknym should attempt to use this method when available. DNS discovery, however, has some problems. DNS discovery of keys is much harder to implement, because the service provider must run their own customized authoritative nameserver. Also, since (RSA) keys can be too big for domain UDP packets, any future-proof DNS method relies on an HTTP request, thus undermining the potential benefit of decentralization you might get from using DNS rather than webfinger.
 
 
 
@@ -439,7 +450,7 @@ private fetch_key_from_nickserver
 Reference nickserver implementation
 =====================================================
 
-The reference nickserver is written in Ruby 1.9 and licensed GPLv3. It is lightweight and scalable (supporting high concurrency, and reasonable latency), and uses EventMachine for asynchronous network IO. Data stored in CouchDB.
+The reference nickserver is written in Ruby 1.9 and licensed GPLv3. It is lightweight and scalable (supporting high concurrency, and reasonable latency), and uses EventMachine for asynchronous network IO. Data is stored in CouchDB.
 
 For more information, see https://github.com/leapcode/nickserver
 
