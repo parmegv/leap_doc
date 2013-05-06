@@ -21,8 +21,7 @@ Soledad is an acronym of "Synchronization of Locally Encrypted Documents Among D
 Goals
 ======================
 
-Security goals
---------------------------------------
+**Security goals**
 
 * *Client-side encryption:* Before any data is synced to the cloud, it should be encrypted/decrypted on the client device.
 * *Encrypted local storage:* Any data cached or stored on the client should be stored in an encrypted format.
@@ -30,8 +29,7 @@ Security goals
 * *Resistant to online attacks:* Analysis of storing and retrieving data should not leak potentially sensitive information.
 * *Resistance to data tampering:* The server should not be able to provide the client with old or bogus data for a document.
 
-Synchronization goals
--------------------------------------
+**Synchronization goals**
 
 * *Consistency:* multiple clients should all get sync'ed with the same data.
 * *Sync flag:* the ability to partially sync data. For example, so a mobile device doesn't need to sync all email attachments.
@@ -40,20 +38,17 @@ Synchronization goals
 * *Scalable cloud:* distributed master-less storage on the cloud side, with no single point of failure.
 * *Conflict resolution:* conflicts are flagged and handed off to the application logic to resolve.
 
-Usability goals
----------------------------------
+**Usability goals**
 
 * *Availability*: the user should always be able to access their data.
 * *Recovery*: there should be a mechanism for a user to recover their data should they forget their password.
 
-Known limitations
-------------------------------
+**Known limitations**
 
 * Currently, the server knows when the contents of a document have changed.
 * Currently, there is no facility for sharing documents among multiple users.
 
-Non-goals
----------------------------
+**Non-goals**
 
 * Soledad is not for filesystem synchronization, storage or backup. It provides an API for application code to synchronize and store arbitrary schema-less JSON documents in one big flat document database. One could model a filesystem on top of Soledad, but it would be a bad fit.
 * Soledad is not intended for decentralized peer-to-peer synchronization, although the underlying synchronization protocol does not require a server. Soledad takes a cloud approach in order to ensure that a client has quick access to an available copy of the data.
@@ -65,7 +60,7 @@ Related software
 
 [U1DB](http://pythonhosted.org/u1db/) - Similar API as Soledad, without encryption.
 
-Protocol
+Soledad protocol
 ===================================
 
 Storage secret
@@ -231,7 +226,7 @@ TO DO: determine the response delay.
 TO DO: come up with a better abuse prevention scheme (maybe blind signature by the provider).
 TO DO: determine what HMAC to use.
 
-Client Reference Implementation
+Reference implementation of client
 ===================================
 
 Dependencies:
@@ -298,7 +293,7 @@ Synchronization-related classes:
   * `sync_exchange`: request encrypted version of Document's content before sending it to the network.
   * `_parse_sync_stream`: set Document's content based on encrypted version right after it arrives as a response from the network.
 
-Server Reference Implementation
+Reference implementation of server
 ======================================================
 
 Dependencies:

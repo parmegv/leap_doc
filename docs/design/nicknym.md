@@ -5,15 +5,19 @@
 Introduction
 ==========================================
 
-Nicknym is a system to map user nicknames to public keys. With Nicknym, the user to be able to think solely in terms of nickname, while still being able to communicate with a high degree of security (confidentiality, integrity, and authenticity). Essentially, Nicknym is a system for binding human-memorable nicknames to a cryptographic key via automatic discovery and automatic validation.
+**What is Nicknym?**
+
+Nicknym is a protocol to map user nicknames to public keys. With Nicknym, the user is able to think solely in terms of nickname, while still being able to communicate with a high degree of security (confidentiality, integrity, and authenticity). Essentially, Nicknym is a system for binding human-memorable nicknames to a cryptographic key via automatic discovery and automatic validation.
 
 Nicknym is a federated protocol: a Nicknym address is in the form `username@domain` just alike an email address and Nicknym includes both a client and a server component. Although the client can fall back to legacy methods of key discovery when needed, domains that run the Nicknym server component enjoy much stronger identity guarentees.
 
 Nicknym is key agnostic, and supports whatever public key information is available for an address (OpenPGP, OTR, X.509, RSA, etc). However, Nicknym enforces a strict one-to-one mapping of address to public key.
 
-Existing forms of secure identity are deeply flawed. These systems rely on either a single trusted entity (e.g. Skype), a vulnerable Certificate Authority system (e.g. S/MIME), or keys that cannot be made human memorable (e.g. OpenPGP, OTR). When an identity system is hard to use, it is effectively compromised because too few people take the time to use it properly.
+**Why is Nicknym needed?**
 
-The broken nature of existing identities systems (either in security or in usability) is especially troubling because identity remains a bedrock precondition for any message security: you cannot ensure confidentiality or integrity without confirming the authenticity of the other party. Nicknym is a protocol to solve this problem in a way that is backward compatible, easy for the user, and includes very strong authenticity when possible.
+Existing forms of secure identity are deeply flawed. These systems rely on either a single trusted entity (e.g. Skype), a vulnerable Certificate Authority system (e.g. S/MIME), or key identifiers that are not human memorable (e.g. OpenPGP, OTR). When an identity system is hard to use, it is effectively compromised because too few people take the time to use it properly.
+
+The broken nature of existing identities systems (either in security or in usability) is especially troubling because identity remains a bedrock precondition for any message security: you cannot ensure confidentiality or integrity without confirming the authenticity of the other party. Nicknym is a protocol to solve this problem in a way that is backward compatible, easy for the user, and includes very strong authenticity.
 
 Goals
 ==========================================
@@ -40,19 +44,19 @@ Goals
 The binding problem
 =============================================
 
-Nicknym attempts to solve the problem of binding a human memorable identifer to a cryptographic key. If you have the identifier, you should be able to get the key with a high level of confidence, and vice versa. The goal is to have federated, human memorable, globally unique public keys. In other words, to somewhat violate [Zooko's triangle](https://en.wikipedia.org/wiki/Zooko's_triangle) by relying on the DNS system to partition a global namespace.
+Nicknym attempts to solve the problem of binding a human memorable identifer to a cryptographic key. If you have the identifier, you should be able to get the key with a high level of confidence, and vice versa. The goal is to have federated, human memorable, globally unique public keys.
 
 There are a number of established methods for binding identifier to key:
 
-* [Web of Trust (WOT)](http://en.wikipedia.org/wiki/Web_of_trust)
-* Trust on First Use (TOFU)
 * [X.509 Certificate Authority System](https://en.wikipedia.org/wiki/X.509)
+* Trust on First Use (TOFU)
+* Mail-back Verification
+* [Web of Trust (WOT)](http://en.wikipedia.org/wiki/Web_of_trust)
 * [DNSSEC](https://en.wikipedia.org/wiki/Dnssec)
 * [Shared Secret](https://en.wikipedia.org/wiki/Socialist_millionaire)
-* Mail-back Verification
 * [Network Perspective](http://convergence.io/)
-* Global Append-only Log
 * Nonverbal Feedback (a la ZRTP)
+* Global Append-only Log
 
 The methods differ widely, but they all try to solve the same general problem of proving that a person or organization is in control of a particular key.
 
