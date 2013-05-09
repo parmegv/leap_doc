@@ -39,12 +39,12 @@ Goals
 
 **Non-goals**
 
-* Nicknym does not try to create a decentralized peer-to-peer identity system. Nicknym is federated, akin to the way email is federatred.
+* Nicknym does not try to create a decentralized peer-to-peer identity system. Nicknym is federated, akin to the way email is federated.
 
 The binding problem
 =============================================
 
-Nicknym attempts to solve the problem of binding a human memorable identifer to a cryptographic key. If you have the identifier, you should be able to get the key with a high level of confidence, and vice versa. The goal is to have federated, human memorable, globally unique public keys.
+Nicknym attempts to solve the problem of binding a human memorable identifier to a cryptographic key. If you have the identifier, you should be able to get the key with a high level of confidence, and vice versa. The goal is to have federated, human memorable, globally unique public keys.
 
 There are a number of established methods for binding identifier to key:
 
@@ -67,22 +67,22 @@ Nicknym solves the binding problem by using a combination of methods, utilizing 
 1. Nicknym starts with TOFU of user keys, because it is easy to do and backward compatible with legacy providers. In TOFU, your client naively accept the key of another user when it first encounters it. When you accept a key via TOFU, you are making a bet that possible attackers against you did not have the foresight to specifically target you with a false key during discovery.
 2. Next, we add X.509. For those providers that publish the public keys of their users, we require that these keys be fetched over validated TLS. This makes third party attacks against TOFU more difficult, but also places a lot of trust in the providers (and the Certificate Authorities).
 3. Next, we add a simple form of Network Perspective where the client can ask one provider what key another provider is distributing. This allows a user's client to be able to audit their provider and keep them honest in an automated manner. If a service provider distributes bogus keys, their users and other providers will be quickly alerted to the problem.
-4. Next, we add Provider Keys. If a service provider has a provider key, the public keys of its users are additionally signed by the provider with the "provider key". If your client has the correct provider key, you no longer need to TOFU the keys of the provider's users. This has the benefit making it possible for a user to issue new keys, and to add support for very short-lived keys rather than trying to use key revocation. A service provider is much less likely to lose their private key or have it compromised, a significant problem with TOFU of user keys.
-5. Finally, we add a Federated Web of Trust. The system works like this: each service provider is responsible for the due diligence of properly signing the keys of a few other providers, akin to the distributed web of trust model of OpenPGP, but with all the hard work of proper signature validation placed upon the service provider. When a user communicates with another party who happens to use a service provider that participates in the FWOT, the user’s software will automatically trace a chain of signature from the other party’s key, to their service provider, to the user’s own service provider (with some possible intermediary signatures). This allows for identity that is verified through an end-to-end trust path from any user to any other user in a way that can be automated and is human memorable. Support for a FWOT allows us to bypass entirely X.509 Certificate Authorities, to gracefully handle short lived provider keys, and to handle emergency re-key events if a provider's key is lost.
+4. Next, we add Provider Keys. If a service provider supports nicknym, the public keys of its users are additionally signed by a "provider key". If your client has the correct provider key, you no longer need to TOFU the keys of the provider's users. This has the benefit making it possible for a user to issue new keys, and to add support for very short-lived keys rather than trying to use key revocation. A service provider is much less likely to lose their private key or have it compromised, a significant problem with TOFU of user keys.
+5. Finally, we add a Federated Web of Trust. The system works like this: each service provider is responsible for the due diligence of properly signing the keys of a few other providers, akin to the distributed web of trust model of OpenPGP, but with all the hard work of proper signature validation placed upon the service provider. When a user communicates with another party who happens to use a service provider that participates in the FWOT, the user's software will automatically trace a chain of signature from the other party's key, to their service provider, to the user's own service provider (with some possible intermediary signatures). This allows for identity that is verified through an end-to-end trust path from any user to any other user in a way that can be automated and is human memorable. Support for a FWOT allows us to bypass entirely X.509 Certificate Authorities, to gracefully handle short lived provider keys, and to handle emergency re-key events if a provider's key is lost.
 
 As we move down this list, each measure taken gets more complicated, requires more provider cooperation, and provides less additional benefit than the one before it. Nevertheless, each measure contributes some important benefit toward the goal of automatic binding of user identity to public key.
 
 **Questions**
 
-*Why not use WOT?* Most users are empirically unable to properly maintain a web of trust. The concepts are hard and it is easy to mess up the signing practice.
+*Why not use WOT?* Most users are empirically unable to properly maintain a web of trust. The concepts are hard, it is easy to mess up the signing practice, most people default to TOFU anyway, and very few users use revocation properly. Most importantly, the WOT exposes a user's social network, potentially highly sensitive information in its own right. When first proposed, WOT was a clever innovation, but contemporary threats have greatly reduced its usefulness.
 
-*Why not use DNSSEC?* Many reasons. DNS records are slow to update. RSA Public keys will soon be too big for UDP packets (though this is not true of ECC), so putting keys in DNS will mean putting a URL to a key in DNS, so you might as well just use TLS. DNSSEC could still be of added benefit if you put the fingerprint in the DNS record. Mostly, however, a simple HTTP get request is a lot easier to deal with than DNS, both for the client and the server.
+*Why not use DNSSEC?* There are many reasons why DNSSEC is should not be used for key validation. DNS records are slow to update. RSA Public keys will soon be too big for UDP packets (though this is not true of ECC), so putting keys in DNS will mean putting a URL to a key in DNS, so you might as well just use TLS. DNSSEC could still be of added benefit if you put the fingerprint in the DNS record, effectively leveraging the authority of DNSSEC to audit the weaker authority in the X.509 CA system. Mostly, however, a simple HTTP get request is a lot easier to deal with than DNS, both for the client and the server.
 
-*Why not use Shared Secret?* Shared secrets, like with the Socialist Millionaire protocol, are cool in theory but prone to user error and frustration in practice. Was the secret "Invisible Zebra" or "invisibleZebra"?
+*Why not use Shared Secret?* Shared secrets, like with the Socialist Millionaire protocol, are cool in theory but prone to user error and frustration in practice. Was the secret "Invisible Zebra" or "invisibleZebra"? For the special case of advanced users with special security needs, however, a shared secret provides a much stronger validation than other methods of key binding (so long as the validation window is small).
 
-*Why not use Mail-back Verification?* If the provider distributes user keys, there is not any benefit to mail-back verification. However, it would be good to add support for mail-back verification for non-cooperating legacy providers.
+*Why not use Mail-back Verification?* If the provider distributes user keys, there is not any benefit to mail-back verification. The nicknym protocol could potentially benefit from a future enhancement to support mail-back for users on a non-cooperating legacy provider. However, at its best, mail-back is a very weak form of key validation.
 
-*Why not use Global Append-only Log?* Maybe we should, they are neat. However, current implementations are resource intensive and experimental (e.g. namecoin).
+*Why not use Global Append-only Log?* Maybe we should, they are neat. However, current implementations are slow, resource intensive, and experimental (e.g. namecoin).
 
 *Why not use Nonverbal Feedback?* ZRTP can use non-verbal clues to establish secure identify because of the nature of a live phone call. This doesn't work for text only messaging.
 
@@ -202,7 +202,11 @@ For example:
     p8KAYDbVac3+c3vm30DjHO/RKF4Zq6+sTAIkrFvXOwYJl9KgjMpQVV/voInjxATz
     -----END PGP SIGNATURE-----
 
+Successful responses return HTTP code 200. If the address cannot be found, code 404 is returned.
+
 If the data in the request was encrypted to the public key nicknym@domain.org, then the JSON response and signature are additionally encrypted to the symmetric key found in the request and returned base64 encoded.
+
+TBD: how to best sign a 404?
 
 Query balancing
 ------------------------
@@ -220,7 +224,7 @@ When querying https://nicknym.domain.org, nickagent must validate the TLS connec
 
 1. Using a commercial CA certificate distributed with the host operating system.
 2. Using a seeded CA certificate (see [Discovering nickservers](#Discoverying.nickservers)).
-3. Using a custom self-signed CA certificate discovered for the domain, so long as the CA certificate was discovered via #1 or #2. Custom CA certificates may be discovered for a domain by making a provider request of a nickserver (e.g. https://nicknym.known-domain.org/?address=new-domain.org).
+3. Using a custom self-signed CA certificate discovered for the domain, so long as the CA certificate was discovered via #1 or #2. Custom CA certificates may be discovered for a domain by making a provider key request of a nickserver (e.g. https://nicknym.known-domain.org/?address=new-domain.org).
 
 Optionally, a nickagent may make an encrypted query like so:
 
@@ -241,9 +245,9 @@ A key is "validated" if the nickagent has bound the user address to a public key
 
 Nicknym supports three different levels of key validation:
 
-* Level 3 - path trusted: A path of cryptographic signatures can be traced from a trusted key to the key under evaluation. By default, only the provider key from the user's provider is a "trusted key".
-* Level 2 - provider signed: The key has been signed by a provider key for the same domain, but the provider key is not validated using a trust path (i.e. it is only registered)
-* Level 1 - registered: The key has been encountered and saved, it has no signatures (that are meaningful to the nickagent).
+* Level 3 - **path trusted**: A path of cryptographic signatures can be traced from a trusted key to the key under evaluation. By default, only the provider key from the user's provider is a "trusted key".
+* Level 2 - **provider signed**: The key has been signed by a provider key for the same domain, but the provider key is not validated using a trust path (i.e. it is only registered)
+* Level 1 - **registered**: The key has been encountered and saved, it has no signatures (that are meaningful to the nickagent).
 
 A nickagent will try to validate using the highest level possible.
 
@@ -252,9 +256,9 @@ Automatic renewal
 
 A validated public key is replaced with a new key when:
 
-* The new key is path trusted
-* The new key is provider signed, but the old key is only registered.
-* The new key has a later expiration, and the old key is only registered and will expire "soon" (exact time TBD).
+* The new key is **path trusted**
+* The new key is **provider signed**, but the old key is only **registered**.
+* The new key has a later expiration, and the old key is only **registered** and will expire "soon" (exact time TBD).
 * The agent discovers a new subkey, but the master signing key is unchanged.
 
 In all other cases, the new key is rejected.
@@ -279,7 +283,7 @@ It is entirely up to the nickagent to decide what nickservers to query. If it wa
 
 However, nickagents should discover new nickservers and balance their queries to these nickservers for the purposes of availability, load balancing, network perspective, and hiding the user's association map.
 
-Whenever the nickagent is asked by a locally running application for a public key corresponding to an address on the domain `domain.org`, it may check to see if the host `nicknym.domain.org` exists. If the domain resolves, then the nickagent may add it to the pool of known nickservers.
+Whenever the nickagent is asked by a locally running application for a public key corresponding to an address on the domain `domain.org`, it may check to see if the host `nicknym.domain.org` exists. If the domain resolves, then the nickagent may add it to the pool of known nickservers. A nickagent should only perform this DNS check if it is able to do so over an encrypted tunnel.
 
 Additionally, a nickagent may be distributed with an initial list of "seed" nickservers. In this case, the nickagent is distributed with a copy of the CA certificate used to validate the TLS connection with each respective seed nickserver.
 
@@ -291,7 +295,7 @@ To be written.
 Auditing
 ----------------------------
 
-In order to keep the user's provider from handing out bogus public keys, a nickagent should occasionally make foreign queries of the user's own address against nickservers run by third parties.
+In order to keep the user's provider from handing out bogus public keys, a nickagent should occasionally make foreign queries of the user's own address against nickservers run by third parties. The recommended frequency of these queries is once per day, at a random time during local waking hours.
 
 In order to prevent a nickserver from handing out bogus provider keys, a nickagent should query multiple nickservers before a provider key is registered or path trusted.
 
@@ -315,7 +319,10 @@ Possible attacks:
 Preventing denial of service attacks
 ------------------------------------------
 
-To be written.
+The nicknym protocol does not yet have a good solution for dealing with the following problems:
+
+* Flooding nickservers with queries
+* Forge traffic from a provider, inserting bogus keys, in order to tarnish the reputation of a provider.
 
 Future enhancements
 ---------------------
