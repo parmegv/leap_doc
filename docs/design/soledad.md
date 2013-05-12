@@ -229,6 +229,8 @@ TO DO: determine what HMAC to use.
 Reference implementation of client
 ===================================
 
+https://github.com/leapcode/soledad
+
 Dependencies:
 
 * [U1DB](https://launchpad.net/u1db) provides an API and protocol for synchronised databases of JSON documents.
@@ -295,6 +297,8 @@ Synchronization-related classes:
 
 Reference implementation of server
 ======================================================
+
+https://github.com/leapcode/soledad
 
 Dependencies:
 

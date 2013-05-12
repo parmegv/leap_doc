@@ -223,7 +223,7 @@ TLS is required for all nickserver queries.
 When querying https://nicknym.domain.org, nickagent must validate the TLS connection in one of three ways:
 
 1. Using a commercial CA certificate distributed with the host operating system.
-2. Using a seeded CA certificate (see [Discovering nickservers](#Discoverying.nickservers)).
+2. Using a seeded CA certificate (see [Discovering nickservers](#Discovering.nickservers)).
 3. Using a custom self-signed CA certificate discovered for the domain, so long as the CA certificate was discovered via #1 or #2. Custom CA certificates may be discovered for a domain by making a provider key request of a nickserver (e.g. https://nicknym.known-domain.org/?address=new-domain.org).
 
 Optionally, a nickagent may make an encrypted query like so:
@@ -279,7 +279,7 @@ This means validation is a one way street: once a certain level of validation is
 Discovering nickservers
 --------------------------------
 
-It is entirely up to the nickagent to decide what nickservers to query. If it wanted to, a nickagent send all its requests to a single nickserver.
+It is entirely up to the nickagent to decide what nickservers to query. If it wanted to, a nickagent could send all its requests to a single nickserver.
 
 However, nickagents should discover new nickservers and balance their queries to these nickservers for the purposes of availability, load balancing, network perspective, and hiding the user's association map.
 
@@ -338,6 +338,8 @@ In addition to nickservers and SKS keyservers, there are two other potential met
 
 Reference nickagent implementation
 ====================================================
+
+https://github.com/leapcode/leap_client
 
 There is a reference nickagent implementation called "key manager" written in Python and integrated into the LEAP client. It uses Soledad to store its data.
 
@@ -461,7 +463,7 @@ private fetch_key_from_nickserver
 Reference nickserver implementation
 =====================================================
 
-The reference nickserver is written in Ruby 1.9 and licensed GPLv3. It is lightweight and scalable (supporting high concurrency, and reasonable latency), and uses EventMachine for asynchronous network IO. Data is stored in CouchDB.
+https://github.com/leapcode/nickserver
 
-For more information, see https://github.com/leapcode/nickserver
+The reference nickserver is written in Ruby 1.9 and licensed GPLv3. It is lightweight and scalable (supporting high concurrency, and reasonable latency), and uses EventMachine for asynchronous network IO. Data is stored in CouchDB.
 
