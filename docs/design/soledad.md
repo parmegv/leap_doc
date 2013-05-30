@@ -178,21 +178,42 @@ TO DO: code example
 Authentication
 -----------------------
 
-Unlike U1DB, Soledad only supports token authentication and does not support not support OAuth. Soledad itself does not handle authentication. Instead, this job is handled by a thin middleware layer running in front of the Soledad server daemon.
+Unlike U1DB, Soledad only supports token authentication and does not support not support OAuth. Soledad itself does not handle authentication. Instead, this job is handled by a thin HTTP middleware layer running in front of the Soledad server daemon. How the session token is obtained is beyond the scope of Soledad.
 
 Recovery and bootstrap
 ------------------------------------------
 
-In order to bootstrap Soledad on a new device, the user only needs their login name and password. Everything else is downloaded from the server.
+In order to bootstrap Soledad on a new device, or to recover data if all your devices have been wiped clean, the user has two options:
+
+1. password method: recover by specifying username and password.
+2. recovery code method: recover by specifying username and recovery code.
+
+This choice must be made in advance of attempting recovery (e.g. at some point after the user has Soledad successfully running on a device).
+
+**Recovery code**
+
+About the optional recovery code:
+
+* The recovery code should be randomly generated, at least 16 characters in length, and contain all lowercase letters (to make it sane to type into mobile devices).
+* The recovery code is not stored by Soledad. When the user needs to bootstrap a new device, a new code is generated. To be used for actual recovery, a user will need to record their recovery code by printing it out or writing it down.
+* The recovery code is independent of the password. In other words, if a recovery code is generated, then a user changes their password, the recovery code is still be sufficient to restore a user's account even if the user has lost the password. This feature is dependent on the server supporting a password reset token. Also, generating a new recovery code does not affect the password.
+* When a new recovery code is created, and new recovery document must be pushed to the recovery database. A code should not be shown to the user before this happens.
+* The recovery code expires when the recovery database record expires (see below).
+
+The purpose of the recovery code is to prevent a compromised or nefarious Soledad service provider from decrypting a user's storage. The benefit of a recovery code over the user password is that the password has a greater opportunity to be compromised by the server. Even if authentication is performed via Secure Remote Password, the server may still perform a brute force attack to derive the password.
 
 **Recovery database**
 
-In order to support this functionality, the Soledad client stores a recovery document in a special recovery database. This database is shared among all users.
+In order to support easy recovery, the Soledad client stores a recovery document in a special recovery database. This database is shared among all users.
 
 The recovery database supports two functions:
 
 * `get_doc(doc_id)`
 * `put_doc(doc_id, recovery_document_content)`
+
+Anyone may preform an unauthenticated `get_doc` request. To mitigate the potential attacks, the response to queries of the discovery database must have a long delay of X seconds. Also, the `doc_id` is very long (see below).
+
+Although the database is shared, the user must authenticate via the normal means before they are allowed to put a recovery document. Because of this, a nefarious server might potentially record which user corresponds to which recovery documents. A well behaved server, however, will not retain this information. If the server supports authentication via blind signatures, then this will not be an issue.
 
 **Recovery document**
 
@@ -204,27 +225,27 @@ An example recovery document:
       "kdf_salt": "400$8$5fb$61b499fe3366d947",
       "kdf_length": 128,
       "cipher": "aes128",
-      "soledad": "xxxxx"
+      "expires_on": "2014-07",
+      "soledad": "xxxxx",
+      "reset_token": "xxxxx"
     }
 
 About these fields:
 
-* `doc_id` is determined by the client and computed from `hmac(username@domain, user_password)`.
-* `soledad`: the encrypted `soledad.json`, created by `sym_encrypt(cipher, contents(soledad.json), derived_key)` (base64 encoded).
+* `doc_id` is determined by the client and computed from `hmac(username@domain, passcode)`.
 * `kdf`: the key derivation function to use. Only scrypt is currently supported (so for now, this value is ignored).
 * `kdf_salt`: the salt used in the kdf. The salt for scrypt is not random, but encodes important parameters like the limits for time and memory.
 * `kdf_length`: the length of the derived key resulting from the kdf.
-* `cipher`: what cipher to use to encrypt `soledad`. It must match kdf_length (i.e. the length of the derived_key).
+* `cipher`: what cipher to use to encrypt `soledad`. It must match `kdf_length` (i.e. the length of the derived_key).
+* `expires_on`: the month in which this recovery document should be purged from the database. The server may choose to purge documents before their expiration, but it should not let them linger after it.
+* `soledad`: the encrypted `soledad.json`, created by `sym_encrypt(cipher, contents(soledad.json), derived_key)` (base64 encoded).
+* `reset_token`: an optional encrypted password reset token, if supported by the server, created by `sym_encrypt(cipher, password_reset_token, derived_key)` (base64 encoded). The purpose of the reset token is to allow recovery using the recovery code even if the user has forgotten their password. It is only applicable if using recovery code method.
 
-**Authentication**
+Other variables:
 
-Unlike other Soledad requests, access to the recovery database does not require authentication. Anyone may query for any `doc_id`. The purpose of this is to prevent the server from tracking which recovery document corresponds to which user.
+* `passcode`: either the user password or the recovery code, depending on the option selected by the user.
+* `derived_key`: equal to `kdf(passcode, kdf_salt, kdf_length)`.
 
-To mitigate the vulnerabily created by this design, the response to queries of the discovery database have a very long delay.
-
-TO DO: determine the response delay.
-TO DO: come up with a better abuse prevention scheme (maybe blind signature by the provider).
-TO DO: determine what HMAC to use.
 
 Reference implementation of client
 ===================================
@@ -233,7 +254,7 @@ https://github.com/leapcode/soledad
 
 Dependencies:
 
-* [U1DB](https://launchpad.net/u1db) provides an API and protocol for synchronised databases of JSON documents.
+* [U1DB](https://launchpad.net/u1db) provides an API and protocol for synchronized databases of JSON documents.
 * [SQLCipher](http://sqlcipher.net/) provides a block-encrypted SQLite database used for local storage.
 * python-gnupg
 
