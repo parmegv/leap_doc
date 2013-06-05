@@ -29,6 +29,62 @@ Not pictured:
 * **tor**: Sets up a tor exit node, unconnected to any other service.
 * **dns**: Not yet implemented.
 
+Locations
+================================
+
+All nodes should have a `location.name` specified, and optionally additional information about the location, like the time zone. This location information is used for two things:
+
+* Determine which nodes can, or must, communicate with one another via a local network. The way some virtualization environments work, like OpenStack, requires that nodes communicate via the local network if they are on the same network.
+* Allows the client to prefer connections to nodes that are closer in physical proximity to the user. This is particularly important for OpenVPN nodes.
+
+The location stanza in a node's config file looks like this:
+
+    {
+      "location": {
+        "id": "ankara",
+        "name": "Ankara",
+        "country_code": "TR",
+        "timezone": "+2",
+        "hemisphere": "N"
+      }
+    }
+
+The fields:
+
+* `id`: An internal handle to use for this location. If two nodes have match `location.id`, then they are treated as being on a local network with one another. This value defaults to downcase and underscore of `location.name`.
+* `name`: Can be anything, might be displayed to the user in the client if they choose to manually select a gateway.
+* `country_code`: The [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1) two letter country code.
+* `timezone`: The timezone expressed as an offset from UTC (in standard time, not daylight savings). You can look up the timezone using this [handy map](http://www.timeanddate.com/time/map/).
+* `hemisphere`: This should be "S" for all servers in South America, Africa, or Australia. Otherwise, this should be "N".
+
+These location options are very imprecise, but good enough for most usage. The client often does not know its own location precisely either. Instead, the client makes an educated guess at location based on the OS's timezone and locale.
+
+If you have multiple nodes in a single location, it is best to use a tag for the location. For example:
+
+`tags/ankara.json`:
+
+    {
+      "location": {
+        "name": "Ankara",
+        "country_code": "TR",
+        "timezone": "+2",
+        "hemisphere": "N"
+      }
+    }
+
+`nodes/vpngateway.json`:
+
+    {
+      "services": "openvpn",
+      "tags": ["production", "ankara"],
+      "ip_address": "1.1.1.1",
+      "openvpn": {
+        "gateway_address": "1.1.1.2"
+      }
+    }
+
+Unless you are using OpenStack or AWS, setting `location` for nodes is not required. It is, however, highly recommended.
+
 Certificates
 ================================
 
@@ -101,7 +157,7 @@ Commercial certificates
 We strongly recommend that you use a commercial signed server certificate for your primary domain (in other words, a certificate with a common name matching whatever you have configured for `provider.domain`). This provides several benefits:
 
 1. When users visit your website, they don't get a scary notice that something is wrong.
-2. When a user runs the leap client, selecting your service provider will not cause a warning message.
+2. When a user runs the LEAP client, selecting your service provider will not cause a warning message.
 3. When other providers first discover your provider, they are more likely to trust your provider key if it is fetched over a commercially verified link.
 
 The LEAP platform is designed so that it assumes you are using a commercial cert for the primary domain of your provider, but all other servers are assumed to use non-commercial certs signed by the Server CA you create.
@@ -125,52 +181,13 @@ The private key file is extremely sensitive and care should be taken with its pr
 
 If your commercial CA has a chained CA cert, you should be OK if you just put the **last** cert in the chain into the `commercial_ca.crt` file. This only works if the other CAs in the chain have certs in the debian package `ca-certificates`, which is the case for almost all CAs.
 
-Locations
-================================
+Facts
+==============================
 
-Nodes with public services can have a location specified. This allows the client to prefer to make connections to the closer nodes. This is particularly important for OpenVPN nodes.
+There are a few cases when we must gather internal data from a node before we can successfully deploy to other nodes. This is what `facts.json` is for. It stores a snapshot of certain facts about each node, as needed. Entries in `facts.json` are updated automatically when you initialize, rename, or remove a node. To manually force a full update of `facts.json`, run:
 
-The location stanza in a node's config file looks like this:
+    leap facts update FILTER
 
-    {
-      "location": {
-        "name": "Ankara",
-        "country_code": "TR",
-        "timezone": "+2",
-        "hemisphere": "N"
-      }
-    }
+Run `leap help facts update` for more information.
 
-The fields:
-
-* `name`: Can be anything, might be displayed to the user in the client if they choose to manually select a gateway.
-* `country_code`: The [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1) two letter country code.
-* `timezone`: The timezone expressed as an offset from UTC (in standard time, not daylight savings). You can look up the timezone using this [handy map](http://www.timeanddate.com/time/map/).
-* `hemisphere`: This should be "S" for all servers in South America, Africa, or Australia. Otherwise, this should be "N".
-
-These location options are very imprecise, but this is good enough for our purpose. The client often does not know its own location precisely either. Instead, the client makes an educated guess at location based on the OS's timezone and locale.
-
-If you have multiple nodes in a single location, it is best to use a tag for the location. For example:
-
-`tags/ankara.json`:
-
-    {
-      "location": {
-        "name": "Ankara",
-        "country_code": "TR",
-        "timezone": "+2",
-        "hemisphere": "N"
-      }
-    }
-
-`nodes/vpngateway.json`:
-
-    {
-      "services": "openvpn",
-      "tags": ["production", "ankara"],
-      "ip_address": "1.1.1.1",
-      "openvpn": {
-        "gateway_address": "1.1.1.2"
-      }
-    }
-
+The file `facts.json` should be committed to source control. You might not have a `facts.json` if one is not required for your provider.

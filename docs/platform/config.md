@@ -115,6 +115,10 @@ When using evaluated ruby in a JSON configuration file, there are several specia
 
 The following methods are available to the evaluated ruby:
 
+`variable.variable`
+
+  > Any variable defined or inherited by a particular node configuration is available by just referencing it using either hash notation or object field notation (e.g. `['domain']['public']` or `domain.public`). Circular references are not allowed, but otherwise it is OK to nest evaluated values in other evaluated values. If a value has not been defined, the hash notation will return nil but the field notation will raise an exception. Properties of services, tags, and the global provider can all be referenced the same way. For example, `global.services['openvpn'].x509.dh`.
+
 `nodes`
 
   > A hash of all nodes. This list can be filtered.
@@ -147,22 +151,64 @@ The following methods are available to the evaluated ruby:
 
   > Returns the value of a secret in secrets.json (or creates it if necessary). E.g. `secret :couch_admin_password`
 
-`variable.variable`
+`hosts_file`
 
-  > Any variable defined or inherited by a particular node configuration is available by just referencing it using either hash notation or object field notation (e.g. `['domain']['public']` or `domain.public`). Circular references are not allowed, but otherwise it is OK to nest evaluated values in other evaluated values. If a value has not been defined, the hash notation will return nil but the field notation will raise an exception. Properties of services, tags, and the global provider can all be referenced the same way. For example, `global.services['openvpn'].x509.dh`.
+  > Returns a data structure that puppet will use to generate /etc/hosts. Care is taken to use the local IP of other hosts when needed.
 
-Using hashes
+`known_hosts_file`
+
+  > Returns the lines needed in a SSH `known_hosts` file.
+
+`stunnel_client(node_list, port, options={})`
+
+  > Returns a stunnel configuration data structure for the client side. Argument `node_list` is an `ObjectList` of nodes running stunnel servers. Argument `port` is the real port of the ultimate service running on the servers that the client wants to connect to.
+
+`stunnel_server(port)`
+
+  > Generates a stunnel server entry. The `port` is the real port targeted service.
+
+Hash tables
 -----------------------------------------
 
-The macros `nodes`, `nodes_like_me`, `global.services`, and `global.tags` all return a hash of other objects. You can reference these hashes either directly or using a filter:
+The macros `nodes`, `nodes_like_me`, `global.services`, and `global.tags` all return a hash table of configuration objects (either nodes, services, or tags). There are several ways to filter and process these hash tables:
 
-Direct access:
+Access an element by name:
 
     nodes['vpn1']                # returns node named 'vpn1'
     global.services['openvpn']   # returns service named 'openvpn'
 
-Filters:
+Create a new hash table by applying filters:
 
     nodes[:public_dns => true] # all nodes where public_dns == true
     nodes[:services => 'openvpn', :services => 'tor'] # openvpn OR tor
     nodes[:services => 'openvpn'][:tags => 'production']  # openvpn AND production
+    nodes[:name => "!bob"] # all nodes that are NOT named "bob"
+
+Create an array of values by selecting a single field:
+
+    nodes.field('location.name')
+    ==> ['seattle', 'istanbul']
+
+Create an array of hashes by selecting multiple fields:
+
+    nodes.fields('domain.full', 'ip_address')
+    ==> [
+      {'domain_full' => 'red.bitmask.net', 'ip_address' => '1.1.1.1'},
+      {'domain_full' => 'blue.bitmask.net', 'ip_address' => '1.1.1.2'},
+    ]
+
+Create a new hash table of hashes, with only certain fields:
+
+    nodes.pick_fields('domain.full', 'ip_address')
+    ==> {
+      "red" => {'domain_full' => 'red.bitmask.net', 'ip_address' => '1.1.1.1'},
+      "blue => {'domain_full' => 'blue.bitmask.net', 'ip_address' => '1.1.1.2'},
+    }
+
+With `pick_fields`, if there is only one field, it will generate a simple hash table:
+
+    nodes.pick_fields('ip_address')
+    ==> {
+      "red" => '1.1.1.1',
+      "blue => '1.1.1.2',
+    }
