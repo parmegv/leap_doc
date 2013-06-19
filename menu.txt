@@ -10,6 +10,7 @@ docs
     guide
     config
     commands
+    under-the-hood
   client
     user-guide
     bleeding-edge
