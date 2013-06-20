@@ -8,7 +8,7 @@
 %table.table.table-bordered
   %tr
     %td leap_client
-    %td Easy-to-use client for Linux, Mac, and Windows.
+    %td Desktop client application for secure communication, using the LEAP platform, supporting encrypted internet proxy, secure email, and secure chat (coming soon). The client is written in Python, runs on Linux, Mac, and Windows, and is licensed under the GPLv3.
     %td git://leap.se/leap_client
     %td= link 'github' => 'https://github.com/leapcode/leap_client'
 
@@ -17,28 +17,28 @@
 %table.table.table-bordered
   %tr
     %td leap_platform
-    %td Turn-key automation for communication service providers
+    %td Server automation recipes for the running secure communication services via the LEAP Platform. Written mostly using puppet, and licensed under the GPLv3.
     %td git://leap.se/leap_platform
     %td= link 'github' => 'https://github.com/leapcode/leap_platform'
 
   %tr
-    %td leap_ca
-    %td Client certificate generation daemon
-    %td git://leap.se/leap_ca
-    %td= link 'github' => 'https://github.com/leapcode/leap_ca'
+    %td leap_cli
+    %td Command line interface for managing a service provider running the LEAP platform. Written in ruby and released under the GPLv3.
+    %td git://leap.se/leap_cli
+    %td= link 'github' => 'https://github.com/leapcode/leap_cli'
 
   %tr
-    %td leap_cli
-    %td Command line interface to setup and manage servers running the LEAP platform
-    %td git://leap.se/leap_cli
-    %td
+    %td soledad
+    %td Soledad (Synchronization of Locally Encrypted Data Among Devices) provides a synchronized, client-encrypted document database.
+    %td git://github.com/leapcode/soledad
+    %td= link 'github' => 'https://github.com/leapcode/soledad'
 
 %h3 Web applications and libraries
 
 %table.table.table-bordered
   %tr
     %td leap_web
-    %td Web application for the LEAP platform, providing user management, tickets, billing, and REST API
+    %td Web application for the LEAP platform, providing user management, tickets, billing, and REST API.
     %td git://leap.se/leap_web
     %td= link 'github' => 'https://github.com/leapcode/leap_web'
   %tr
@@ -61,8 +61,3 @@
     %td Secure Remote Password (SRP) library for ruby
     %td git://github.com/leapcode/ruby_srp
     %td= link 'github' => 'https://github.com/leapcode/ruby_srp'
-  %tr
-    %td soledad
-    %td Synchronization of locally encrypted data among devices
-    %td git://github.com/leapcode/soledad
-    %td= link 'github' => 'https://github.com/leapcode/soledad'
