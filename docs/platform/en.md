@@ -7,7 +7,7 @@ If you have ever been a sysadmin for an organization or company that provides co
 
 > $%#*&!! It shouldn't have to be this hard.
 
-We agree! The LEAP Platform is consists of a set of complementary packages and recipes to automate the maintenance of LEAP services in a hardened Debian environment. Our goal is to make it as painless as possible for sysadmins to deploy and maintain an service provider's infrastructure.
+We agree! The LEAP Platform consists of a set of complementary packages and recipes to automate the maintenance of LEAP services in a hardened Debian environment. Our goal is to make it as painless as possible for sysadmins to deploy and maintain a service provider's infrastructure.
 
 There are three main parts to the platform:
 
