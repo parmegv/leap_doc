@@ -108,6 +108,21 @@ The `provider_base` directory is under the `leap_platform` specified in the file
 
 To see all the variables a node has inherited, you could run `leap inspect willamette`.
 
+Common configuration options
+----------------------------------------
+
+You can use the command `leap inspect` to see what options are available for a provider, node, service, or tag configuration. For example:
+
+* `leap inspect common` -- show the options inherited by all nodes.
+* `leap inspect --base common` -- show the common.json from `provider_base` without the local `common.json` inheritance applied.
+* `leap inspect webapp` -- show all the options available for the service `webapp`.
+
+Here are some of the more important options you should be aware of:
+
+* `ip_address` -- Required for all nodes, no default.
+* `ssh.port` -- The SSH port you want the node's OpenSSH server to bind to. This is also the default when trying to connect to a node, but if the node currently has OpenSSH running on a different port then run deploy with `--port` to override the `ssh.port` configuration value.
+* `mosh.enabled` -- If set to `true`, then mosh will be installed on the server. The default is `false`.
+
 Macros
 ----------------------------------------
 
