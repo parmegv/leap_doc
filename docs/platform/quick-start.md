@@ -1,7 +1,7 @@
 @title = 'LEAP Platform Quick Start'
 @nav_title = 'Quick Start'
 
-This tutorial that will walk you through the initial process of creating and deploying a service provider running the LEAP platform.
+This tutorial walks you through the initial process of creating and deploying a service provider running the [LEAP platform](platform). First examples aim to build a provider in a virtual environment, and in the end running in real hardware is targeted.
 
 First, a few definitions:
 
