@@ -11,6 +11,7 @@ docs
     config
     commands
     under-the-hood
+    known-issues
   client
     user-guide
     bleeding-edge
