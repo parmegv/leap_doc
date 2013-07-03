@@ -14,9 +14,9 @@ In this release the following issues are known, work-arounds are noted when avai
 
 . If when deploying your debian mirror fails for some reason, network anomoly or the mirror itself is out of date, then platform deployment will not succeed properly. Check the mirror is up and try to deploy again when it is resolved (see: https://leap.se/code/issues/1091)
 
-. If you have any errors during a run, please try to deploy again as this often solves non-deterministic issues that were not uncovered in our testing. Please re-deploy with `leap -v2 deploy` to get verbose logs and capture the complete output to provide to us for debugging.
+. If you have any errors during a run, please try to deploy again as this often solves non-deterministic issues that were not uncovered in our testing. Please re-deploy with `leap -v2 deploy` to get more verbose logs and capture the complete output to provide to us for debugging.
 
-. if you aren't using a single ssh key, but have different ones, you will need to define the following in your ~/.ssh/config: 
+. if you aren't using a single ssh key, but have different ones, you will need to define the following at the top of your ~/.ssh/config: 
   HostName <ip address>
   IdentityFile <path to identity file>
   
@@ -31,7 +31,7 @@ HostKey /etc/ssh/ssh_host_ecdsa_key and that file exists. If you made a change t
 
 . To remove an admin's access to your servers, please remove the directory for that user under the `users/` subdirectory in your provider directory and then remove that user's ssh keys from files/ssh/authorized_keys. When finished you *must* run a `leap deploy` to update that information on the servers (see: https://leap.se/code/issues/1863)
 
-. At the moment, it is only possible to add an admin who will have access to all Leap servers (see: https://leap.se/code/issues/2280)
+. At the moment, it is only possible to add an admin who will have access to all LEAP servers (see: https://leap.se/code/issues/2280)
 
 . This release has no ability to custom configure apt sources or proxies (see: https://leap.se/code/issues/1971)
 
