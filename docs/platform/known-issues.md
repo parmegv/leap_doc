@@ -1,5 +1,5 @@
 @title = 'Leap Platform Release Notes'
-@nav_title = 'Provider Platform'
+@nav_title = 'Known issues'
 @summary = 'Known issues in the Leap Platform.'
 @toc = true
 
