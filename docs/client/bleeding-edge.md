@@ -1,5 +1,5 @@
 @title = "HOWTO for running latest develop branch"
-@nav_title = "Running Lastest"
+@nav_title = "Running Latest"
 
 This document covers a how-to guide to:
 
