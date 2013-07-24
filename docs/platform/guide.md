@@ -165,12 +165,12 @@ The `ca` option in provider.json provides settings used when generating CAs and 
       "digest": "SHA256",
       "life_span": "10y",
       "server_certificates": {
-        "bit_size": 2024,
+        "bit_size": 2048,
         "digest": "SHA256",
         "life_span": "1y"
       },
       "client_certificates": {
-        "bit_size": 2024,
+        "bit_size": 2048,
         "digest": "SHA256",
         "life_span": "2m",
         "limited_prefix": "LIMITED",
@@ -180,7 +180,7 @@ The `ca` option in provider.json provides settings used when generating CAs and 
 
 To see what values are used for your provider, run `leap inspect provider.json`. You can modify the defaults as you wish by adding the values to provider.json.
 
-NOTE: A certificate `bit_size` greater than 2024 will probably not be recognized by most commercial CAs.
+NOTE: A certificate `bit_size` greater than 2048 will probably not be recognized by most commercial CAs.
 
 Certificate Authorities
 -----------------------------------------
@@ -244,6 +244,18 @@ The related commercial cert files are:
 The private key file is extremely sensitive and care should be taken with its provenance.
 
 If your commercial CA has a chained CA cert, you should be OK if you just put the **last** cert in the chain into the `commercial_ca.crt` file. This only works if the other CAs in the chain have certs in the debian package `ca-certificates`, which is the case for almost all CAs.
+
+If you want to add additional fields to the CSR, like country, city, or locality, you can configure these values in provider.json like so:
+
+      "ca": {
+        "server_certificates": {
+          "country": "US",
+          "state": "Washington",
+          "locality": "Seattle"
+        }
+      }
+
+If they are not present, the CSR will be created without them.
 
 Facts
 ==============================
