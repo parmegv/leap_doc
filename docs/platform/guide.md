@@ -157,28 +157,30 @@ Configuration options
 
 The `ca` option in provider.json provides settings used when generating CAs and certificates. The defaults are as follows:
 
-    "ca": {
-      "name": "= global.provider.ca.organization + ' Root CA'",
-      "organization": "= global.provider.name",
-      "organizational_unit": "= 'https://' + global.provider.name",
-      "bit_size": 4096,
-      "digest": "SHA256",
-      "life_span": "10y",
-      "server_certificates": {
-        "bit_size": 2048,
+    {
+      "ca": {
+        "name": "= global.provider.ca.organization + ' Root CA'",
+        "organization": "= global.provider.name[global.provider.default_language]",
+        "organizational_unit": "= 'https://' + global.provider.domain",
+        "bit_size": 4096,
         "digest": "SHA256",
-        "life_span": "1y"
-      },
-      "client_certificates": {
-        "bit_size": 2048,
-        "digest": "SHA256",
-        "life_span": "2m",
-        "limited_prefix": "LIMITED",
-        "unlimited_prefix": "UNLIMITED"
+        "life_span": "10y",
+        "server_certificates": {
+          "bit_size": 2048,
+          "digest": "SHA256",
+          "life_span": "1y"
+        },
+        "client_certificates": {
+          "bit_size": 2048,
+          "digest": "SHA256",
+          "life_span": "2m",
+          "limited_prefix": "LIMITED",
+          "unlimited_prefix": "UNLIMITED"
+        }
       }
     }
 
-To see what values are used for your provider, run `leap inspect provider.json`. You can modify the defaults as you wish by adding the values to provider.json.
+You should not need to override these defaults in your own provider.json, but you can if you want to. To see what values are used for your provider, run `leap inspect provider.json`.
 
 NOTE: A certificate `bit_size` greater than 2048 will probably not be recognized by most commercial CAs.
 
