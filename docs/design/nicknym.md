@@ -76,7 +76,7 @@ As we move down this list, each measure taken gets more complicated, requires mo
 
 *Why not use WOT?* Most users are empirically unable to properly maintain a web of trust. The concepts are hard, it is easy to mess up the signing practice, most people default to TOFU anyway, and very few users use revocation properly. Most importantly, the WOT exposes a user's social network, potentially highly sensitive information in its own right. When first proposed, WOT was a clever innovation, but contemporary threats have greatly reduced its usefulness.
 
-*Why not use DNSSEC?* There are many reasons why DNSSEC is should not be used for key validation. DNS records are slow to update. RSA Public keys will soon be too big for UDP packets (though this is not true of ECC), so putting keys in DNS will mean putting a URL to a key in DNS, so you might as well just use TLS. DNSSEC could still be of added benefit if you put the fingerprint in the DNS record, effectively leveraging the authority of DNSSEC to audit the weaker authority in the X.509 CA system. Mostly, however, a simple HTTP get request is a lot easier to deal with than DNS, both for the client and the server.
+*Why not use DANE/DNSSEC?* DANE is great for discovery and validation of server keys, but there are many reasons why it is not so good for user keys: DNS records are slow to update; DNS queries are observable, unlike HTTP over TLS; it is difficult for a provider to publish thousands of keys in DNS; it is much easier for a client to do a simple HTTP fetch (and more possible for HTML5 clients). Also, RSA Public keys will soon be too big for UDP packets (though this is not true of ECC), so putting keys in DNS will mean putting a URL to a key in DNS, so you might as well just use HTTP anyway.
 
 *Why not use Shared Secret?* Shared secrets, like with the Socialist Millionaire protocol, are cool in theory but prone to user error and frustration in practice. Was the secret "Invisible Zebra" or "invisibleZebra"? For the special case of advanced users with special security needs, however, a shared secret provides a much stronger validation than other methods of key binding (so long as the validation window is small).
 
@@ -111,6 +111,11 @@ Additional differences include:
 * Nicknym is protocol agnostic: Nicknym can be used with SMTP, XMPP, SIP, etc.
 * Nicknym relies on service provider adoption: With Nicknym, the strength of verification of public keys rests the degree to which a service provider adopts Nicknym. If a service provider does not support Nicknym, then effectively Nicknym opperates like STEED for that domain.
 
+**DANE**
+
+[DANE](https://datatracker.ietf.org/wg/dane/), and the specific proposal for [OpenPGP user keys using DANE](https://datatracker.ietf.org/doc/draft-wouters-dane-openpgp/), offer a standardized method for securely publishing and locating OpenPGP public keys in DNS.
+
+As noted above, DANE will be very cool if ever adopted widely, but user keys are probably not a good fit for DNSSEC, because of issues of observability of DNS queries and complexity on the server and client end.
 
 Nicknym protocol
 ==============================
@@ -220,11 +225,12 @@ Query security
 
 TLS is required for all nickserver queries.
 
-When querying https://nicknym.domain.org, nickagent must validate the TLS connection in one of three ways:
+When querying https://nicknym.domain.org, nickagent must validate the TLS connection in one of four possible ways:
 
 1. Using a commercial CA certificate distributed with the host operating system.
-2. Using a seeded CA certificate (see [Discovering nickservers](#Discovering.nickservers)).
-3. Using a custom self-signed CA certificate discovered for the domain, so long as the CA certificate was discovered via #1 or #2. Custom CA certificates may be discovered for a domain by making a provider key request of a nickserver (e.g. https://nicknym.known-domain.org/?address=new-domain.org).
+2. Using DANE TLSA record to discover and validate the server certificate.
+3. Using a seeded CA certificate (see [Discovering nickservers](#Discovering.nickservers)).
+4. Using a custom self-signed CA certificate discovered for the domain, so long as the CA certificate was discovered via #1 or #2 or #3. Custom CA certificates may be discovered for a domain by making a provider key request of a nickserver (e.g. https://nicknym.known-domain.org/?address=new-domain.org).
 
 Optionally, a nickagent may make an encrypted query like so:
 
@@ -332,8 +338,7 @@ Future enhancements
 In addition to nickservers and SKS keyservers, there are two other potential methods for discovering public keys:
 
 * **Webfinger** includes a standard mechanism for distributing a user's public key via a simple HTTP request. This is very easy to implement on the server, and very easy to consume on the client side, but there are not many webfinger servers with public keys in the wild.
-* **DNS** is used by multiple competing standards for key discovery. When and if one of these emerges predominate, Nicknym should attempt to use this method when available. DNS discovery, however, has some problems. DNS discovery of keys is much harder to implement, because the service provider must run their own customized authoritative nameserver. Also, since (RSA) keys can be too big for domain UDP packets, any future-proof DNS method relies on an HTTP request, thus undermining the potential benefit of decentralization you might get from using DNS rather than webfinger.
-
+* **DNS** is used by multiple competing standards for key discovery. When and if one of these emerges predominate, Nicknym should attempt to use this method when available.
 
 
 Reference nickagent implementation
