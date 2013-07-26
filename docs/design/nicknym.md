@@ -78,7 +78,7 @@ As we move down this list, each measure taken gets more complicated, requires mo
 
 *Why not use DANE/DNSSEC?* DANE is great for discovery and validation of server keys, but there are many reasons why it is not so good for user keys: DNS records are slow to update; DNS queries are observable, unlike HTTP over TLS; it is difficult for a provider to publish thousands of keys in DNS; it is much easier for a client to do a simple HTTP fetch (and more possible for HTML5 clients). Also, RSA Public keys will soon be too big for UDP packets (though this is not true of ECC), so putting keys in DNS will mean putting a URL to a key in DNS, so you might as well just use HTTP anyway.
 
-*Why not use Shared Secret?* Shared secrets, like with the Socialist Millionaire protocol, are cool in theory but prone to user error and frustration in practice. Was the secret "Invisible Zebra" or "invisibleZebra"? For the special case of advanced users with special security needs, however, a shared secret provides a much stronger validation than other methods of key binding (so long as the validation window is small).
+*Why not use Shared Secret?* Shared secrets, like with the Socialist Millionaire protocol, are cool in theory but prone to user error and frustration in practice. A typical user is not in a position to have established a prior secret with most of the people they need to make first contact with. Shared secrets also cannot be scaled to a group setting. Finally, shared secrets are often typed incorrectly (e.g. was the secret "Invisible Zebra" or "invisibleZebra"? This could be fixed with rules for secret normalization, but this is tricky and language specific). For the special case of advanced users with special security needs, however, a shared secret provides a much stronger validation than other methods of key binding (so long as the validation window is small).
 
 *Why not use Mail-back Verification?* If the provider distributes user keys, there is not any benefit to mail-back verification. The nicknym protocol could potentially benefit from a future enhancement to support mail-back for users on a non-cooperating legacy provider. However, at its best, mail-back is a very weak form of key validation.
 
@@ -116,6 +116,8 @@ Additional differences include:
 [DANE](https://datatracker.ietf.org/wg/dane/), and the specific proposal for [OpenPGP user keys using DANE](https://datatracker.ietf.org/doc/draft-wouters-dane-openpgp/), offer a standardized method for securely publishing and locating OpenPGP public keys in DNS.
 
 As noted above, DANE will be very cool if ever adopted widely, but user keys are probably not a good fit for DNSSEC, because of issues of observability of DNS queries and complexity on the server and client end.
+
+By relying on the central authority of the root DNS zone, and the authority of TLDs (many of which are of doubtful trustworthiness), DANE potentially suffers from problems of compromised or nefarious authorities. Because DNS queries are not secure, a single user is particularly vulnerable to MiTM attacks that rewrite all their DNS queries. Adopting an alternate DNS query system, like [DNSCurve](http://dnscurve.org/), [DNSCrypt](https://www.opendns.com/technology/dnscrypt/), an alternate HTTPS based API, or restricting DNS queries to a VPN, would go a long way to fix this problem, and would effectively turn any supporting DNS server into a network perspectives notary. Regardless, the other problems with using DANE for user keys remain.
 
 Nicknym protocol
 ==============================
