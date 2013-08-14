@@ -15,7 +15,7 @@ Nicknym is key agnostic, and supports whatever public key information is availab
 
 **Why is Nicknym needed?**
 
-Existing forms of secure identity are deeply flawed. These systems rely on either a single trusted entity (e.g. Skype), a vulnerable Certificate Authority system (e.g. S/MIME), or key identifiers that are not human memorable (e.g. OpenPGP, OTR). When an identity system is hard to use, it is effectively compromised because too few people take the time to use it properly.
+Existing forms of secure identity are deeply flawed. These systems rely on either a single trusted entity (e.g. Skype), a vulnerable Certificate Authority system (e.g. S/MIME), or key identifiers that are not human memorable (e.g. fingerprints used in OpenPGP, OTR, etc). When an identity system is hard to use, it is effectively compromised because too few people take the time to use it properly.
 
 The broken nature of existing identities systems (either in security or in usability) is especially troubling because identity remains a bedrock precondition for any message security: you cannot ensure confidentiality or integrity without confirming the authenticity of the other party. Nicknym is a protocol to solve this problem in a way that is backward compatible, easy for the user, and includes very strong authenticity.
 
@@ -57,6 +57,7 @@ There are a number of established methods for binding identifier to key:
 * [Network Perspective](http://convergence.io/)
 * Nonverbal Feedback (a la ZRTP)
 * Global Append-only Log
+* Key fingerprint as unique identifiers
 
 The methods differ widely, but they all try to solve the same general problem of proving that a person or organization is in control of a particular key.
 
@@ -74,7 +75,7 @@ As we move down this list, each measure taken gets more complicated, requires mo
 
 **Questions**
 
-*Why not use WOT?* Most users are empirically unable to properly maintain a web of trust. The concepts are hard, it is easy to mess up the signing practice, most people default to TOFU anyway, and very few users use revocation properly. Most importantly, the WOT exposes a user's social network, potentially highly sensitive information in its own right. When first proposed, WOT was a clever innovation, but contemporary threats have greatly reduced its usefulness.
+*Why not use WoT?* Most users are empirically unable to properly maintain a web of trust. The concepts are hard, it is easy to mess up the signing practice, most people default to TOFU anyway, and very few users use revocation properly. Most importantly, the WOT exposes a user's social network, potentially highly sensitive information in its own right. When first proposed, WOT was a clever innovation, but contemporary threats have greatly reduced its usefulness.
 
 *Why not use DANE/DNSSEC?* DANE is great for discovery and validation of server keys, but there are many reasons why it is not so good for user keys: DNS records are slow to update; DNS queries are observable, unlike HTTP over TLS; it is difficult for a provider to publish thousands of keys in DNS; it is much easier for a client to do a simple HTTP fetch (and more possible for HTML5 clients). Also, RSA Public keys will soon be too big for UDP packets (though this is not true of ECC), so putting keys in DNS will mean putting a URL to a key in DNS, so you might as well just use HTTP anyway.
 
@@ -84,17 +85,18 @@ As we move down this list, each measure taken gets more complicated, requires mo
 
 *Why not use Global Append-only Log?* Maybe we should, they are neat. However, current implementations are slow, resource intensive, and experimental (e.g. namecoin).
 
-*Why not use Nonverbal Feedback?* ZRTP can use non-verbal clues to establish secure identify because of the nature of a live phone call. This doesn't work for text only messaging.
+*Why not use Nonverbal Feedback?* ZRTP can use non-verbal clues to establish secure identity because of the nature of a live phone call. This doesn't work for text only messaging.
 
+*Why not use the key fingerprint as the unique identifier?* This is the strategy taken by all systems for peer-to-peer messaging (e.g. retroshare, bitmessage, etc). Depending on the length of the fingerprint, this method is very secure. Essentially, this approach neatly solves the binding problem by collapsing the key and the identifier together as one. The problem, of course, is that this is not very user friendly. Users must either have pre-arranged some way to exchange fingerprints, or they must fall back to one of the other methods for verification (shared secret, WoT, etc). The friction associated with pre-arranged sharing of fingerprints can be reduced with technology, using QR-codes and hand held devices, for example. In the best case scenario, however, fingerprints as identifiers will always be much less user friendly than simple username@domain.org addresses. The motivating premise behind Nicknym is that when an identity system is hard to use, it is effectively compromised because too few people take the time to use it properly.
 
 Related work
 ===================================
 
-**WebID and BrowserID**
+**WebID and Mozilla Persona**
 
-What about WebID or BrowserID? These are both interesting cryptographic identity standards that are gaining support and implementations. So why do we need something new?
+What about [WebID](http://www.w3.org/wiki/WebID) or [Mozilla Persona](https://www.mozilla.org/en-US/persona/)? These are both interesting standards for cryptographically proving identify, so why do we need something new?
 
-These protocols, and the poorly conceived OpenID Connect, are designed to address a fundamentally different problem: authenticating a user to a website. The problem of authenticating users to one another requires a different architecture entirely. There are some similarities, however, and in the long run Nicknym could be combined with something like BrowserID.
+These protocols, and the poorly conceived OpenID Connect, are designed to address a fundamentally different problem: authenticating a user to a website. The problem of authenticating users to one another requires a different architecture entirely. There are some similarities, however, and in the long run a Nicknym provider could also be a WebID and Mozilla Persona provider.
 
 **STEED**
 
@@ -145,6 +147,7 @@ A nickagent will attempt to discover the public key for a particular user addres
 * The request must use TLS (see [Query security](#Query.security)).
 * The query data should have a single field 'address'.
 * For POST requests to nicknym.domain.org, the query data may be encrypted to the the public OpenPGP key nicknym@domain.org (see [Query security](#Query.security)).
+* The request may include an "If-Modified-Since" header. In this case, the response might be "304 Not Modified".
 
 Requests may be local or foreign, and for user keys or for provider keys.
 
@@ -194,11 +197,29 @@ If the key returned for a foreign request contains multiple user addresses, they
 Nickserver response
 ---------------------------------
 
-A nickserver response is a JSON encoded map with a field "address" plus one or more of the following fields: "openpgp", "otr", "rsa", "ecc", "x509-client", "x509-server", "x509-ca".
+The nickserver will respond with one of the following status codes:
 
-A nickserver response is always signed with the OpenPGP public signing key associated with the address nicknym@domain.org. The signature is ASCII armored and appended to the JSON.
+* "200 Success": found keys for this address, and the result is in the body of the response encoded as JSON.
+* "304 Not Modified": if the request included an "If-Modified-Since" header and the keys in question have not been modified, the response will have status code 304.
+* "404 Not Found": no keys were found for this address.
+* "500 Error": An unknown error occurred. Details may be included in the body.
 
-For example:
+Responses with status code 200 include a body text that is a JSON encoded map with a field "address" plus one or more of the following fields: "openpgp", "otr", "rsa", "ecc", "x509-client", "x509-server", "x509-ca". For example:
+
+    {
+      "address": "alice@example.org",
+      "openpgp": "6VtcDgEKaHF64uk1c/crFhRHuFW9kTvgxAWAK01rXXjrxEa/aMOyXnVQuQINBEof...."
+    }
+
+Responses with status codes other than 200 include a body text that is a JSON encoded map with the following fields: "address", "status", and "message". For example:
+
+    {
+      "address": "bob@otherdomain.org",
+      "status": 404,
+      "message": "Not Found"
+    }
+
+A nickserver response is always signed with a OpenPGP public signing key associated with the provider. Both successful AND unsuccessful responses are signed. Responses to successful local requests must be signed by the key associated with the address "nicknym@domain.org". Foreign requests and non-200 responses may alternately be signed with a key associated with the address nickserver@domain.org. This allows for user keys to be signed off-site and in advance, if they so choose. The signature is ASCII armored and appended to the JSON.
 
     {
       "address": "alice@example.org",
@@ -209,11 +230,9 @@ For example:
     p8KAYDbVac3+c3vm30DjHO/RKF4Zq6+sTAIkrFvXOwYJl9KgjMpQVV/voInjxATz
     -----END PGP SIGNATURE-----
 
-Successful responses return HTTP code 200. If the address cannot be found, code 404 is returned.
-
 If the data in the request was encrypted to the public key nicknym@domain.org, then the JSON response and signature are additionally encrypted to the symmetric key found in the request and returned base64 encoded.
 
-TBD: how to best sign a 404?
+TBD: maybe we should just switch to a raw RSA or ECC signature.
 
 Query balancing
 ------------------------
@@ -298,6 +317,8 @@ Additionally, a nickagent may be distributed with an initial list of "seed" nick
 Cross-provider signatures
 ----------------------------------
 
+Nicknym does not support user signatures on user keys. There is no trust path from user to user. However, a service provider may sign the provider key of another provider.
+
 To be written.
 
 Auditing
@@ -324,13 +345,14 @@ Possible attacks:
 * Attack: A provider tracks all the requests for key discovery in order to build a map of association.
 * Countermeasure: By performing foreign key queries via third party nickservers, an agent can prevent any particular entity from tracking their queries.
 
-Preventing denial of service attacks
+Known vulnerabilities
 ------------------------------------------
 
 The nicknym protocol does not yet have a good solution for dealing with the following problems:
 
-* Flooding nickservers with queries
-* Forge traffic from a provider, inserting bogus keys, in order to tarnish the reputation of a provider.
+* Enumeration attack: an attacker can enumerate the list of all users for a provider by simply querying every possible username combination. We have no defense against this, although it would surely take a while.
+* DDoS attack: by their very nature, nickservers perform a bit of work for every request. Because of this, they are vulnerable to be overloaded by a a flood of bogus requests.
+* Besmirch attack: a MitM attacker can sully the reputation of a provider by generating many bad responses (responses signed with the wrong key), thus leading other nickservers and nicknym agents to consider the provider compromised.
 
 Future enhancements
 ---------------------
