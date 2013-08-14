@@ -10,7 +10,7 @@ Provider problems
 Meta-data can be recorded by the provider
 -------------------------------------------------
 
-Currently, the service provider is able to observe the meta-data routing information of messages in transit of their own users. This information is not stored, but a nefarious provider could observe this information in transit and record it.
+Currently, the service provider is able to observe the meta-data routing information of messages in transit of their own users (email and chat). This information is not stored, but a nefarious provider could observe this information in transit and record it.
 
 We have several plans to eliminate this, but these are not part of the initial release.
 
@@ -85,7 +85,7 @@ In order to shield the service provider from being pressured by a host governmen
 
 This is good for the provider, but not so good for LEAP, since this system could potentially place pressure on LEAP. Because LEAP does not have a provider-customer relationship with any user, LEAP cannot target compromised applications for particular users. LEAP could, however, introduce a backdoor in the client used by all users.
 
-To prevent this, we place to adopt [Gitian](https://gitian.org/) or something equivalent. Gitian allows for a way to standardize the entire build environment and build process in order for third parties to be able to verify that the released binary application does indeed match the correct source code.
+To prevent this, we plan to adopt [Gitian](https://gitian.org/) or something equivalent. Gitian allows for a way to standardize the entire build environment and build process in order for third parties to be able to verify that the released binary application does indeed match the correct source code.
 
 External authority problems
 =================================================
