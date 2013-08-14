@@ -146,10 +146,11 @@ Other variables:
 * `document_secret`: equal to `HMAC(doc_id, storage_secret)`. This value is unique for every document and only kept in memory. We use document_secret instead of simply storage_secret in order to hinder possible derivation of storage_secret by the server. Every `doc_id` is unique.
 * `content`: equal to `sym_decrypt(cipher, ciphertext, document_secret)`.
 
-When receiving a document with the above structure from the server, Soledad client will decrypt the `ciphertext` to find `content`, verify that the mac is correct, and then store `content` as a cleartext document in the local database replica.
+When receiving a document with the above structure from the server, Soledad client will first verify that `mac` is correct, then decrypt the `ciphertext` to find `content`, which it saves as a cleartext document in the local database replica.
 
-TO DO: determine supported ciphers
-TO DO: determine HMAC method
+TO DO: specify supported ciphers
+
+TO DO: specify supported HMAC
 
 Document synchronization
 -----------------------------------
