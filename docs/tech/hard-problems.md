@@ -14,6 +14,8 @@ If you take a survey of interesting initiatives to create more secure communicat
 6. **Availability problem**: People want to smoothly switch devices, and restore their data if they lose a device, but this very difficult to do securely.
 7. **Update problem**: Almost universally, software updates are done in ways that invite attacks and device compromises.
 
+These problems appear to be present regardless of which architectural approach you take (centralized authority, distributed peer-to-peer, or federated servers).
+
 It is possible to safely ignore many of these problems if you don't particularly care about usability or matching the features that users have grown accustomed to with contemporary methods of online communication. But if you do care about usability and features, then you are stuck with finding solutions to these problems.
 
 ## Our solutions
@@ -34,12 +36,12 @@ The problem:
 
 > Existing protocols are vulnerable to meta-data analysis, even though meta-data is often much more sensitive than content.
 
-As a short term measure, we are integrating opportunistic encrypted transport for email and chat messages when relayed between servers. There are two important aspects to this:
+As a short term measure, we are integrating opportunistic encrypted transport (TLS) for email and chat messages when relayed among servers. There are two important aspects to this:
 
-* Relaying servers need a solid way to discover and validate the keys of one another. For this, we are initially using DANE.
+* Relaying servers need a solid way to discover and validate the keys of one another. For this, we are initially using DNSSEC/DANE.
 * An attacker must not be able to downgrade the encrypted transport back to cleartext. For this, we are modifying software to ensure that encrypted transport cannot later be downgraded.
 
-This approach is potentially effective against external network observers, but does not protect the meta-data from the service providers themselves.
+This approach is potentially effective against external network observers, but does not protect the meta-data from the service providers themselves. Also, it does not, by itself, protect against more advanced attacks involving timing and traffic analysis.
 
 In the long term, we plan to adopt one of several different schemes for securely routing meta-data. These include:
 
@@ -56,13 +58,15 @@ The problem:
 
 > For encrypted communication, you must currently choose between forward secrecy or the ability to communicate asynchronously.
 
+In the example of email and chat, we have OpenPGP with email and OTR with chat: the former provides asynchronous capabilities, and the latter forward secrecy, but neither one supports both abilities.
+
 With the pace of growth in digital storage and decryption, forward secrecy is increasingly important. Otherwise, any encrypted communication you engage in today is likely to become cleartext communication in the near future.
 
 Because all email is asynchronous, encrypted email does not have forward secrecy. But this is a problem for chat too, because increasingly users demand the ability to send and receive offline chat messages, so we can no longer assume that chat is a synchronous protocol.
 
-In the short term, we are layering forward secret transport for email and chat relay on top of traditional object encryption. This approach is identical to our stop-gap approach for the meta-data problem, with the one addition that relaying servers need the ability to not simply negotiate TLS transport, but to also negotiate forward secret ciphers and to prevent a cipher downgrade.
+In the short term, we are layering forward secret transport for email and chat relay on top of traditional object encryption (OpenPGP). This approach is identical to our stop-gap approach for the meta-data problem, with the one addition that relaying servers need the ability to not simply negotiate TLS transport, but to also negotiate forward secret ciphers and to prevent a cipher downgrade.
 
-This approach is potentially effective against external network observers, but does not achieve forward secrecy from the from the service providers themselves.
+This approach is potentially effective against external network observers, but does not achieve forward secrecy from the service providers themselves.
 
 In the long term, we plan to work with other groups to create new encryption protocol standards that can be both asynchronous and forward secret. The essential idea is to combine both object encryption and session encryption, and to opportunistically upgrade to session encryption when possible, potentially using session keys that are long lived or kept alive until the next synchronous session. Currently, Open Whisper System's TextSecure is the only working example of using long lived session keys for simulating asynchronous communication with forward secrecy that we are aware of.
 
@@ -85,6 +89,8 @@ The problem:
 For example, when using secure chat or secure federated social networking, you need some way to link to external media, such as an image, video or file, that has the same security guarantees as the message itself. Embedding this type of resource in the messages themselves is prohibitively inefficient.
 
 We don't have a proposal for how to address this problem. There are a lot of great initiatives working under the banner of read-write-web, but these do not take encryption into account. In many ways, solutions to the resource problem are dependent on solutions to the the group problem.
+
+As with the group problem, most of the progress in this area has been by people working on encrypted file sync (e.g. strategies like Lazy Revocation and Key Regression).
 
 ### Availability problem
 

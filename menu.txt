@@ -1,10 +1,13 @@
 docs
+  tech
+    infosec
+    hard-problems
+    limitations
+    routing
   design
     overview
-    hard-problems
     nicknym
     soledad
-    limitations
   source
   platform
     quick-start
