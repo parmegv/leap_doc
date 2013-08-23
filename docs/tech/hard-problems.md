@@ -58,17 +58,19 @@ The problem:
 
 > For encrypted communication, you must currently choose between forward secrecy or the ability to communicate asynchronously.
 
-In the example of email and chat, we have OpenPGP with email and OTR with chat: the former provides asynchronous capabilities, and the latter forward secrecy, but neither one supports both abilities.
-
 With the pace of growth in digital storage and decryption, forward secrecy is increasingly important. Otherwise, any encrypted communication you engage in today is likely to become cleartext communication in the near future.
 
-Because all email is asynchronous, encrypted email does not have forward secrecy. But this is a problem for chat too, because increasingly users demand the ability to send and receive offline chat messages, so we can no longer assume that chat is a synchronous protocol.
+In the example of email and chat, we have OpenPGP with email and OTR with chat: the former provides asynchronous capabilities, and the latter forward secrecy, but neither one supports both abilities. We need both better security for email and the ability to send/receive offline chat messages.
 
 In the short term, we are layering forward secret transport for email and chat relay on top of traditional object encryption (OpenPGP). This approach is identical to our stop-gap approach for the meta-data problem, with the one addition that relaying servers need the ability to not simply negotiate TLS transport, but to also negotiate forward secret ciphers and to prevent a cipher downgrade.
 
 This approach is potentially effective against external network observers, but does not achieve forward secrecy from the service providers themselves.
 
-In the long term, we plan to work with other groups to create new encryption protocol standards that can be both asynchronous and forward secret. The essential idea is to combine both object encryption and session encryption, and to opportunistically upgrade to session encryption when possible, potentially using session keys that are long lived or kept alive until the next synchronous session. Currently, Open Whisper System's TextSecure is the only working example of using long lived session keys for simulating asynchronous communication with forward secrecy that we are aware of.
+In the long term, we plan to work with other groups to create new encryption protocol standards that can be both asynchronous and forward secret. There are several proposals for this:
+
+* [Forward Secrecy Extensions for OpenPGP](http://tools.ietf.org/html/draft-brown-pgp-pfs-03)
+* [Forward Secrecy for Asynchronous Messages](https://whispersystems.org/blog/asynchronous-security/)
+* Trevor Perrin's unpublished "Conversation Encryption" protocol
 
 ### Group problem
 
