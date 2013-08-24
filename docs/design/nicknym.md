@@ -368,7 +368,7 @@ In addition to nickservers and SKS keyservers, there are two other potential met
 Reference nickagent implementation
 ====================================================
 
-https://github.com/leapcode/leap_client
+https://github.com/leapcode/keymanager
 
 There is a reference nickagent implementation called "key manager" written in Python and integrated into the LEAP client. It uses Soledad to store its data.
 
