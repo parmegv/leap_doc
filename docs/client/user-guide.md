@@ -16,7 +16,7 @@ Or from the github mirror
 
 Once you have grabbed a copy of the sources, you can install it into your site-packages easily
 
-    $ pyton setup.py install
+    $ python setup.py install
 
 
 Running
