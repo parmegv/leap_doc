@@ -43,6 +43,10 @@ HostKey /etc/ssh/ssh_host_ecdsa_key and that file exists. If you made a change t
 
 . leap add-user --self allows only one key - if you run that command twice with different keys, you will just replace the key with the second key. To add a second key, add it manually to files/ssh/authorized_keys (see: https://leap.se/code/issues/866)
 
+. Missing ECDSA host key: if you upgraded from Debian squeeze to wheezy, your server might not have an ECDSA host key configured. leap node init will fail with 
+  `FAILED ssh-keyscan: no hostkey alg (must be missing an ecdsa public host key)`
+  You can solve this easily with `dpkg-reconfigure openssh-server` on your server.
+
 Deploying
 ---------
 
