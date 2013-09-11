@@ -13,6 +13,7 @@ docs
     quick-start
     guide
     config
+    examples
     commands
     under-the-hood
     known-issues
