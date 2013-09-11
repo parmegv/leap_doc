@@ -46,6 +46,7 @@ There are a couple options to preview your source files without needing to run t
 
 * Markdown preview for Chrome: https://chrome.google.com/webstore/detail/markdown-preview/jmchmkecamhbiokiopfpnfgbidieafmd
 * Markdown preview for Sublime: https://github.com/revolunet/sublimetext-markdown-preview
+* Markdown preview for Firefox: https://addons.mozilla.org/de/firefox/addon/markdown-viewer/  (see https://addons.mozilla.org/en-US/firefox/addon/markdown-viewer/reviews/423328/ for rendering .md file extensions)
 
 Setting page properties
 ---------------------------------
