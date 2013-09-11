@@ -1,6 +1,5 @@
 @title = 'Examples'
 @summary = 'Example provider setups using the LEAP platform.'
-# @toc = true
 
 A minimal three node OpenVPN provider
 =======================================
