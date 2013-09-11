@@ -1,0 +1,15 @@
+what to test before a release 
+=============================
+
+deployment tests
+----------------
+deployment to PC
+deployment to KVM
+deployment to vagrant
+deployment of everything to one node
+
+post deployment tests
+---------------------
+webapp works? create a user? login as that user?
+client works with the above user?
+check firewall ports?
