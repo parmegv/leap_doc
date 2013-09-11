@@ -11,8 +11,7 @@ We are going to create a minimal LEAP provider offering OpenVPN service. This ba
 
 Our goal is something like this:
 
-> leap list
-
+    leap list
            NODES   SERVICES           TAGS
             clam   couchdb
         elephant   webapp
@@ -35,7 +34,8 @@ Add some nodes:
 
     leap node add clam ip_address:176.53.69.22 services:couchdb
     leap node add elephant ip_address:176.53.69.13 services:webapp
-    leap node add snail ip_address:176.53.69.14 openvpn.gateway_address:176.53.69.15 services:openvpn
+    leap node add snail ip_address:176.53.69.14 \
+      openvpn.gateway_address:176.53.69.15 services:openvpn
 
 NOTE: openvpn gateways must be assigned two IP addresses, one for the host itself and one for the openvpn gateway. We do this to prevent incoming and outgoing VPN traffic on the same IP. Without this, the client might send some traffic to other VPN users in the clear, bypassing the VPN.
 
@@ -43,15 +43,14 @@ Now that you have the nodes configured, you should create the DNS entries for th
 
 Set up your DNS with these hostnames:
 
-> leap list --print ip_address,domain.full,dns.aliases
-
+    leap list --print ip_address,domain.full,dns.aliases
         clam  176.53.69.22, clam.bitmask.net, null
-    elephant  176.53.69.13, elephant.bitmask.net, api.bitmask.net, nicknym.bitmask.net
+    elephant  176.53.69.13, elephant.bitmask.net, api.bitmask.net
        snail  176.53.69.14, snail.bitmask.net, null
 
 Alternately, you can adapt this zone file snippet:
 
-> leap compile zone
+    leap compile zone
 
 Create certificates
 ------------------------------------
