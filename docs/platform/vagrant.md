@@ -1,4 +1,4 @@
-Konwn working combinations
+Known working combinations
 --------------------------
 
 Please consider that using other combinations might work for you as well, these are just the combinations we tried and worked for us:
