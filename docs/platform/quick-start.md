@@ -44,14 +44,14 @@ Install leap
 
 Alternately, you can install `leap` from source:
 
-    git clone git://leap.se/leap_cli.git
+    git clone https://leap.se/git/leap_cli
     cd leap_cli
     rake build
 -->
 
 Install `leap` command from source:
 
-    git clone git://leap.se/leap_cli.git
+    git clone https://leap.se/git/leap_cli
     cd leap_cli
     rake build
 
