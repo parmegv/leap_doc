@@ -5,7 +5,7 @@
 Introduction
 =====================
 
-Soledad is a system for to allow client applications the ability to securely share synchronized document databases. Soledad is based on Ubuntu's U1DB, "a cross-platform, cross-device, syncable database API", but with the addition of client-side encryption of documents stored on the server, and encryption of the local database replica.
+Soledad allows client applications to securely share synchronized document databases. Soledad is based on Ubuntu's U1DB, "a cross-platform, cross-device, syncable database API", but with the addition of client-side encryption of database replicas and documents stored on the server.
 
 Key aspects of Soledad include:
 
@@ -23,8 +23,8 @@ Goals
 
 **Security goals**
 
-* *Client-side encryption:* Before any data is synced to the cloud, it should be encrypted/decrypted on the client device.
-* *Encrypted local storage:* Any data cached or stored on the client should be stored in an encrypted format.
+* *Client-side encryption:* Before any data is synced to the cloud, it should be encrypted on the client device.
+* *Encrypted local storage:* Any data cached in the client should be stored in an encrypted format.
 * *Resistant to offline attacks:* Data stored on the server should be highly resistant to offline attacks (i.e. an attacker with a static copy of data stored on the server would have a very hard time discerning much from the data).
 * *Resistant to online attacks:* Analysis of storing and retrieving data should not leak potentially sensitive information.
 * *Resistance to data tampering:* The server should not be able to provide the client with old or bogus data for a document.
@@ -66,22 +66,28 @@ Soledad protocol
 Storage secret
 -----------------------------------
 
-When a client application first wants to use Soledad, it must provide the user's password to unlock the `storage_secret`. The `storage_secret` is a long, randomly generated symmetric key used to encrypt both the documents stored on the server and the local replica of these documents.
+When a client application first wants to use Soledad, it must provide the user's password to unlock the `storage_secret`. The `storage_secret` is a long, randomly generated symmetric key used to generate encryption keys for both the documents stored on the server and the local replica of these documents.
 
-TO ADD: example code
+    from leap.soledad.client import Soledad
+    sol = Soledad('<user_uid>', '<user_passphrase>',
+                  secrets_path='~/.config/leap/soledad/<user_uid>.secret',
+                  local_db_path='~/.config/leap/soledad/<user_uid>.db',
+                  server_url='https://<soledad_server_url>',
+                  cert_file='~/.config/leap/providers/<provider>/keys/ca/cacert.pem',
+                  secret_id='<storage_secret_id>')  # optional argument
 
-The `storage_secret` is saved locally on disk in the file `soledad.json`, block encrypted using a derived key. The derived key is obtained from the user's password.
+The `storage_secret` is saved locally on disk in the file `<user-uid>.secret`, block encrypted using a derived key. The derived key is obtained from the user's password.
 
-The file `soledad.json` has a field `storage_secrets` that looks like so:
+The file `<user-uid>.secret` has a field `storage_secrets` that looks like so:
 
     {
       "storage_secrets": {
         "<secret_id>": {
           "kdf": "scrypt",
           "kdf_salt": "400$8$5fb$61b499fe3366d947",
-          "kdf_length": 128,
-          "cipher": "aes128",
-          "length": 512,
+          "kdf_length": 256,
+          "cipher": "aes256",
+          "length": 1024,
           "secret": "<encrypted storage_secret 1>",
         }
       }
@@ -89,20 +95,18 @@ The file `soledad.json` has a field `storage_secrets` that looks like so:
 
 The `storage_secrets` entry is a map that stores information about each storage key, indexed by the id of each key. For each storage key, the following fields are stored:
 
-* `kdf`: the key derivation function to use. Only scrypt is currently supported (so for now, this value is ignored).
+* `secret_id`: a handle used to refer to a particular storage_secret and equal to `sha256(storage_secret)`.
+* `kdf`: the key derivation function to use. Only scrypt is currently supported.
 * `kdf_salt`: the salt used in the kdf. The salt for scrypt is not random, but encodes important parameters like the limits for time and memory.
 * `kdf_length`: the length of the derived key resulting from the kdf.
-* `secret`: the encrypted `storage_secret`, created by `sym_encrypt(cipher, storage_secret, derived_key)` (base64 encoded).
-* `length`: the length of `storage_secret`, when not encrypted.
 * `cipher`: what cipher to use to encrypt `storage_secret`. It must match kdf_length (i.e. the length of the derived_key).
-* `secret_id`: a handle used to refer to a particular storage_secret and equal to `md5(storage_secret)`.
+* `length`: the length of `storage_secret`, when not encrypted.
+* `secret`: the encrypted `storage_secret`, created by `sym_encrypt(cipher, storage_secret, derived_key)` (base64 encoded).
 
 Other variables:
 
 * `derived_key` is equal to `kdf(user_password, kdf_salt, kdf_length)`.
 * `storage_secret` is equal to `sym_decrypt(cipher, secret, derived_key)`.
-
-In the current version, only one `storage_secret` is supported.
 
 The `storage_secret` is shared among all devices with access to a particular user's Soledad database. See [Recovery and bootstrap](#Recovery.and.bootstrap) for how the storage_secret is initially installed on a device.
 
@@ -120,7 +124,12 @@ This is unchanged and identical to the [API used in U1DB](http://pythonhosted.or
 * Document indexing and searching: `create_index()`, `list_indexes()`, `get_from_index()`, `delete_index()`.
 * Document conflict resolution: `get_doc_conflicts()`, `resolve_doc()`.
 
-TO ADD: code examples
+    # create document, change it and sync
+    sol.create_doc({'my': 'doc'}, doc_id='mydoc')
+    doc = sol.get_doc('mydoc')
+    doc.content = {'new': 'content'}
+    sol.put_doc(doc)
+    sol.sync()
 
 Document encryption
 ------------------------
@@ -128,39 +137,44 @@ Document encryption
 Before a JSON document is synced with the server, it is transformed into a document that looks like so:
 
     {
-      "scheme": "aes128",
-      "secret_id": "1",
-      "ciphertext": "xxxxxxxxx",
-      "mac": "xxxxxxx"
+      "_enc_json": "<encrypted_doc_content>",
+      "_enc_scheme": "symkey",
+      "_enc_method": "aes256ctr",
+      "_enc_iv": "<initialization_vector>",
+      "_mac": "<auth_mac>",
+      "_mac_method": "hmac"
     }
 
 About these fields:
 
-* `ciphertext`: The original JSON document, encrypted and base64 encoded. `ciphertext` is equal to `sym_encrypt(cipher, content, document_secret)`.
-* `scheme`: Information about the block cipher that is used to encrypt this document.
-* `secret_id`: The id of the storage_secret that was used to generate the `document_key`.
-* `mac`: Defined as `HMAC(doc_id|rev|ciphertext, document_secret)`. The purpose of this field is to prevent the server from tampering with the stored documents.
+* `_enc_json`: The original JSON document, encrypted and base64 encoded. `ciphertext` is equal to `sym_encrypt(cipher, content, document_secret)`.
+* `_enc_scheme`: Information about the encryption scheme used to encrypt this document (i.e.'pubkey', 'symkey' or 'none').
+* `_enc_method`: Information about the block cipher that is used to encrypt this document.
+* `_mac`: Defined as `mac(doc_id|rev|ciphertext, document_secret)`. The purpose of this field is to prevent the server from tampering with the stored documents.
+* `_mac_method`: The method used to calculate the mac above (currently hmac).
 
 Other variables:
 
-* `document_secret`: equal to `HMAC(doc_id, storage_secret)`. This value is unique for every document and only kept in memory. We use document_secret instead of simply storage_secret in order to hinder possible derivation of storage_secret by the server. Every `doc_id` is unique.
+* `document_secret`: equal to `mac(doc_id, storage_secret)`. This value is unique for every document and only kept in memory. We use document_secret instead of simply storage_secret in order to hinder possible derivation of storage_secret by the server. Every `doc_id` is unique.
 * `content`: equal to `sym_decrypt(cipher, ciphertext, document_secret)`.
 
-When receiving a document with the above structure from the server, Soledad client will first verify that `mac` is correct, then decrypt the `ciphertext` to find `content`, which it saves as a cleartext document in the local database replica.
+When receiving a document with the above structure from the server, Soledad client will first verify that `_mac` is correct, then decrypt the `_enc_json` to find `content`, which it saves as a cleartext document in the local database replica.
 
-TO DO: specify supported ciphers
-
-TO DO: specify supported HMAC
+Currently supported encryption ciphers are AES256 (CTR mode) and XSalsa20;
+currently supported MAC method is HMAC.
 
 Document synchronization
 -----------------------------------
 
-Soledad follows the U1DB synchronization protocol, with two changes:
+Soledad follows the U1DB synchronization protocol, with some changes:
 
-* Soledad adds the ability to flag some documents so they are not synchronized by default.
-* Soledad will refuse to synchronize a document if it is encrypted and the MAC is incorrect.
+* Add the ability to flag some documents so they are not synchronized by default.
+* Refuse to synchronize a document if it is encrypted and the MAC is incorrect.
+* Always use `https://<soledad_server_url>/user-<user_uid>` as the synchronization URL.
 
-TO ADD: code examples
+    doc = sol.create_doc({'some': 'data'})
+    doc.syncable = False
+    sol.sync()  # will not send the above document to the server!
 
 Document IDs
 --------------------
@@ -172,14 +186,12 @@ Re-keying
 
 Sometimes there is a need to change the `storage_secret`. Rather then re-encrypt every document, Soledad implements a system called "lazy revocation" where a new storage_secret is generated and used for all subsequent encryption. The old storage_secret is still retained and used when decrypting older documents that have not yet been re-encrypted with the new storage_secret.
 
-Implementation status: not yet.
-
-TO DO: code example
+    sol.change_passphrase('<new_passphrase>')
 
 Authentication
 -----------------------
 
-Unlike U1DB, Soledad only supports token authentication and does not support not support OAuth. Soledad itself does not handle authentication. Instead, this job is handled by a thin HTTP middleware layer running in front of the Soledad server daemon. How the session token is obtained is beyond the scope of Soledad.
+Unlike U1DB, Soledad only supports token authentication and does not support OAuth. Soledad itself does not handle authentication. Instead, this job is handled by a thin HTTP WSGI middleware layer running in front of the Soledad server daemon, which retrieves valid tokens from a certain shared database and compares with the user-provided token. How the session token is obtained is beyond the scope of Soledad.
 
 Recovery and bootstrap
 ------------------------------------------
@@ -258,6 +270,8 @@ Dependencies:
 * [U1DB](https://launchpad.net/u1db) provides an API and protocol for synchronized databases of JSON documents.
 * [SQLCipher](http://sqlcipher.net/) provides a block-encrypted SQLite database used for local storage.
 * python-gnupg
+* scrypt
+* pycryptopp
 
 Local storage
 --------------------------
@@ -325,8 +339,10 @@ https://github.com/leapcode/soledad
 Dependencies:
 
 * [CouchDB](https://couchdb.apache.org/] for server storage, via [python client library](https://pypi.python.org/pypi/CouchDB/0.8).
-* WSGI middleware for authentication.
 * [Twisted](http://twistedmatrix.com/trac/) to run the WSGI application.
+* scrypt
+* pycryptopp
+* PyOpenSSL
 
 CouchDB backend
 -------------------------------
