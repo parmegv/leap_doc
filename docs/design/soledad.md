@@ -124,6 +124,7 @@ This is unchanged and identical to the [API used in U1DB](http://pythonhosted.or
 * Document indexing and searching: `create_index()`, `list_indexes()`, `get_from_index()`, `delete_index()`.
 * Document conflict resolution: `get_doc_conflicts()`, `resolve_doc()`.
 
+
     # create document, change it and sync
     sol.create_doc({'my': 'doc'}, doc_id='mydoc')
     doc = sol.get_doc('mydoc')
