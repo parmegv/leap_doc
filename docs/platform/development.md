@@ -45,7 +45,7 @@ Adding development nodes to your provider
 
 Now you will add local-only Vagrant development nodes to your provider. 
 
-You do not need to setup a different provider instance for development, in fact it is more convenient if you do not, but you can if you wish.  If you do not have a provider already, you will need to create one and configure it before continuing (see: x). 
+You do not need to setup a different provider instance for development, in fact it is more convenient if you do not, but you can if you wish.  If you do not have a provider already, you will need to create one and configure it before continuing (it is recommended you go through the [Quick Start](quick-start) before continuing down this path). 
 
 
 Create local development nodes
