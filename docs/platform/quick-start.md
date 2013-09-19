@@ -1,6 +1,9 @@
 @title = 'LEAP Platform Quick Start'
 @nav_title = 'Quick Start'
 
+Quick Start
+===========
+
 This tutorial walks you through the initial process of creating and deploying a minimal service provider running the [LEAP platform](platform). This Quick Start guide will guide you through building a three node OpenVPN provider.
 
 Our goal
@@ -44,6 +47,11 @@ All the commands in this tutorial are run on your sysadmin machine. In order to 
 
 We will walk you through each of these steps.
 
+
+Prepare your environment
+========================
+
+There are a few things you need to setup before you can get going. Just some packages, the LEAP cli and the platform.
 
 Install pre-requisites
 --------------------------------
@@ -115,12 +123,15 @@ First we'll create a directory for LEAP things, and then we'll check out the pla
     $ git submodule sync; git submodule update --init
 
 
-Create a provider
------------------
+Provider Setup
+==============
 
 A provider instance is a directory tree, usually stored in git, that contains everything you need to manage an infrastructure for a service provider. In this case, we create one for example.net and call the instance directory 'example'.
 
     $ mkdir -p ~/leap/example
+
+Bootstrap the provider
+-----------------------
 
 Now, we will initialize this directory to make it a provider instance. Your provider instance will need to know where it can find the local copy of the git repository leap_platform, which we setup in the previous step. 
 
@@ -157,8 +168,8 @@ Now add yourself as a privileged sysadmin who will have access to deploy to serv
 
 NOTE: in most cases, `leap` must be run from within a provider instance directory tree (e.g. ~/leap/example).
 
-Create certificates
-------------------------------------
+Create provider certificates
+----------------------------
 
 Create two certificate authorities, one for server certs and one for client certs:
 
@@ -201,8 +212,8 @@ For a full list of possible settings, you can use `leap inspect` to see how prov
     leap inspect provider.json
 
 
-Setup the provider's nodes and the services that will run on those nodes
-------------------------------------------------------------------------
+Setup the provider's nodes and services
+---------------------------------------
 
 A "node" is a server that is part of your infrastructure. Every node can have one or more services associated with it. Some nodes are "local" and used only for testing, see [Development](developmet) for more information.
 
@@ -297,10 +308,12 @@ You can run `leap -v2 deploy` to see exactly what commands are being executed.
 
 <!-- See [under the hood](under-the-hood) for more details. -->
 
+
 Test that things worked correctly
----------------------------------
+=================================
 
 You should now have three machines with the LEAP platform deployed to them, one for the web application, one for the database and one for the OpenVPN gateway. 
+
 
 Access the web application
 --------------------------------------------
@@ -330,8 +343,13 @@ You should be able to simply test that the OpenVPN gateway works properly by doi
 Or, you can use the LEAP client (called "bitmask") to connect to your new provider, create a user and then connect to the VPN.
 
 
-Additional commands
--------------------------------------------
+Additional information
+======================
+
+It is useful to know a few additional things.
+
+Useful commands
+---------------
 
 Here are a few useful commands you can run on your new local nodes:
 
