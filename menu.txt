@@ -16,6 +16,7 @@ docs
     commands
     under-the-hood
     known-issues
+    development
   client
     user-guide
     bleeding-edge
