@@ -15,16 +15,11 @@ When adding a new node to your provider, you should ask yourself four questions:
 
 Brief overview of the services:
 
-![services diagram](service-diagram.png)
-
 * **webapp**: The web application. Runs both webapp control panel for users and admins as well as the REST API that the client uses. Needs to communicate heavily with `couchdb` nodes. You need at least one, good to have two for redundancy. The webapp does not get a lot of traffic, so you will not need many.
 * **couchdb**: The database for users and user data. You can get away with just one, but for proper redundancy you should have at least three. Communicates heavily with `webapp` and `mx` nodes.
 * **soledad**: Handles the data syncing with clients. Typically combined with `couchdb` service, since it communicates heavily with couchdb. (not currently in stable release)
 * **mx**: Incoming and outgoing MX servers. Communicates with the public internet, clients, and `couchdb` nodes. (not currently in stable release)
 * **openvpn**: OpenVPN gateway for clients. You need at least one, but want as many as needed to support the bandwidth your users are doing. The `openvpn` nodes are autonomous and don't need to communicate with any other nodes. Often combined with `tor` service.
-
-Not pictured:
-
 * **monitor**: Internal service to monitor all the other nodes. Currently, you can have zero or one `monitor` nodes.
 * **tor**: Sets up a tor exit node, unconnected to any other service.
 * **dns**: Not yet implemented.
