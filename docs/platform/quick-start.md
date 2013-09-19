@@ -1,21 +1,51 @@
 @title = 'LEAP Platform Quick Start'
 @nav_title = 'Quick Start'
 
-This tutorial walks you through the initial process of creating and deploying a service provider running the [LEAP platform](platform). First examples aim to build a provider in a virtual environment, and in the end running in real hardware is targeted.
+This tutorial walks you through the initial process of creating and deploying a minimal service provider running the [LEAP platform](platform). This Quick Start guide will guide you through building a three node OpenVPN provider.
 
-First, a few definitions:
+Our goal
+------------------
 
-* **node:** A server that is part of the service provider's infrastructure. All nodes are running the Debian GNU/Linux operating system.
-* **sysadmin:** This is you.
-* **sysadmin machine:** Your desktop or laptop computer that you use to control the nodes. This machine can be running any variant of Unix, Linux, or Mac OS (however, only Debian derivatives are supported at the moment).
+We are going to create a minimal LEAP provider offering OpenVPN service. This basic setup can be expanded by adding more OpenVPN nodes to increase capacity, or more webapp and couchdb nodes to increase availability (performance wise, a single couchdb and a single webapp are more than enough for most usage, since they are only lightly used, but you might want redundancy).
 
-All the commands in this tutorial are run on your sysadmin machine. In order to complete the tutorial, the sysadmin machine must:
+Our goal is something like this:
 
-* Be a real machine with virtualization support in the CPU (VT-x or AMD-V). In other words, not a virtual machine.
-* Have at least 4gb of RAM.
-* Have a fast internet connection (because you will be downloading a lot of big files, like virtual machine images).
+    leap list
+           NODES   SERVICES           TAGS
+            clam   couchdb
+        elephant   webapp
+           snail   openvpn
 
-Install prerequisites
+NOTE: You won't be able to run those `leap list` commands yet, not until we actually create the node configurations.
+
+Requirements
+------------
+
+In order to complete this Quick Start, you will need a few things:
+
+* You will need three real or virtual machines that have a basic Debian Stable installed. 
+* You should be able to SSH into them remotely, and know their IP addresses and their SSH host keys
+* You will need four different IPs, one for each node, and a second one for the VPN gateway
+* You should have the ability to create/modify DNS entries for your domain
+* You need to be aware that this process will make changes to your systems, so please be sure that these machines are a basic install with nothing configured or running for other purposes
+* Your machines will need to be connected to the internet, and not behind a restrictive firewall
+
+All the commands in this tutorial are run on your sysadmin machine. In order to complete the tutorial, the sysadmin will do the following:
+
+* Install pre-requisites
+* Install the LEAP command-line utility
+* Check out the LEAP platform
+* Create a provider and its certificates
+* Setup the provider's nodes and the services that will reside on those nodes
+* Initialize the nodes
+* Deploy the LEAP platform to the nodes
+* Test that things worked correctly
+* Some additional commands
+
+We will walk you through each of these steps.
+
+
+Install pre-requisites
 --------------------------------
 
 *Debian & Ubuntu*
@@ -24,18 +54,16 @@ Install core prerequisites:
 
     sudo apt-get install git ruby ruby-dev rsync openssh-client openssl rake make
 
-Install Vagrant in order to be able to test with local virtual machines (typically optional, but required for this tutorial):
-
-    sudo apt-get install vagrant virtualbox
-
 <!--
 *Mac OS*
 
 1. Install rubygems from https://rubygems.org/pages/download (unless the `gem` command is already installed).
-2. Install Vagrant.dmg from http://downloads.vagrantup.com/
 -->
 
-Install leap
+NOTE: leap_cli should work with ruby1.8, but has only been tested using ruby1.9.
+
+
+Install the LEAP command-line utility
 ---------------------
 
 <!--Install the `leap` command as a gem:
@@ -67,25 +95,51 @@ Or, install as unprivileged user:
 
 With both methods, you can use now /usr/local/bin/leap, which in most cases will be in your $PATH.
 
+If you have successfully installed the LEAP cli, then you should be able to do the following:
 
-Create a provider instance
----------------------------------------
+   $ leap --help
 
-A provider instance is a directory tree, usually stored in git, that contains everything you need to manage an infrastructure for a service provider. In this case, we create one for bitmask.net and call the instance directory 'bitmask'.
+and be presented with the command-line help options. If you receive an error when doing this, please read through the README.md in the LEAP cli source to try and resolve any problems before going forwards.
 
-    mkdir -p ~/leap/bitmask
 
-Now, we will initialize this directory to make it a provider instance. Your provider instance will need to know where it can find local copy of the git repository leap_platform, which holds the puppet recipes you will need to manage your servers. Typically, you will not need to modify leap_platform.
+Check out the platform
+----------------------
 
-    cd ~/leap/bitmask
+The LEAP Platform is a series of puppet recipes and modules that will be used to configure your provider. You will need a local copy of the platform that will be used to setup your nodes and manage your services. To begin with, you will not need to modify the LEAP Platform.
+
+First we'll create a directory for LEAP things, and then we'll check out the platform code and initalize the modules:
+
+   $ mkdir ~/leap
+   $ cd ~/leap
+   $ git clone https://leap.se/git/leap_platform.git
+   $ git submodule sync; git submodule update --init
+
+
+Create a provider
+-----------------
+
+A provider instance is a directory tree, usually stored in git, that contains everything you need to manage an infrastructure for a service provider. In this case, we create one for example.net and call the instance directory 'example'.
+
+    mkdir -p ~/leap/example
+
+Now, we will initialize this directory to make it a provider instance. Your provider instance will need to know where it can find the local copy of the git repository leap_platform, which we setup in the previous step. 
+
+    cd ~/leap/example
     leap new .
+
+NOTES: 
+ . make sure you include that trailing dot!
 
 The `leap new` command will ask you for several required values:
 
-* domain: The primary domain name of your service provider. In this tutorial, we will be using "bitmask.net".
-* name: The name of your service provider.
+* domain: The primary domain name of your service provider. In this tutorial, we will be using "example.net".
+* name: The name of your service provider (we use "Example").
 * contact emails: A comma separated list of email addresses that should be used for important service provider contacts (for things like postmaster aliases, Tor contact emails, etc).
-* platform: The directory where you have a copy of the `leap_platform` git repository checked out. If it doesn't exist, it will be downloaded for you.
+* platform: The directory where you have a copy of the `leap_platform` git repository checked out.
+
+You could also have passed these configuration options on the command-line, like so:
+
+    leap new --contacts your@email.here --domain leap.example.net --name Example --platform=~/leap/leap_platform .
 
 You may want to poke around and see what is in the files we just created. For example:
 
@@ -95,22 +149,38 @@ Optionally, commit your provider directory using the version control software yo
 
     git init
     git add .
-    git commit -m "initial commit"
+    git commit -m "initial provider commit"
 
 Now add yourself as a privileged sysadmin who will have access to deploy to servers:
 
     leap add-user --self
 
-NOTE: in most cases, `leap` must be run from within a provider instance directory tree (e.g. ~/leap/bitmask).
+NOTE: in most cases, `leap` must be run from within a provider instance directory tree (e.g. ~/leap/example).
 
-Now generate required X509 certificates and keys:
+Create certificates
+------------------------------------
+
+Create two certificate authorities, one for server certs and one for client certs:
 
     leap cert ca
+
+Create a temporary cert for your main domain (you should replace with a real commercial cert at some point)
+
     leap cert csr
 
 To see details about the keys and certs that the prior two commands created, you can use `leap inspect` like so:
 
     leap inspect files/ca/ca.crt
+
+Create the Diffie-Hellman parameters file, needed for forward secret OpenVPN ciphers:
+
+    leap cert dh
+
+Create server certificates for all the nodes you have added:
+
+    leap cert update
+
+NOTE: the file `files/ca/ca.key` is extremely sensitive and must be carefully protected. The other key files are much less sensitive and can simply be regenerated if needed.
 
 
 Edit provider.json configuration
@@ -119,10 +189,10 @@ Edit provider.json configuration
 There are a few required settings in provider.json. At a minimum, you must have:
 
     {
-      "domain": "bitmask.net",
-      "name": "Bitmask",
+      "domain": "example.net",
+      "name": "Example",
       "contacts": {
-        "default": "email1@domain.org, email2@domain.org"
+        "default": "email1@example.org, email2@example.org"
       }
     }
 
@@ -130,47 +200,84 @@ For a full list of possible settings, you can use `leap inspect` to see how prov
 
     leap inspect provider.json
 
-Create nodes
----------------------
 
-A "node" is a server that is part of your infrastructure. Every node can have one or more services associated with it. Some nodes are "local" and used only for testing. These local nodes exist only as virtual machines on your computer and cannot be accessed from outside (see `leap help local` for more information).
+Setup the provider's nodes and the services that will run on those nodes
+------------------------------------------------------------------------
 
-Create a local node, with the service "webapp":
+A "node" is a server that is part of your infrastructure. Every node can have one or more services associated with it. Some nodes are "local" and used only for testing, see [Development](developmet) for more information.
 
-    leap node add --local web1 services:webapp
+Create a node, with the service "webapp":
 
-This created a node configuration file in `nodes/web1.json`, but it did not create the virtual machine. In order to test our node "web1", we need to first spin up a virtual machine. The next command will probably take a very long time, because it will need to download a VM image (about 700mb).
+    leap node add elephant ip_address:x.x.x.w services:webapp tags:production
 
-    leap local start
+NOTE: replace x.x.x.w with the actual IP address of this node
 
-Now that the virtual machine for web1 is running, you need to initialize it and then deploy the recipes to it. You only need to initialize a node once, but there is no harm in doing it multiple times. These commands will take a while to run the first time, as it needs to update the package cache on the new virtual machine.
+This created a node configuration file in `nodes/elephant.json`, but it did not do anything else. It also added the 'tag' called 'production' to this node. Tags allow us to conveniently group nodes together. When creating nodes, you should give them the tag 'production' if the node is to be used in your production infrastructure.
 
-    leap node init web1
-    leap deploy web1
+The web application and the VPN nodes require a database, so lets create the database server node:
 
-That is it, you should now have your first running node. However, the LEAP web application requires a database to run, so let's add a "couchdb" node:
+    leap node add clam ip_address:x.x.x.x services:couchdb tags:production
 
-    leap node add --local db1 services:couchdb
-    leap local start
-    leap node init db1
-    leap deploy db1
+NOTE: replace x.x.x.x with the actual IP address of this node
 
-Access the web application
---------------------------------------------
+Now we need the VPN gateway, so lets create that node:
 
-You should now have two local virtual machines running, one for the web application and one for the database. In order to connect to the web application in your browser, you need to point your domain at the IP address of the web application node (named web1 in this example).
+    $ leap node add snail ip_address:x.x.x.y openvpn.gateway_address:x.x.x.z services:openvpn tags:production
 
-There are a lot of different ways to do this, but one easy way is to modify your `/etc/hosts` file. First, find the IP address of the webapp node:
+NOTE: replace x.x.x.y with the IP address of the machine, and x.x.x.z with the second IP. openvpn gateways must be assigned two IP addresses, one for the host itself and one for the openvpn gateway. We do this to prevent incoming and outgoing VPN traffic on the same IP. Without this, the client might send some traffic to other VPN users in the clear, bypassing the VPN.
 
-    leap list webapp --print ip_address
 
-Then modify `/etc/hosts` like so:
+Setup DNS
+---------
 
-    10.5.5.47   DOMAIN
+Now that you have the nodes configured, you should create the DNS entries for these nodes.
 
-Replacing 'DOMAIN' with whatever you specified as the `domain` in the `leap new` command.
+Set up your DNS with these hostnames:
 
-Next, you can connect to the web application either using a web browser or via the API using the LEAP client. To use a browser, connect to https://DOMAIN. Your browser will complain about an untrusted cert, but for now just bypass this. From there, you should be able to register a new user and login.
+    leap list --print ip_address,domain.full,dns.aliases
+        clam  x.x.x.w, clam.example.net, null
+    elephant  x.x.x.x, elephant.example.net, api.bitmask.net
+       snail  x.x.x.y, snail.example.net, null
+
+Alternately, you can adapt this zone file snippet:
+
+    leap compile zone
+
+
+Initialize the nodes
+--------------------
+
+Node initialization only needs to be done once, but there is no harm in doing it multiple times:
+
+   $ leap node init
+
+When `leap node init` is run, you will be prompted to verify the fingerprint of the SSH host key and to provide the root password of the server(s). You should only need to do this once.
+
+NOTE: If leap cannot ping the nodes that you have configured, you will need to pass the '--noping' argument like follows:
+
+   $ leap node --noping init
+
+If you prefer, you can initalize each node, one at a time:
+
+   $ leap node init elephant
+   $ leap node init clam
+   $ leap node init snail
+
+Deploy the LEAP platform to the nodes
+--------------------
+
+Now you should deploy the platform recipes to the nodes. Deployment can take a while to run, especially on the first run, as it needs to update the packages on the new machine:
+
+    $ leap deploy elephant
+
+Watch the output for any errors (in red), if everything worked fine, you should now have your first running node. If you do have errors, try doing the deploy again. 
+
+However, to deploy our three-node openvpn setup, we need the database and LEAP web application requires a database to run, so let's deploy to the couchdb and openvpn nodes:
+
+    $ leap deploy clam
+    $ leap deploy snail
+
+NOTE: the output from deploying can be quite busy, so we often do them each node one by one.
 
 What is going on here?
 --------------------------------------------
@@ -190,6 +297,39 @@ You can run `leap -v2 deploy` to see exactly what commands are being executed.
 
 <!-- See [under the hood](under-the-hood) for more details. -->
 
+Test that things worked correctly
+---------------------------------
+
+You should now have three machines with the LEAP platform deployed to them, one for the web application, one for the database and one for the OpenVPN gateway. 
+
+Access the web application
+--------------------------------------------
+
+In order to connect to the web application in your browser, you need to point your domain at the IP address of the web application node (named elephant in this example).
+
+There are a lot of different ways to do this, but one easy way is to modify your `/etc/hosts` file. First, find the IP address of the webapp node:
+
+    leap list webapp --print ip_address
+
+Then modify `/etc/hosts` like so:
+
+    x.x.x.w   leap.example.net
+
+Replacing 'leap.example.net' with whatever you specified as the `domain` in the `leap new` command.
+
+Next, you can connect to the web application either using a web browser or via the API using the LEAP client. To use a browser, connect to https://leap.example.net (replacing that with your domain). Your browser will complain about an untrusted cert, but for now just bypass this. From there, you should be able to register a new user and login.
+
+Use the VPN
+-----------
+
+You should be able to simply test that the OpenVPN gateway works properly by doing the following:
+
+    $ leap test init
+    $ sudo openvpn test/openvpn/unlimited.ovpn
+
+Or, you can use the LEAP client (called "bitmask") to connect to your new provider, create a user and then connect to the VPN.
+
+
 Additional commands
 -------------------------------------------
 
@@ -197,10 +337,8 @@ Here are a few useful commands you can run on your new local nodes:
 
 * `leap ssh web1` -- SSH into node web1 (requires `leap node init web1` first).
 * `leap list` -- list all nodes.
+* `leap list production` -- list only those nodes with the tag 'production'
 * `leap list --print ip_address` -- list a particular attribute of all nodes.
-* `leap local reset web1` -- return web1 to a pristine state.
-* `leap local stop` -- stop all local virtual machines.
-* `leap local status` -- get the running state of all the local virtual machines.
 * `leap cert update` -- generate new certificates if needed.
 
 See the full command reference for more information.
@@ -222,21 +360,6 @@ Examples:
 * `leap list openvpn +production` -- only nodes of service type openvpn AND tag production.
 * `leap deploy webapp openvpn` -- deploy to all webapp OR openvpn nodes.
 * `leap node init vpn1` -- just init the node named vpn1.
-
-Running on real hardware
------------------------------------
-
-The steps required to initialize and deploy to nodes on the public internet are basically the same as we have seen so far for local testing nodes. There are a few key differences:
-
-* Obviously, you will need to acquire a real or virtual machine that you can SSH into remotely.
-* When creating the node configuration, you should give it the tag "production" if the node is to be used in your production infrastructure.
-* When creating the node configuration, you need to specify the IP address of the node.
-
-For example:
-
-    leap node add db1 tags:production services:couchdb ip_address:4.4.4.4
-
-Also, running `leap node init NODE_NAME` on a real server will prompt you to verify the fingerprint of the SSH host key and to provide the root password of the server NODE_NAME. You should only need to do this once.
 
 What's next
 -----------------------------------
