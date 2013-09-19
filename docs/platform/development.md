@@ -144,7 +144,7 @@ Stopping machines
 
 It is not recommended that you leave your virtual machines running when you are not using them. They consume memory and other resources! To stop your machines, simply do the following:
 
-   $ leap local stop web1 db1
+    $ leap local stop web1 db1
 
 Connecting to machines
 ----------------------
@@ -156,7 +156,7 @@ However, if you cannot connect to your local node, because the networking is not
 In order to do that, you will need to configure Vagrant to launch a graphical console and then you can login as root there to diagnose the networking problem. To do this, add the following to you
 $HOME/.leaprc:
 
-   @custom_vagrant_vm_line = 'config.vm.boot_mode = :gui'
+    @custom_vagrant_vm_line = 'config.vm.boot_mode = :gui'
 
 and then start, or restart, your local Vagrant node. You should get a VirtualBox graphical interface presented to you showing you the bootup and eventually the login.
 
@@ -167,15 +167,15 @@ A very useful feature of local Vagrant development nodes is the ability to snaps
 
 For example, perhaps the base image is a little bit out of date and you want to get the packages updated to the latest before continuing. You can do that simply by starting the node, connecting to it and updating the packages and then snapshotting the node:
 
-   $ leap local start web1
-   $ leap ssh web1
-   web1# apt-get -u dist-upgrade
-   web1# exit
-   $ leap local save web1
+    $ leap local start web1
+    $ leap ssh web1
+    web1# apt-get -u dist-upgrade
+    web1# exit
+    $ leap local save web1
 
 Now you can deploy to web1 and if you decide you want to revert to the state before deployment, you simply have to reset the node to your previous save:
 
-   $ leap local reset web1
+    $ leap local reset web1
 
 More information
 ----------------
