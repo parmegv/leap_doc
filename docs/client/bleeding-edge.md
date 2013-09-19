@@ -32,7 +32,7 @@ Download and source the following script in the parent folder where you want you
 
 
     cd /tmp
-    wget https://raw.github.com/leapcode/leap_client/develop/pkg/scripts/leap_client_bootstrap.sh
+    wget https://raw.github.com/leapcode/bitmask_client/develop/pkg/scripts/bitmask_bootstrap.sh
     source leap_client_bootstrap.sh
 
 Tada! If everything went well, you should be able to run the client by typing:
@@ -99,6 +99,6 @@ for running  LEAP Client with the spanish locales.
 Reporting bugs
 =======================
 
-We use the [LEAP Client Bug Tracker](https://leap.se/code/projects/eip-client), although you can also use [Github issues](https://github.com/leapcode/leap_client/issues).
+We use the [LEAP Client Bug Tracker](https://leap.se/code/projects/eip-client), although you can also use [Github issues](https://github.com/leapcode/bitmask_client/issues).
 
 > There is a great text on the art of bug reporting, that can be found at http://www.chiark.greenend.org.uk/~sgtatham/bugs.html

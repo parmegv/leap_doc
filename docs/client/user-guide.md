@@ -8,11 +8,11 @@ Note: currently, this does not completely work. See [testing](testing)
 
 You can get the code from LEAP public git repository
 
-    git clone https://leap.se/git/leap_client
+    git clone https://leap.se/git/bitmask_client
 
 Or from the github mirror
 
-    git clone https://github.com/leapcode/leap_client.git
+    git clone https://github.com/leapcode/bitmask_client.git
 
 Once you have grabbed a copy of the sources, you can install it into your site-packages easily
 

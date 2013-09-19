@@ -8,7 +8,7 @@ Cloning the repo
 
 > Stable releases will be in *master* branch (nothing there yet, move on!). Development code lives in *develop* branch.
 
-    git clone https://leap.se/git/leap_client
+    git clone https://leap.se/git/bitmask_client
 
 Base Dependencies
 =========================
