@@ -209,7 +209,7 @@ There are a few required settings in provider.json. At a minimum, you must have:
 
 For a full list of possible settings, you can use `leap inspect` to see how provider.json is evaluated after including the inherited defaults:
 
-    leap inspect provider.json
+    $ leap inspect provider.json
 
 
 Setup the provider's nodes and services
