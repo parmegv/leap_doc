@@ -260,7 +260,7 @@ Initialize the nodes
 
 Node initialization only needs to be done once, but there is no harm in doing it multiple times:
 
-   $ leap node init
+    $ leap node init
 
 When `leap node init` is run, you will be prompted to verify the fingerprint of the SSH host key and to provide the root password of the server(s). You should only need to do this once.
 
@@ -378,6 +378,13 @@ Examples:
 * `leap list openvpn +production` -- only nodes of service type openvpn AND tag production.
 * `leap deploy webapp openvpn` -- deploy to all webapp OR openvpn nodes.
 * `leap node init vpn1` -- just init the node named vpn1.
+
+Keep track of your provider configurations
+------------------------------------------
+
+You should commit your provider changes to your favorite VCS whenever things change. This way you can share your configurations with other admins, all they have to do is to pull the changes to stay up to date. Every time you make a change to your provider, such as adding nodes, services, generating certificates, etc. you should add those to your VCS, commit them and push them to where your repository is hosted.
+
+Note that your provider directory contains secrets! Those secrets include passwords for various services. You do not want to have those passwords readable by the world, so make sure that wherever you are hosting your repository, it is not public for the world to read.
 
 What's next
 -----------------------------------
