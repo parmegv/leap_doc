@@ -354,7 +354,8 @@ A node filter consists of one or more keywords, with an optional "+" before each
 * the "+" before the keyword constructs an AND condition
 * otherwise, multiple keywords together construct an OR condition
 
-Examples:
+Examples
+--------
 
 * `leap list openvpn` -- list all nodes with service openvpn.
 * `leap list openvpn +production` -- only nodes of service type openvpn AND tag production.
