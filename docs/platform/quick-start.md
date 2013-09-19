@@ -52,7 +52,7 @@ Install pre-requisites
 
 Install core prerequisites:
 
-    sudo apt-get install git ruby ruby-dev rsync openssh-client openssl rake make
+    $ sudo apt-get install git ruby ruby-dev rsync openssh-client openssl rake make
 
 <!--
 *Mac OS*
@@ -68,36 +68,36 @@ Install the LEAP command-line utility
 
 <!--Install the `leap` command as a gem:
 
-    sudo gem install leap_cli
+    $ sudo gem install leap_cli
 
 Alternately, you can install `leap` from source:
 
-    git clone https://leap.se/git/leap_cli
-    cd leap_cli
-    rake build
+    $ git clone https://leap.se/git/leap_cli
+    $ cd leap_cli
+    $ rake build
 -->
 
 Install `leap` command from source:
 
-    git clone https://leap.se/git/leap_cli
-    cd leap_cli
-    rake build
+    $ git clone https://leap.se/git/leap_cli
+    $ cd leap_cli
+    $ rake build
 
 Then, install as root user (recommended):
 
-    sudo rake install
+    $ sudo rake install
 
 Or, install as unprivileged user:
 
-    rake install
+    $ rake install
     # watch out for the directory leap is installed to, then i.e.
-    sudo ln -s ~/.gem/ruby/1.9.1/bin/leap /usr/local/bin/leap
+    $ sudo ln -s ~/.gem/ruby/1.9.1/bin/leap /usr/local/bin/leap
 
 With both methods, you can use now /usr/local/bin/leap, which in most cases will be in your $PATH.
 
 If you have successfully installed the LEAP cli, then you should be able to do the following:
 
-   $ leap --help
+    $ leap --help
 
 and be presented with the command-line help options. If you receive an error when doing this, please read through the README.md in the LEAP cli source to try and resolve any problems before going forwards.
 
@@ -109,10 +109,10 @@ The LEAP Platform is a series of puppet recipes and modules that will be used to
 
 First we'll create a directory for LEAP things, and then we'll check out the platform code and initalize the modules:
 
-   $ mkdir ~/leap
-   $ cd ~/leap
-   $ git clone https://leap.se/git/leap_platform.git
-   $ git submodule sync; git submodule update --init
+    $ mkdir ~/leap
+    $ cd ~/leap
+    $ git clone https://leap.se/git/leap_platform.git
+    $ git submodule sync; git submodule update --init
 
 
 Create a provider
@@ -120,12 +120,12 @@ Create a provider
 
 A provider instance is a directory tree, usually stored in git, that contains everything you need to manage an infrastructure for a service provider. In this case, we create one for example.net and call the instance directory 'example'.
 
-    mkdir -p ~/leap/example
+    $ mkdir -p ~/leap/example
 
 Now, we will initialize this directory to make it a provider instance. Your provider instance will need to know where it can find the local copy of the git repository leap_platform, which we setup in the previous step. 
 
-    cd ~/leap/example
-    leap new .
+    $ cd ~/leap/example
+    $ leap new .
 
 NOTES: 
  . make sure you include that trailing dot!
@@ -139,21 +139,21 @@ The `leap new` command will ask you for several required values:
 
 You could also have passed these configuration options on the command-line, like so:
 
-    leap new --contacts your@email.here --domain leap.example.net --name Example --platform=~/leap/leap_platform .
+    $ leap new --contacts your@email.here --domain leap.example.net --name Example --platform=~/leap/leap_platform .
 
 You may want to poke around and see what is in the files we just created. For example:
 
-    cat provider.json
+    $ cat provider.json
 
 Optionally, commit your provider directory using the version control software you fancy. For example:
 
-    git init
-    git add .
-    git commit -m "initial provider commit"
+    $ git init
+    $ git add .
+    $ git commit -m "initial provider commit"
 
 Now add yourself as a privileged sysadmin who will have access to deploy to servers:
 
-    leap add-user --self
+    $ leap add-user --self
 
 NOTE: in most cases, `leap` must be run from within a provider instance directory tree (e.g. ~/leap/example).
 
@@ -162,23 +162,23 @@ Create certificates
 
 Create two certificate authorities, one for server certs and one for client certs:
 
-    leap cert ca
+    $ leap cert ca
 
 Create a temporary cert for your main domain (you should replace with a real commercial cert at some point)
 
-    leap cert csr
+    $ leap cert csr
 
 To see details about the keys and certs that the prior two commands created, you can use `leap inspect` like so:
 
-    leap inspect files/ca/ca.crt
+    $ leap inspect files/ca/ca.crt
 
 Create the Diffie-Hellman parameters file, needed for forward secret OpenVPN ciphers:
 
-    leap cert dh
+    $ leap cert dh
 
 Create server certificates for all the nodes you have added:
 
-    leap cert update
+    $ leap cert update
 
 NOTE: the file `files/ca/ca.key` is extremely sensitive and must be carefully protected. The other key files are much less sensitive and can simply be regenerated if needed.
 
@@ -208,7 +208,7 @@ A "node" is a server that is part of your infrastructure. Every node can have on
 
 Create a node, with the service "webapp":
 
-    leap node add elephant ip_address:x.x.x.w services:webapp tags:production
+    $ leap node add elephant ip_address:x.x.x.w services:webapp tags:production
 
 NOTE: replace x.x.x.w with the actual IP address of this node
 
@@ -216,7 +216,7 @@ This created a node configuration file in `nodes/elephant.json`, but it did not 
 
 The web application and the VPN nodes require a database, so lets create the database server node:
 
-    leap node add clam ip_address:x.x.x.x services:couchdb tags:production
+    $ leap node add clam ip_address:x.x.x.x services:couchdb tags:production
 
 NOTE: replace x.x.x.x with the actual IP address of this node
 
@@ -234,14 +234,14 @@ Now that you have the nodes configured, you should create the DNS entries for th
 
 Set up your DNS with these hostnames:
 
-    leap list --print ip_address,domain.full,dns.aliases
+    $ leap list --print ip_address,domain.full,dns.aliases
         clam  x.x.x.w, clam.example.net, null
     elephant  x.x.x.x, elephant.example.net, api.bitmask.net
        snail  x.x.x.y, snail.example.net, null
 
 Alternately, you can adapt this zone file snippet:
 
-    leap compile zone
+    $ leap compile zone
 
 
 Initialize the nodes
@@ -255,13 +255,13 @@ When `leap node init` is run, you will be prompted to verify the fingerprint of 
 
 NOTE: If leap cannot ping the nodes that you have configured, you will need to pass the '--noping' argument like follows:
 
-   $ leap node --noping init
+    $ leap node --noping init
 
 If you prefer, you can initalize each node, one at a time:
 
-   $ leap node init elephant
-   $ leap node init clam
-   $ leap node init snail
+    $ leap node init elephant
+    $ leap node init clam
+    $ leap node init snail
 
 Deploy the LEAP platform to the nodes
 --------------------
@@ -309,7 +309,7 @@ In order to connect to the web application in your browser, you need to point yo
 
 There are a lot of different ways to do this, but one easy way is to modify your `/etc/hosts` file. First, find the IP address of the webapp node:
 
-    leap list webapp --print ip_address
+    $ leap list webapp --print ip_address
 
 Then modify `/etc/hosts` like so:
 
