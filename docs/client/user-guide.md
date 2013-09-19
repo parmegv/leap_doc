@@ -22,7 +22,7 @@ Once you have grabbed a copy of the sources, you can install it into your site-p
 Running
 ==================
 
-This document dovers how to launch the LEAP Client.
+This document covers how to launch the LEAP Client.
 
 Launching the client
 --------------------
