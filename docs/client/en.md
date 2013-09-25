@@ -1,13 +1,16 @@
-@title = 'LEAP Client'
-@summary = "Easy-to-use application for cloud communication services that are client encrypted."
+@title = 'Bitmask'
+@summary = "The Internet Encryption Toolkit: Encrypted Internet Proxy and Encrypted Mail"
 
-The **LEAP Client** is a GPL3 Licensed multiplatform client, written in Python using PyQt4, that supports the features offered by [the LEAP Platform](platform). Currently is being tested on Linux, support for OSX and Windows will come soon.
+**Bitmask** is the multiplatform desktop client for the services offered by the [the LEAP Platform](platform). It is written in python using PySide and licensed under the GPL3. Currently we distribute pre-compiled bundles for Linux and OSX, with Windows bundles following soon.
 
+You can find the complete up-to-date documentation at the site of the python
+package [at the python package documentation site.](http://pythonhosted.com/leap.bitmask "Bitmask documentation")
+
+* [Bitmask Documentation index](client/client-index)
 * [User guide](client/user-guide)
+ 
+<!--
 * [Running latest code](client/bleeding-edge)
 * [Getting started with development](client/dev-guide)
-* [Packaging notes](client/packaging)
-
-<!--
-  * [Configuration](client/configuration)
-  * [Client API](client/client-api) -->
+* [Configuration](client/configuration)
+* [Client API](client/client-api) -->
