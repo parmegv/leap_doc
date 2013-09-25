@@ -26,7 +26,7 @@ Requirements
 
 In order to complete this Quick Start, you will need a few things:
 
-* You will need three real or paravirtualized virtual machines (KVM, Xen, Openstack, Amazon, but not Vagrant - sorry) that have a basic Debian Stable installed. 
+* You will need three real or paravirtualized virtual machines (KVM, Xen, Openstack, Amazon, but not Vagrant - sorry) that have a basic Debian Stable installed. If you allocate 10G to each node, that should be plenty.
 * You should be able to SSH into them remotely, and know their IP addresses and their SSH host keys
 * You will need four different IPs, one for each node, and a second one for the VPN gateway
 * You should have the ability to create/modify DNS entries for your domain
