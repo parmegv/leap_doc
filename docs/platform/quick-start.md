@@ -13,20 +13,20 @@ We are going to create a minimal LEAP provider offering OpenVPN service. This ba
 
 Our goal is something like this:
 
-    leap list
+    $ leap list
            NODES   SERVICES           TAGS
             clam   couchdb
         elephant   webapp
            snail   openvpn
 
-NOTE: You won't be able to run those `leap list` commands yet, not until we actually create the node configurations.
+NOTE: You won't be able to run that `leap list` command yet, not until we actually create the node configurations.
 
 Requirements
 ------------
 
 In order to complete this Quick Start, you will need a few things:
 
-* You will need three real or paravirtualized virtual machines (KVM, Xen, Openstack, Amazon, but not Vagrant - sorry) that have a basic Debian Stable installed. 
+* You will need three real or paravirtualized virtual machines (KVM, Xen, Openstack, Amazon, but not Vagrant - sorry) that have a basic Debian Stable installed. If you allocate 10G to each node, that should be plenty.
 * You should be able to SSH into them remotely, and know their IP addresses and their SSH host keys
 * You will need four different IPs, one for each node, and a second one for the VPN gateway
 * You should have the ability to create/modify DNS entries for your domain
