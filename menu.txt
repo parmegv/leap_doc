@@ -21,4 +21,4 @@ docs
     user-install
     user-running
     testers-howto
-    dev-enviroment
+    dev-environment
