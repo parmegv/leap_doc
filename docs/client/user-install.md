@@ -83,8 +83,8 @@ Distribute & Pip
 > The rest of the methods described below in this page assume you are
 > familiar with python code, and you can find your way through the
 > process of dependencies install. For more insight, you can also refer
-> to the sections setting up a working environment \<environment\> or
-> fetching latest code for testing \<fetchinglatest\>.
+> to the sections setting up a working environment or
+> fetching latest code for testing.
 
 ![image](https://pypip.in/v/leap.bitmask/badge.png%0A%20%20%20%20%20:target:%20https://crate.io/packages/leap.bitmask)
 
