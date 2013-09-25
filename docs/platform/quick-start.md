@@ -13,13 +13,13 @@ We are going to create a minimal LEAP provider offering OpenVPN service. This ba
 
 Our goal is something like this:
 
-    leap list
+    $ leap list
            NODES   SERVICES           TAGS
             clam   couchdb
         elephant   webapp
            snail   openvpn
 
-NOTE: You won't be able to run those `leap list` commands yet, not until we actually create the node configurations.
+NOTE: You won't be able to run that `leap list` command yet, not until we actually create the node configurations.
 
 Requirements
 ------------
