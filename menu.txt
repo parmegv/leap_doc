@@ -19,6 +19,3 @@ docs
     development
   client
     user-guide
-    bleeding-edge
-    dev-guide
-    packaging
