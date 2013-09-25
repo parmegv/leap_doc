@@ -1,4 +1,4 @@
-@nav_title = "Testers Guide"
+@nav_title = "Testing"
 @title = "Howto for Testers"
 
 Howto for Testers
