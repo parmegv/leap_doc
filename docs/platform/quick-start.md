@@ -5,6 +5,7 @@ Quick Start
 ===========
 
 This tutorial walks you through the initial process of creating and deploying a minimal service provider running the [LEAP platform](platform). This Quick Start guide will guide you through building a three node OpenVPN provider.
+If you are curious how this will look like without trying it out yourself, you can watch our [recorded screencasts](http://shelr.tv/users/524415e69660807910000021).
 
 Our goal
 ------------------
