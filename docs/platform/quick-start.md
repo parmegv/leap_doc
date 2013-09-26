@@ -15,9 +15,9 @@ Our goal is something like this:
 
     $ leap list
            NODES   SERVICES           TAGS
-            clam   couchdb
-        elephant   webapp
-           snail   openvpn
+           couch1  couchdb
+           web1    webapp
+           vpn1     openvpn
 
 NOTE: You won't be able to run that `leap list` command yet, not until we actually create the node configurations.
 
@@ -219,21 +219,21 @@ A "node" is a server that is part of your infrastructure. Every node can have on
 
 Create a node, with the service "webapp":
 
-    $ leap node add elephant ip_address:x.x.x.w services:webapp tags:production
+    $ leap node add web1 ip_address:x.x.x.w services:webapp tags:production
 
 NOTE: replace x.x.x.w with the actual IP address of this node
 
-This created a node configuration file in `nodes/elephant.json`, but it did not do anything else. It also added the 'tag' called 'production' to this node. Tags allow us to conveniently group nodes together. When creating nodes, you should give them the tag 'production' if the node is to be used in your production infrastructure.
+This created a node configuration file in `nodes/web1.json`, but it did not do anything else. It also added the 'tag' called 'production' to this node. Tags allow us to conveniently group nodes together. When creating nodes, you should give them the tag 'production' if the node is to be used in your production infrastructure.
 
 The web application and the VPN nodes require a database, so lets create the database server node:
 
-    $ leap node add clam ip_address:x.x.x.x services:couchdb tags:production
+    $ leap node add couch1 ip_address:x.x.x.x services:couchdb tags:production
 
 NOTE: replace x.x.x.x with the actual IP address of this node
 
 Now we need the VPN gateway, so lets create that node:
 
-    $ leap node add snail ip_address:x.x.x.y openvpn.gateway_address:x.x.x.z services:openvpn tags:production
+    $ leap node add vpn1 ip_address:x.x.x.y openvpn.gateway_address:x.x.x.z services:openvpn tags:production
 
 NOTE: replace x.x.x.y with the IP address of the machine, and x.x.x.z with the second IP. openvpn gateways must be assigned two IP addresses, one for the host itself and one for the openvpn gateway. We do this to prevent incoming and outgoing VPN traffic on the same IP. Without this, the client might send some traffic to other VPN users in the clear, bypassing the VPN.
 
@@ -246,9 +246,9 @@ Now that you have the nodes configured, you should create the DNS entries for th
 Set up your DNS with these hostnames:
 
     $ leap list --print ip_address,domain.full,dns.aliases
-        clam  x.x.x.w, clam.example.org, null
-    elephant  x.x.x.x, elephant.example.org, api.bitmask.net
-       snail  x.x.x.y, snail.example.org, null
+        couch1  x.x.x.w, couch1.example.org, null
+    web1  x.x.x.x, web1.example.org, api.bitmask.net
+       vpn1  x.x.x.y, vpn1.example.org, null
 
 Alternately, you can adapt this zone file snippet:
 
@@ -266,23 +266,23 @@ When `leap node init` is run, you will be prompted to verify the fingerprint of 
 
 If you prefer, you can initalize each node, one at a time:
 
-    $ leap node init elephant
-    $ leap node init clam
-    $ leap node init snail
+    $ leap node init web1
+    $ leap node init couch1
+    $ leap node init vpn1
 
 Deploy the LEAP platform to the nodes
 --------------------
 
 Now you should deploy the platform recipes to the nodes. Deployment can take a while to run, especially on the first run, as it needs to update the packages on the new machine:
 
-    $ leap deploy elephant
+    $ leap deploy web1
 
 Watch the output for any errors (in red), if everything worked fine, you should now have your first running node. If you do have errors, try doing the deploy again. 
 
 However, to deploy our three-node openvpn setup, we need the database and LEAP web application requires a database to run, so let's deploy to the couchdb and openvpn nodes:
 
-    $ leap deploy clam
-    $ leap deploy snail
+    $ leap deploy couch1
+    $ leap deploy vpn1
 
 NOTE: the output from deploying can be quite busy, so we often do them each node one by one.
 
@@ -314,7 +314,7 @@ You should now have three machines with the LEAP platform deployed to them, one 
 Access the web application
 --------------------------------------------
 
-In order to connect to the web application in your browser, you need to point your domain at the IP address of the web application node (named elephant in this example).
+In order to connect to the web application in your browser, you need to point your domain at the IP address of the web application node (named web1 in this example).
 
 There are a lot of different ways to do this, but one easy way is to modify your `/etc/hosts` file. First, find the IP address of the webapp node:
 
