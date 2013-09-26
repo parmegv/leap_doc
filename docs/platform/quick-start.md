@@ -264,10 +264,6 @@ Node initialization only needs to be done once, but there is no harm in doing it
 
 When `leap node init` is run, you will be prompted to verify the fingerprint of the SSH host key and to provide the root password of the server(s). You should only need to do this once.
 
-NOTE: If leap cannot ping the nodes that you have configured, you will need to pass the '--noping' argument like follows:
-
-    $ leap node --noping init
-
 If you prefer, you can initalize each node, one at a time:
 
     $ leap node init elephant
