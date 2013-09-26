@@ -10,8 +10,7 @@ What resources are touched by puppet/leap_platform (services/packages/files etc.
 
 Log into your server and issue:
 
-    grep '".*":' /var/lib/puppet/state/state.yaml |sort
-
+    grep -v '!ruby/sym' /var/lib/puppet/state/state.yaml | sed 's/\"//' | sort
 
 How do i change the domain of my provider ?
 -------------------------------------------
