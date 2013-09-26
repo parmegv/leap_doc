@@ -126,7 +126,7 @@ First we'll create a directory for LEAP things, and then we'll check out the pla
 Provider Setup
 ==============
 
-A provider instance is a directory tree, usually stored in git, that contains everything you need to manage an infrastructure for a service provider. In this case, we create one for example.net and call the instance directory 'example'.
+A provider instance is a directory tree, usually stored in git, that contains everything you need to manage an infrastructure for a service provider. In this case, we create one for example.org and call the instance directory 'example'.
 
     $ mkdir -p ~/leap/example
 
@@ -143,14 +143,14 @@ NOTES:
 
 The `leap new` command will ask you for several required values:
 
-* domain: The primary domain name of your service provider. In this tutorial, we will be using "example.net".
+* domain: The primary domain name of your service provider. In this tutorial, we will be using "example.org".
 * name: The name of your service provider (we use "Example").
 * contact emails: A comma separated list of email addresses that should be used for important service provider contacts (for things like postmaster aliases, Tor contact emails, etc).
 * platform: The directory where you have a copy of the `leap_platform` git repository checked out.
 
 You could also have passed these configuration options on the command-line, like so:
 
-    $ leap new --contacts your@email.here --domain leap.example.net --name Example --platform=~/leap/leap_platform .
+    $ leap new --contacts your@email.here --domain leap.example.org --name Example --platform=~/leap/leap_platform .
 
 You may want to poke around and see what is in the files we just created. For example:
 
@@ -200,7 +200,7 @@ Edit provider.json configuration
 There are a few required settings in provider.json. At a minimum, you must have:
 
     {
-      "domain": "example.net",
+      "domain": "example.org",
       "name": "Example",
       "contacts": {
         "default": "email1@example.org, email2@example.org"
@@ -246,9 +246,9 @@ Now that you have the nodes configured, you should create the DNS entries for th
 Set up your DNS with these hostnames:
 
     $ leap list --print ip_address,domain.full,dns.aliases
-        clam  x.x.x.w, clam.example.net, null
-    elephant  x.x.x.x, elephant.example.net, api.bitmask.net
-       snail  x.x.x.y, snail.example.net, null
+        clam  x.x.x.w, clam.example.org, null
+    elephant  x.x.x.x, elephant.example.org, api.bitmask.net
+       snail  x.x.x.y, snail.example.org, null
 
 Alternately, you can adapt this zone file snippet:
 
@@ -326,11 +326,11 @@ There are a lot of different ways to do this, but one easy way is to modify your
 
 Then modify `/etc/hosts` like so:
 
-    x.x.x.w   leap.example.net
+    x.x.x.w   leap.example.org
 
-Replacing 'leap.example.net' with whatever you specified as the `domain` in the `leap new` command.
+Replacing 'leap.example.org' with whatever you specified as the `domain` in the `leap new` command.
 
-Next, you can connect to the web application either using a web browser or via the API using the LEAP client. To use a browser, connect to https://leap.example.net (replacing that with your domain). Your browser will complain about an untrusted cert, but for now just bypass this. From there, you should be able to register a new user and login.
+Next, you can connect to the web application either using a web browser or via the API using the LEAP client. To use a browser, connect to https://leap.example.org (replacing that with your domain). Your browser will complain about an untrusted cert, but for now just bypass this. From there, you should be able to register a new user and login.
 
 Use the VPN
 -----------
