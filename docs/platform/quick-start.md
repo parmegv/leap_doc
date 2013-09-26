@@ -17,7 +17,7 @@ Our goal is something like this:
            NODES   SERVICES           TAGS
            couch1  couchdb
            web1    webapp
-           vpn1     openvpn
+           vpn1    openvpn
 
 NOTE: You won't be able to run that `leap list` command yet, not until we actually create the node configurations.
 
@@ -203,7 +203,7 @@ There are a few required settings in provider.json. At a minimum, you must have:
       "domain": "example.org",
       "name": "Example",
       "contacts": {
-        "default": "email1@example.org, email2@example.org"
+        "default": "email1@example.org"
       }
     }
 
@@ -260,9 +260,9 @@ Initialize the nodes
 
 Node initialization only needs to be done once, but there is no harm in doing it multiple times:
 
-    $ leap node init
+    $ leap node init production
 
-When `leap node init` is run, you will be prompted to verify the fingerprint of the SSH host key and to provide the root password of the server(s). You should only need to do this once.
+This will initialize all nodes with the tag "production". When `leap node init` is run, you will be prompted to verify the fingerprint of the SSH host key and to provide the root password of the server(s). You should only need to do this once.
 
 If you prefer, you can initalize each node, one at a time:
 
