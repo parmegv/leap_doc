@@ -184,6 +184,12 @@ More information
 See `leap help local` for a complete list of local-only commands and how they can be used.
 
 
+Limitations
+===========
+
+Please consult the known issues for vagrant, see the [Known Issues](known-issues), section *Special Environments*
+
+
 Troubleshooting Vagrant
 =======================
 
