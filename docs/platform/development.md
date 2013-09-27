@@ -2,7 +2,7 @@
 
 If you are wanting to make local changes to your provider, or want to contribute some fixes back to LEAP, we recommend that you follow this guide to build up a development environment to test your changes first. Using this method, you can quickly test your changes without deploying them to your production environment, while benefitting from the convenience of reverting to known good states in order to retry things from scratch. 
 
-This page will walk you through setting up nodes using Vagrant for convenient deployment testing, snapshotting known good states, and reverting to previous snapshots. 
+This page will walk you through setting up nodes using [Vagrant](http://www.vagrantup.com/) for convenient deployment testing, snapshotting known good states, and reverting to previous snapshots. 
 
 Requirements
 ============
