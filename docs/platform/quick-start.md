@@ -248,8 +248,8 @@ Set up your DNS with these hostnames:
 
     $ leap list --print ip_address,domain.full,dns.aliases
         couch1  x.x.x.w, couch1.example.org, null
-    web1  x.x.x.x, web1.example.org, api.bitmask.net
-       vpn1  x.x.x.y, vpn1.example.org, null
+          web1  x.x.x.x, web1.example.org, api.bitmask.net
+          vpn1  x.x.x.y, vpn1.example.org, null
 
 Alternately, you can adapt this zone file snippet:
 
