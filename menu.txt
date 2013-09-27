@@ -17,6 +17,7 @@ docs
     under-the-hood
     known-issues
     faq
+    troubleshooting
     development
   client
     user-install

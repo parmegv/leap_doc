@@ -1,23 +1,28 @@
 Webapp node
 ===========
 
-Places to look for errors:
+Places to look for errors
+-------------------------
 
-* /var/log/apache2/error.log
-* /srv/leap/webapp/log/production.log
-* /var/log/syslog (watch out for stunnel issues)
+* `/var/log/apache2/error.log`
+* `/srv/leap/webapp/log/production.log`
+* `/var/log/syslog` (watch out for stunnel issues)
 
-* is haproxy ok ? 
+Is haproxy ok ? 
+---------------
 
 
     curl -X  GET "http://127.0.0.1:4096"
 
-* is couchdb access through stunnel ok ? 
+Is couchdb accessible through stunnel ?
+---------------------------------------
 
 
     curl -X  GET "http://127.0.0.1:4000"
 
-* check couchdb acl
+
+Check couchdb acl
+-----------------
 
 
     mkdir /etc/couchdb
@@ -32,29 +37,51 @@ Places to look for errors:
 Couchdb node
 ============
 
-* Membership ok ?
+Places to look for errors
+-------------------------
+
+* `/opt/bigcouch/var/log/bigcouch.log`
+* `/var/log/syslog` (watch out for stunnel issues)
+
+
+Bigcouch membership
+-------------------
+
+* Do all nodes show up both in and ?
 
 
     curl --netrc-file /etc/couchdb/couchdb.netrc 'http://127.0.0.1:5984/_membership'
 
 
-* User `_design doc` available ?
+
+Databases
+---------
+
+Design Documents
+----------------
+
+* Is User `_design doc` available ?
 
 
-    curl --netrc-file /etc/couchdb/couchdb.netrc -X  GET "http://127.0.0.1:4096/users/_design/User"
+    curl --netrc-file /etc/couchdb/couchdb.netrc -X  GET "http://127.0.0.1:5984/users/_design/User"
 
 
 
 MX node
 =======
 
-* query leap-mx for useraccount 
+Query leap-mx
+-------------
+
+* for useraccount 
 
 
     postmap -v -q  "joe@dev.bitmask.net" tcp:localhost:2244
 
 
-* query leap-mx for mailalias
+* for mailalias
 
 
     postmap -v -q  "joe@dev.bitmask.net" tcp:localhost:4242
+
+
