@@ -1,3 +1,8 @@
+@title = 'Troubleshooting Guide'
+@nav_title = 'Troubleshooting'
+@toc = true
+
+
 Webapp node
 ===========
 
