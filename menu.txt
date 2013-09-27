@@ -16,6 +16,7 @@ docs
     commands
     under-the-hood
     known-issues
+    faq
     development
   client
     user-install

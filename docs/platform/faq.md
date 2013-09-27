@@ -1,3 +1,8 @@
+@title = 'Frequently asked questions'
+@nav_title = 'FAQ'
+@toc = true
+
+
 Where do i find the time a server was last deployed ?
 -----------------------------------------------------
 
