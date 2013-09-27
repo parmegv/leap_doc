@@ -130,4 +130,13 @@ Mailspool
 
     ls -la /var/mail/vmail/Maildir/cur/
 
- 
+
+VPN node
+========
+
+Places to look for errors
+-------------------------
+
+* `/var/log/syslog` (watch out for openvpn issues)
+
+
