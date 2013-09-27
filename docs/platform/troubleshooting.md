@@ -3,6 +3,11 @@
 @toc = true
 
 
+General
+=======
+
+* Please increase verbosity when debugging / filing issues in our issue tracker. You can do this with adding i.e. `-v 5` after the `leap` cmd, i.e. `leap -v 2 deploy`.
+
 Webapp node
 ===========
 
