@@ -30,9 +30,10 @@ In order to complete this Quick Start, you will need a few things:
 * You will need three real or paravirtualized virtual machines (KVM, Xen, Openstack, Amazon, but not Vagrant - sorry) that have a basic Debian Stable installed. If you allocate 10G to each node, that should be plenty.
 * You should be able to SSH into them remotely, and know their IP addresses and their SSH host keys
 * You will need four different IPs, one for each node, and a second one for the VPN gateway
-* You should have the ability to create/modify DNS entries for your domain
+* The ability to create/modify DNS entries for your domain is preferable, but not needed. If you don't have access to DNS, you can workaround this by modifying your local resolver, i.e. editing `/etc/hosts`.
 * You need to be aware that this process will make changes to your systems, so please be sure that these machines are a basic install with nothing configured or running for other purposes
-* Your machines will need to be connected to the internet, and not behind a restrictive firewall
+* Your machines will need to be connected to the internet, and not behind a restrictive firewall.
+* You should work locally on your laptop/workstation (one that you trust and that is ideally full-disk encrypted) while going through this guide. This is important because the provider configuration you are creating contain sensible data that should not reside on a remote machine. The leap cli utility will login to your servers and configure the services.
 
 All the commands in this tutorial are run on your sysadmin machine. In order to complete the tutorial, the sysadmin will do the following:
 
@@ -248,12 +249,20 @@ Set up your DNS with these hostnames:
 
     $ leap list --print ip_address,domain.full,dns.aliases
         couch1  x.x.x.w, couch1.example.org, null
-          web1  x.x.x.x, web1.example.org, api.bitmask.net
+          web1  x.x.x.x, web1.example.org, api.example.org
           vpn1  x.x.x.y, vpn1.example.org, null
 
 Alternately, you can adapt this zone file snippet:
 
     $ leap compile zone
+
+If you cannot edit your DNS zone file, you can still test your provider by adding entries to your local resolver hosts file (`/etc/hosts` for linux):
+
+    x.x.x.w couch1.example.org
+    x.x.x.x web1.example.org api.example.org example.org
+    x.x.x.y vpn1.example.org
+
+Please don't forget about these entries, they will override DNS queries if you setup your DNS later.
 
 
 Initialize the nodes
