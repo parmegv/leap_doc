@@ -122,6 +122,7 @@ First we'll create a directory for LEAP things, and then we'll check out the pla
     $ mkdir ~/leap
     $ cd ~/leap
     $ git clone https://leap.se/git/leap_platform.git
+    $ cd leap_platform
     $ git submodule sync; git submodule update --init
 
 
