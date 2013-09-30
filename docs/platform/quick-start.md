@@ -191,11 +191,7 @@ Create the Diffie-Hellman parameters file, needed for forward secret OpenVPN cip
 
     $ leap cert dh
 
-Create server certificates for all the nodes you have added:
-
-    $ leap cert update
-
-NOTE: the file `files/ca/ca.key` is extremely sensitive and must be carefully protected. The other key files are much less sensitive and can simply be regenerated if needed.
+NOTE: the files `files/ca/*.key` are extremely sensitive and must be carefully protected. The other key files are much less sensitive and can simply be regenerated if needed.
 
 
 Edit provider.json configuration
@@ -240,6 +236,10 @@ Now we need the VPN gateway, so lets create that node:
     $ leap node add vpn1 ip_address:x.x.x.y openvpn.gateway_address:x.x.x.z services:openvpn tags:production
 
 NOTE: replace x.x.x.y with the IP address of the machine, and x.x.x.z with the second IP. openvpn gateways must be assigned two IP addresses, one for the host itself and one for the openvpn gateway. We do this to prevent incoming and outgoing VPN traffic on the same IP. Without this, the client might send some traffic to other VPN users in the clear, bypassing the VPN.
+
+Create server certificates for all the nodes you have added:
+
+    $ leap cert update
 
 
 Setup DNS
