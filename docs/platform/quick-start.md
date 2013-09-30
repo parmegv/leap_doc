@@ -62,7 +62,7 @@ Install pre-requisites
 
 Install core prerequisites:
 
-    $ sudo apt-get install git ruby ruby-dev rsync openssh-client openssl rake make
+    $ sudo apt-get install git ruby ruby-dev rsync openssh-client openssl rake make bzip2
 
 <!--
 *Mac OS*
