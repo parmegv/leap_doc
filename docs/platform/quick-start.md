@@ -174,7 +174,8 @@ NOTE: in most cases, `leap` must be run from within a provider instance director
 Create provider certificates
 ----------------------------
 
-Create two certificate authorities, one for server certs and one for client certs:
+Create two certificate authorities, one for server certs and one for client
+certs (note: you only need to run this one command to get both):
 
     $ leap cert ca
 
