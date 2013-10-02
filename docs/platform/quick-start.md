@@ -237,10 +237,6 @@ Now we need the VPN gateway, so lets create that node:
 
 NOTE: replace x.x.x.y with the IP address of the machine, and x.x.x.z with the second IP. openvpn gateways must be assigned two IP addresses, one for the host itself and one for the openvpn gateway. We do this to prevent incoming and outgoing VPN traffic on the same IP. Without this, the client might send some traffic to other VPN users in the clear, bypassing the VPN.
 
-Create server certificates for all the nodes you have added:
-
-    $ leap cert update
-
 
 Setup DNS
 ---------
@@ -251,7 +247,7 @@ Set up your DNS with these hostnames:
 
     $ leap list --print ip_address,domain.full,dns.aliases
         couch1  x.x.x.w, couch1.example.org, null
-          web1  x.x.x.x, web1.example.org, api.example.org
+          web1  x.x.x.x, web1.example.org, api.example.org, nicknym.example.org
           vpn1  x.x.x.y, vpn1.example.org, null
 
 Alternately, you can adapt this zone file snippet:
