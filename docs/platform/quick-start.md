@@ -33,7 +33,7 @@ In order to complete this Quick Start, you will need a few things:
 * The ability to create/modify DNS entries for your domain is preferable, but not needed. If you don't have access to DNS, you can workaround this by modifying your local resolver, i.e. editing `/etc/hosts`.
 * You need to be aware that this process will make changes to your systems, so please be sure that these machines are a basic install with nothing configured or running for other purposes
 * Your machines will need to be connected to the internet, and not behind a restrictive firewall.
-* You should work locally on your laptop/workstation (one that you trust and that is ideally full-disk encrypted) while going through this guide. This is important because the provider configuration you are creating contain sensible data that should not reside on a remote machine. The leap cli utility will login to your servers and configure the services.
+* You should work locally on your laptop/workstation (one that you trust and that is ideally full-disk encrypted) while going through this guide. This is important because the provider configuration you are creating contains sensible data that should not reside on a remote machine. The leap cli utility will login to your servers and configure the services.
 
 All the commands in this tutorial are run on your sysadmin machine. In order to complete the tutorial, the sysadmin will do the following:
 
