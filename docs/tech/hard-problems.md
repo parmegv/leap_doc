@@ -66,11 +66,10 @@ In the short term, we are layering forward secret transport for email and chat r
 
 This approach is potentially effective against external network observers, but does not achieve forward secrecy from the service providers themselves.
 
-In the long term, we plan to work with other groups to create new encryption protocol standards that can be both asynchronous and forward secret. There are several proposals for this:
+In the long term, we plan to work with other groups to create new encryption protocol standards that can be both asynchronous and forward secret. :
 
 * [Forward Secrecy Extensions for OpenPGP](http://tools.ietf.org/html/draft-brown-pgp-pfs-03)
-* [Forward Secrecy for Asynchronous Messages](https://whispersystems.org/blog/asynchronous-security/)
-* Trevor Perrin's unpublished "Conversation Encryption" protocol
+* [Triple elliptical curve Diffie-Hellman handshake](https://whispersystems.org/blog/simplifying-otr-deniability/)
 
 ### Group problem
 
@@ -81,6 +80,11 @@ The problem:
 We have a lot of ideas, but we don't have any solutions yet to fix this. Essentially, the question is how to use existing public key primitives to create strong cryptographic groups, where membership and permissions are based on keys and not arbitrary server-maintained access control lists.
 
 Most of the interesting work in this area has been done by companies working on secure file backup/sync/sharing, such as Wuala and Spideroak. Unfortunately, there are not yet any good open protocols or free software packages that can handle group cryptography.
+
+There is some free software work on some of interesting building blocks that could be useful in building group cryptography. For example:
+
+* [Proxy re-encryption](https://en.wikipedia.org/wiki/Proxy_re-encryption): This allows the server to re-encrypt to new recipients without gaining access to the cleartext. The [SELS mailing list manager](http://sels.ncsa.illinois.edu/) uses OpenPGP to implement a [clever scheme for proxy re-encryption](http://spar.isi.jhu.edu/~mgreen/proxy.pdf).
+* [Ring signatures](https://en.wikipedia.org/wiki/Ring_signature): This allows any member of a group to sign, withing anyone knowing which member.
 
 ### Resource problem
 
