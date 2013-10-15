@@ -103,7 +103,7 @@ get the code from LEAP public git repository :
 
 Or from the github mirror :
 
-    $ git clone git://github.com/leapcode/bitmask_client.git
+    $ git clone https://github.com/leapcode/bitmask_client.git
 
 Once you have grabbed a copy of the sources, and installed all the base
 dependencies, you can install it into your site-packages easily :
