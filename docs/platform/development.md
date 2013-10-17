@@ -217,3 +217,48 @@ Ubuntu Raring 13.04
 
 * `virtualbox 4.2.10-dfsg-0ubuntu2.1` from Ubuntu raring and `vagrant 1.2.2` from vagrantup.com
 
+
+Using Vagrant with libvirt/kvm
+==============================
+
+Since Vagrant V1.1, Vagrant can be used with different providers/backends, one of them is [vagrant-libvirt](https://github.com/pradels/vagrant-libvirt). Here are the steps how to use it. Be sure to use a recent vagrant version ( >= 1.2).
+
+Install vagrant-libvirt plugin and add box
+------------------------------------------
+
+    vagrant plugin install vagrant-libvirt
+    vagrant box add leap-wheezy https://downloads.leap.se/leap-debian-libvirt.box
+
+Start it
+--------
+
+Use this example Vagrantfile:
+
+    Vagrant.configure("2") do |config|
+      config.vm.define :testvm do |testvm|
+        testvm.vm.box = "leap-wheezy"
+        testvm.vm.network :private_network, :ip => '10.6.6.201'
+      end
+
+      config.vm.provider :libvirt do |libvirt|
+        libvirt.connect_via_ssh = false
+      end
+    end
+
+Then:
+
+    vagrant up --provider=libvirt
+
+If everything works, you should export libvirt as the VAGRANT_DEFAULT_PROVIDER:
+
+    export VAGRANT_DEFAULT_PROVIDER="libvirt" 
+
+Now you should be able to use the `leap local` commands.
+
+Known Issues
+------------
+
+* see the [vagrant-libvirt issue list on github](https://github.com/pradels/vagrant-libvirt/issues)
+* in particular, leap-cli uses [sahara](https://github.com/jedi4ever/sahara) for the `leap local [save|reset]` commands for saving/reverting from snapshots. At this moment, sahara don't work with the libvirt provider, here's the [sahare issue for supporting vagrant-libvirt](https://github.com/jedi4ever/sahara/issues/26). Luckily, leap-cli will only complain about `VBoxManage: not found`, but the VM is started just fine (of cause without snapshot capability).
+* there's also [libvirt network still active after destroying box](https://github.com/pradels/vagrant-libvirt/issues/70)
+
