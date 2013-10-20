@@ -259,6 +259,5 @@ Known Issues
 ------------
 
 * see the [vagrant-libvirt issue list on github](https://github.com/pradels/vagrant-libvirt/issues)
-* in particular, leap-cli uses [sahara](https://github.com/jedi4ever/sahara) for the `leap local [save|reset]` commands for saving/reverting from snapshots. At this moment, sahara don't work with the libvirt provider, here's the [sahare issue for supporting vagrant-libvirt](https://github.com/jedi4ever/sahara/issues/26). Luckily, leap-cli will only complain about `VBoxManage: not found`, but the VM is started just fine (of cause without snapshot capability).
-* there's also [libvirt network still active after destroying box](https://github.com/pradels/vagrant-libvirt/issues/70)
-
+* leap-cli uses [sahara](https://github.com/jedi4ever/sahara) for the `leap local [save|reset]` commands for saving/reverting from snapshots. At this moment, sahara don't work with the libvirt provider, here's the [sahare issue for supporting vagrant-libvirt](https://github.com/jedi4ever/sahara/issues/26). Luckily, leap-cli will only complain about `VBoxManage: not found`, but the VM is started just fine (of cause without snapshot capability).
+  UPDATE: This has been fixed in [Sciurus fork of sahara, branch libvirt](https://github.com/sciurus/sahara/tree/libvirt). A [pull request for sahara upstream](https://github.com/jedi4ever/sahara/pull/27) is pending.
