@@ -227,6 +227,7 @@ Install vagrant-libvirt plugin and add box
 ------------------------------------------
 
     vagrant plugin install vagrant-libvirt
+    vagrant plugin install sahara 
     vagrant box add leap-wheezy https://downloads.leap.se/leap-debian-libvirt.box
 
 Start it
@@ -259,5 +260,4 @@ Known Issues
 ------------
 
 * see the [vagrant-libvirt issue list on github](https://github.com/pradels/vagrant-libvirt/issues)
-* leap-cli uses [sahara](https://github.com/jedi4ever/sahara) for the `leap local [save|reset]` commands for saving/reverting from snapshots. At this moment, sahara don't work with the libvirt provider, here's the [sahare issue for supporting vagrant-libvirt](https://github.com/jedi4ever/sahara/issues/26). Luckily, leap-cli will only complain about `VBoxManage: not found`, but the VM is started just fine (of cause without snapshot capability).
-  UPDATE: This has been fixed in [Sciurus fork of sahara, branch libvirt](https://github.com/sciurus/sahara/tree/libvirt). A [pull request for sahara upstream](https://github.com/jedi4ever/sahara/pull/27) is pending.
+* be sure to use vagrant-libvirt >= 0.0.11 and sahara >= 0.0.16 (which are the latest stable gems you would get with `vagrant plugin install [vagrant-libvirt|sahara]`) for proper libvirt support
