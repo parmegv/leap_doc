@@ -1,18 +1,103 @@
 - @title = "Source Code"
 - @summary = "Submit a pull request today!"
 
-%h1.first Source Code
+%h1.first Contributing
 
-This page should give an easy overview of the most important repositories. We explicitly don't want you to get lost in the myriad of existing repositories. We mirror all of them to link 'github' => 'https://github.com/leapcode/', which you might find convenient. The authorative code is however hosted link 'by ourselves' => 'https://leap.se/git/'. We use Git for version control, so you can directly use the urls from this page: 'git clone $url' Issues and pull requests are most welcome on https://leap.se/code/
+%h3 Reading the code
 
-%h3 Client
+%p This page should give an easy overview of the most important repositories. The authorative code is hosted at #{link 'leap.se/git' => 'https://leap.se/git/'}, but they are also mirrored to #{link 'github' => 'https://github.com/leapcode/'}.
+
+%p In general, all LEAP code repositories will have <code>develop</code> and <code>master</code> branches. The <code>master</code> branch should be a stable, release version of the software. The <code>develop</code> branch is where all feature and bugfix branches are merged into.
+
+%h3 Submitting a pull request
+
+%p All development happens via pull requests. To add a new feature or fix a bug, the developer must create a new branch off <code>develop</code>, make their changes, and then issue a pull request for another developer to review before the changes get merged back into <code>develop</code>.
+
+%p Here is an example, using github with username <code>rms</code> and repository <code>bitmask_client</code>. You don't need to use github, but it is a friendly way to get started.
+
+%p
+  %b Step 1 &mdash; Fork on github
+
+%p Login to github.com as 'rms', browse to #{link 'https://github.com/leapcode/bitmask_client'}, and click the fork button.
+
+%p Now you should have a fork of the code available at <code>https://github.com/rms/bitmask_client</code>.
+
+%p
+  %b Step 2 &mdash; Set up local clone
+
+%p Clone the upstream repository:
+
+%pre
+  %code
+    git clone https://leap.se/git/bitmask_client
+    cd bitmask_client
+
+%blockquote
+  .p NOTE: Alternately, you can use the github mirror at <code>https://github.com/leapcode/bitmask_client</code>. It does not matter which one you choose.
+
+%p
+  %b Step 4 &mdash; Add a "remote" for your fork
+
+%p Next, you need to add the fork you created on github as an alternate remote in your local repository:
+
+%pre
+  %code
+    git remote add rms https://github.com/rms/bitmask_client.git
+
+%p
+  %b Step 5 &mdash; Create a new feature branch
+
+%pre
+  %code
+    git fetch origin
+    git checkout develop
+    git checkout -b feature/my_new_feature
+
+%p
+  %b Step 6 &mdash; Hack away
+
+%P Make all your changes in your <code>feature/my_new_feature</code> branch, with a separate <code>git commit</code> for each discrete modification you make.
+
+%p
+  %b Step 7 &mdash; Prepare for pull request
+
+%p Once you are happy with your branch, prepare it for a pull request by rebasing on the latest upstream <code>develop</code> branch. This will also give you an opportunity to clean up your commit history by squashing and changing commit messages.
+
+%pre
+  %code
+    git fetch origin                    # ensure the latest
+    git checkout feature/my_new_feature # if not already checked out
+    git rebase -i develop               # rebase and clean up commits
+
+%p
+  %b Step 8 &mdash; Submit pull request
+
+%p Next, you will push your local feature branch to your fork on github, and then issue a pull request.
+
+%pre
+  %code
+    git push rms feature/my_new_feature
+
+%p Then browse to <code>https://github.com/rms/bitmask_client</code>, where you will see a handy button to issue a pull request. Make sure that the upstream branch is <code>leapcode/bitmask_client:develop</code> and you are requesting the merge of <code>rms/bitmask_client:feature/my_new_feature</code>.
+
+Then you are done. Some other developer will get a notice of your pull request, review the changes, and merge into upstream <code>develop</code> branch. If they have questions or comments, you will get an email from github.
+
+%h1 Source Code
+
+%h3 Client code
 
 %table.table.table-bordered
   %tr
-    %td leap_client
-    %td Desktop client application for secure communication, using the LEAP platform, supporting encrypted internet proxy, secure email, and secure chat (coming soon). The client is written in Python, runs on Linux, Mac, and Windows, and is licensed under the GPLv3.
-    %td= link 'https://leap.se/git/bitmask_client' => 'https://leap.se/git/bitmask_client'
-    %td= link 'github' => 'https://github.com/leapcode/bitmask_client'
+    %td bitmask_client
+    %td The Bitmask desktop client application, supporting encrypted internet proxy, secure email, and secure chat (coming soon). The client is written in Python, runs on Linux, Mac, and Windows, and is licensed under the GPLv3.
+    %td
+      =# link 'https://leap.se/git/bitmask_client'
+      = link 'https://github.com/leapcode/bitmask_client'
+  %tr
+    %td bitmask_android
+    %td Android version of the Bitmask client, supporting encrypted internet proxy. Future development will include support for secure email. Licensed under the GPLv3.
+    %td
+      = link 'https://github.com/leapcode/bitmask_android'
 
 %h3 Service provider platform
 
@@ -20,26 +105,30 @@ This page should give an easy overview of the most important repositories. We ex
   %tr
     %td leap_platform
     %td Server automation recipes for running secure communication services via the LEAP Platform. Written mostly using puppet, and licensed under the GPLv3.
-    %td= link 'https://leap.se/git/leap_platform' => 'https://leap.se/git/leap_platform'
-    %td= link 'github' => 'https://github.com/leapcode/leap_platform'
+    %td
+      = link 'https://leap.se/git/leap_platform'
+      = link 'https://github.com/leapcode/leap_platform'
 
   %tr
     %td leap_cli
     %td Command line interface for managing a service provider running the LEAP platform. Written in Ruby and released under the GPLv3.
-    %td= link 'https://leap.se/git/leap_cli' => 'https://leap.se/git/leap_cli'
-    %td= link 'github' => 'https://github.com/leapcode/leap_cli'
-  
-  %tr
-    %td nickserver
-    %td Nickserver is a daemon supporting nicknym, a protocol to map user nicknames to public keys. Written in Ruby, released under the GPLv3.
-    %td= link 'https://leap.se/git/nickserver' => 'https://leap.se/git/nickserver'
-    %td= link 'github' => 'https://github.com/leapcode/nickserver'
+    %td
+      = link 'https://leap.se/git/leap_cli'
+      = link 'https://github.com/leapcode/leap_cli'
 
   %tr
     %td soledad
-    %td Soledad (Synchronization of Locally Encrypted Data Among Devices) provides a synchronized, client-encrypted document database.
-    %td= link 'https://leap.se/git/soledad' => 'https://leap.se/git/soledad'
-    %td= link 'github' => 'https://github.com/leapcode/soledad'
+    %td Soledad (Synchronization of Locally Encrypted Data Among Devices) provides a synchronized, client-encrypted document database. Written in Python.
+    %td
+      = link 'https://github.com/leapcode/soledad'
+
+  %tr
+    %td nickserver
+    %td Nickserver is a daemon supporting nicknym, a protocol to map user nicknames to public keys. Written in Ruby, released under the GPLv3.
+    %td
+      = link 'https://leap.se/git/nickserver'
+      = link 'https://github.com/leapcode/nickserver'
+
 
 %h3 Web applications and libraries
 
@@ -47,25 +136,26 @@ This page should give an easy overview of the most important repositories. We ex
   %tr
     %td leap_web
     %td Web application for the LEAP platform, providing user management, tickets, billing, and REST API.
-    %td= link 'https://leap.se/git/leap_web' => 'https://leap.se/git/leap_web'
-    %td= link 'github' => 'https://github.com/leapcode/leap_web'
+    %td
+      = link 'https://leap.se/git/leap_web'
+      = link 'https://github.com/leapcode/leap_web'
   %tr
     %td leap_website
     %td This website
-    %td= link 'https://leap.se/git/leap_website' => 'https://leap.se/git/leap_website'
     %td
+      = link 'https://leap.se/git/leap_website'
   %tr
     %td leap_doc
     %td LEAP Documentation (everything under leap.se/docs including this page)
-    %td= link 'https://leap.se/git/leap_doc' => 'https://leap.se/git/leap_doc'
-    %td
+    %td= link 'https://leap.se/git/leap_doc'
   %tr
     %td srp_js
-    %td Secure Remote Password (SRP) library for javascript
-    %td= link 'https://leap.se/git/srp_js' => 'https://leap.se/git/srp_js'
-    %td= link 'github' => 'https://github.com/leapcode/srp_js'
+    %td Secure Remote Password (SRP) library for Javascript.
+    %td
+      = link 'https://leap.se/git/srp_js'
+      = link 'https://github.com/leapcode/srp_js'
   %tr
     %td ruby_srp
-    %td Secure Remote Password (SRP) library for ruby
-    %td= link 'https://github.com/leapcode/ruby_srp' => 'https://github.com/leapcode/ruby_srp'
-    %td= link 'github' => 'https://github.com/leapcode/ruby_srp'
+    %td Secure Remote Password (SRP) library for Ruby.
+    %td
+      = link 'https://github.com/leapcode/ruby_srp'
