@@ -9,7 +9,7 @@ Se você pesquisar as iniciativas para a criação de formas de comunicação ma
 1. **Problema da autenticidade**: a validação de chaves públicas é muito difícil para os/as usuários gerenciarem, mas sem isso você não pode ter confidencialidade.
 2. **Problma dos metadados**: os protocolos existentes são vulneráveis à análise de metadados, mesmo considerando que muitas vezes os metadados são muito mais sensíveis do que o conteúdo.
 3. **Problema da assincronicidade**: para comunicação criptografada, atualmente você precisa escolher entre sigilo futuro (forward secrecy) e a habilidade de se comunicar de forma assíncrona.
-4. **Problema do grupo*: na prática, pessoas trabalham em grupos, mas a criptografia de chave pública não.
+4. **Problema do grupo**: na prática, pessoas trabalham em grupos, mas a criptografia de chave pública não.
 5. **Problema dos recursos**: não existem protocolos abertos que permitam a usuários/as compartilharem recursos (como arquivos) de forma segura.
 6. **Problema da disponibilidade**: pessoas querem alternar suavemente entre dispositivos e restaurar seus dados se elas perderem um dispositivo, mas isso é bem difícil de se fazer com segurança.
 7. **Problema da atualização**: quase que univesalmente, atualizações de software são feitas de maneiras convidativas para ataques e comprometimento de dispositivos.
