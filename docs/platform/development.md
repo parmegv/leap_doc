@@ -230,6 +230,13 @@ Install vagrant-libvirt plugin and add box
     vagrant plugin install sahara 
     vagrant box add leap-wheezy https://downloads.leap.se/leap-debian-libvirt.box
 
+
+Debugging
+---------
+
+If you get an error in any of the above commands, try to get some debugging information, it will often tell you what is wrong. In order to get debugging logs, you simply need to re-run the command that produced the error but prepend the command with VAGRANT_LOG=info, for example:
+    VAGRANT_LOG=info vagrant box add leap-wheezy https://downloads.leap.se/leap-debian-libvirt.box
+
 Start it
 --------
 
