@@ -225,7 +225,7 @@ Since Vagrant V1.1, Vagrant can be used with different providers/backends, one o
 
 Install vagrant-libvirt plugin and add box
 ------------------------------------------
-
+    sudo apt-get install libvirt-dev
     vagrant plugin install vagrant-libvirt
     vagrant plugin install sahara 
     vagrant box add leap-wheezy https://downloads.leap.se/leap-debian-libvirt.box
