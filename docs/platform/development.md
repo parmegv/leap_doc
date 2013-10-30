@@ -225,7 +225,7 @@ Vagrant can be used with different providers/backends, one of them is [vagrant-l
 
 Install vagrant-libvirt plugin and add box
 ------------------------------------------
-    sudo apt-get install libvirt-dev
+    sudo apt-get install libvirt-bin libvirt-dev
     vagrant plugin install vagrant-libvirt
     vagrant plugin install sahara 
     vagrant box add leap-wheezy https://downloads.leap.se/leap-debian-libvirt.box
@@ -266,5 +266,7 @@ Now you should be able to use the `leap local` commands.
 Known Issues
 ------------
 
+* 'Call to virConnectOpen failed: internal error: Unable to locate libvirtd daemon in /usr/sbin (to override, set $LIBVIRTD_PATH to the name of the libvirtd binary)' - you don't have the libvirtd daemon running or installed, be sure you installed the 'libvirt-bin' package and it is running
+* 'Call to virConnectOpen failed: Failed to connect socket to '/var/run/libvirt/libvirt-sock': Permission denied' - you need to be in the libvirt group to access the socket, do 'sudo adduser <user> libvirt' and then re-login to your session
 * see the [vagrant-libvirt issue list on github](https://github.com/pradels/vagrant-libvirt/issues)
 * be sure to use vagrant-libvirt >= 0.0.11 and sahara >= 0.0.16 (which are the latest stable gems you would get with `vagrant plugin install [vagrant-libvirt|sahara]`) for proper libvirt support
