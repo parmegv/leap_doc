@@ -221,7 +221,7 @@ Ubuntu Raring 13.04
 Using Vagrant with libvirt/kvm
 ==============================
 
-Since Vagrant V1.1, Vagrant can be used with different providers/backends, one of them is [vagrant-libvirt](https://github.com/pradels/vagrant-libvirt). Here are the steps how to use it. Be sure to use a recent vagrant version ( >= 1.2).
+Vagrant can be used with different providers/backends, one of them is [vagrant-libvirt](https://github.com/pradels/vagrant-libvirt). Here are the steps how to use it. Be sure to use a recent vagrant version (>= 1.3).
 
 Install vagrant-libvirt plugin and add box
 ------------------------------------------
