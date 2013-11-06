@@ -141,9 +141,11 @@ Mailspool
 * Any file in the leap_mx mailspool longer for a few seconds ?
 
 
+
     ls -la /var/mail/vmail/Maildir/cur/
 
 * Any mails in postfix mailspool longer than a few seconds ?
+
 
 
     mailq
