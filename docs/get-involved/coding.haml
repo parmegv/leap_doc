@@ -1,0 +1,77 @@
+- @title = "Contributing Code"
+- @summary = "How to issue a pull request."
+
+%h1.first Contributing Code
+
+%h3 Submitting a pull request
+
+%p All development happens via pull requests. To add a new feature or fix a bug, the developer must create a new branch off <code>develop</code>, make their changes, and then issue a pull request for another developer to review before the changes get merged back into <code>develop</code>.
+
+%p Here is an example, using github with username <code>rms</code> and repository <code>bitmask_client</code>. You don't need to use github, but it is a friendly way to get started.
+
+%p
+  %b Step 1 &mdash; Fork on github
+
+%p Login to github.com as 'rms', browse to #{link 'https://github.com/leapcode/bitmask_client'}, and click the fork button.
+
+%p Now you should have a fork of the code available at <code>https://github.com/rms/bitmask_client</code>.
+
+%p
+  %b Step 2 &mdash; Set up local clone
+
+%p Clone the upstream repository:
+
+%pre
+  %code
+    git clone https://leap.se/git/bitmask_client
+    cd bitmask_client
+
+%blockquote
+  .p NOTE: Alternately, you can use the github mirror at <code>https://github.com/leapcode/bitmask_client</code>. It does not matter which one you choose.
+
+%p
+  %b Step 4 &mdash; Add a "remote" for your fork
+
+%p Next, you need to add the fork you created on github as an alternate remote in your local repository:
+
+%pre
+  %code
+    git remote add rms https://github.com/rms/bitmask_client.git
+
+%p
+  %b Step 5 &mdash; Create a new feature branch
+
+%pre
+  %code
+    git fetch origin
+    git checkout develop
+    git checkout -b feature/my_new_feature
+
+%p
+  %b Step 6 &mdash; Hack away
+
+%P Make all your changes in your <code>feature/my_new_feature</code> branch, with a separate <code>git commit</code> for each discrete modification you make.
+
+%p
+  %b Step 7 &mdash; Prepare for pull request
+
+%p Once you are happy with your branch, prepare it for a pull request by rebasing on the latest upstream <code>develop</code> branch. This will also give you an opportunity to clean up your commit history by squashing and changing commit messages.
+
+%pre
+  %code
+    git fetch origin                    # ensure the latest
+    git checkout feature/my_new_feature # if not already checked out
+    git rebase -i develop               # rebase and clean up commits
+
+%p
+  %b Step 8 &mdash; Submit pull request
+
+%p Next, you will push your local feature branch to your fork on github, and then issue a pull request.
+
+%pre
+  %code
+    git push rms feature/my_new_feature
+
+%p Then browse to <code>https://github.com/rms/bitmask_client</code>, where you will see a handy button to issue a pull request. Make sure that the upstream branch is <code>leapcode/bitmask_client:develop</code> and you are requesting the merge of <code>rms/bitmask_client:feature/my_new_feature</code>.
+
+Then you are done. Some other developer will get a notice of your pull request, review the changes, and merge into upstream <code>develop</code> branch. If they have questions or comments, you will get an email from github.

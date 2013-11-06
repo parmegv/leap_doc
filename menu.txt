@@ -1,4 +1,8 @@
 docs
+  get-involved
+    communication
+    coding
+    source
   tech
     infosec
     hard-problems
@@ -8,7 +12,6 @@ docs
     overview
     nicknym
     soledad
-  source
   platform
     quick-start
     guide
