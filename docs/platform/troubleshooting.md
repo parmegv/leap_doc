@@ -34,7 +34,6 @@ Is couchdb accessible through stunnel ?
 Check couchdb acl
 -----------------
 
-
     mkdir /etc/couchdb
     cat /srv/leap/webapp/config/couchdb.yml.admin  # see username and password
     echo "machine 127.0.0.1 login admin password <PASSWORD>" > /etc/couchdb/couchdb-admin.netrc
@@ -43,6 +42,14 @@ Check couchdb acl
     curl -s --netrc-file /etc/couchdb/couchdb-admin.netrc -X GET "http://127.0.0.1:4096"
     curl -s --netrc-file /etc/couchdb/couchdb-admin.netrc -X GET "http://127.0.0.1:4096/_all_dbs"
     
+Check client config files
+-------------------------
+
+    https://example.net/provider.json
+    https://example.net/1/config/smtp-service.json
+    https://example.net/1/config/soledad-service.json
+    https://example.net/1/config/eip-service.json
+
 
 Couchdb node
 ============
@@ -52,6 +59,7 @@ Places to look for errors
 
 * `/opt/bigcouch/var/log/bigcouch.log`
 * `/var/log/syslog` (watch out for stunnel issues)
+
 
 
 Bigcouch membership
@@ -68,7 +76,7 @@ Bigcouch membership
     curl -s --netrc-file /etc/couchdb/couchdb.netrc 'http://127.0.0.1:5984/_membership'
     {"all_nodes":["bigcouch@couch1.bitmask.net"],"cluster_nodes":["bigcouch@couch1.bitmask.net","bigcouch@couch2.bitmask.net"]}
 
-
+* Sometimes a `/etc/init.d/bigcouch restart` on all nodes is needed, to register new nodes
 
 Databases
 ---------
@@ -130,10 +138,23 @@ Query leap-mx
 Mailspool
 ---------
 
-* Any file in the mailspool longer for a few seconds ?
+* Any file in the leap_mx mailspool longer for a few seconds ?
 
 
     ls -la /var/mail/vmail/Maildir/cur/
+
+* Any mails in postfix mailspool longer than a few seconds ?
+
+
+    mailq
+
+
+Testing mail delivery
+---------------------
+
+    swaks -f alice@example.org -t bob@example.net -s mx1.example.net --port 25 
+    swaks -f varac@cdev.bitmask.net -t varac@cdev.bitmask.net -s chipmonk.cdev.bitmask.net --port 465 --tlsc
+    swaks -f alice@example.org -t bob@example.net -s mx1.example.net --port 587 --tls
 
 
 VPN node
