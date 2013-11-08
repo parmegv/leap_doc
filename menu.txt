@@ -3,6 +3,7 @@ docs
     communication
     coding
     source
+    project-ideas
   tech
     infosec
     hard-problems
