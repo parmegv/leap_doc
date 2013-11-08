@@ -1,5 +1,5 @@
 - @title = 'Project Ideas'
-- @description = 'Ideas for discrete, unclaimed development projects that would greatly benefit the LEAP ecosystem.'
+- @summary = 'Ideas for discrete, unclaimed development projects that would greatly benefit the LEAP ecosystem.'
 
 Project Ideas
 ============================================
