@@ -35,10 +35,9 @@ downloads page](https://downloads.leap.se/client/).
 
 ### Windows
 
-> **note**
->
-> The release of the bundles for Windows is delayed right now. We should
-> resume producing them shortly, keep tuned.
+-   [Windows 32 bits
+    bundle](https://downloads.leap.se/client/windows/Bitmask-win32-latest.zip)
+    ([signature](https://downloads.leap.se/client/windows/Bitmask-win32-latest.zip.asc))
 
 ### Signature verification
 
