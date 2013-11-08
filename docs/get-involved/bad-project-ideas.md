@@ -56,3 +56,14 @@
 * Contact: elijah
 * Difficulty: -
 * Description: -
+
+### Port Soledad to Android
+* Contact: drebs, chiiph
+* Difficulty: Medium to hard
+* Description: Soledad is currently built on top of U1DB's reference implementation which is in Python. It also uses OpenSSL and pycryptopp for the cryptography bits. So the possibilities for porting Soledad to Android are: Implement it in pure C and use cryptopp (since it's what pycryptopp is using underneath), do an pure Java implementation or try to run the Python code we are already using. It would be reasonable to not have the most fast implementation at first if running our Python code is possible and would shorten the development times.
+
+### Port Keymanager to Android
+* Dependencies: Soledad for Android
+* Contact: drebs, chiiph
+* Difficulty: Medium
+* Description: The way we try to solve the key distribution problem is by having a NickServer and handling key logic through what we call the KeyManager. Currently, as most of our components, it's implemented in Python, so the same ideas apply here as for the Soledad port.
