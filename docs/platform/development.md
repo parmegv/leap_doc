@@ -69,7 +69,7 @@ Starting local development nodes
 
 In order to test the node "web1" we need to start it. Starting a node for the first time will spin up a virtual machine. The first time you do this will take some time because it will need to download a VM image (about 700mb). After you've downloaded the base image, you will not need to download it again, and instead you will re-use the downloaded image (until you need to update the image).
 
-NOTE: Many people have difficulties getting Vagrant working. If the following commands do not work, please visit the [Vagrant page](vagrant) to troubleshoot your Vagrant install before proceeding.
+NOTE: Many people have difficulties getting Vagrant working. If the following commands do not work, please see the Vagrant section below to troubleshoot your Vagrant install before proceeding.
 
     $ leap local start web
      = created test/
