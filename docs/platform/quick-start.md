@@ -217,7 +217,7 @@ For a full list of possible settings, you can use `leap inspect` to see how prov
 Setup the provider's nodes and services
 ---------------------------------------
 
-A "node" is a server that is part of your infrastructure. Every node can have one or more services associated with it. Some nodes are "local" and used only for testing, see [Development](developmet) for more information.
+A "node" is a server that is part of your infrastructure. Every node can have one or more services associated with it. Some nodes are "local" and used only for testing, see [Development](development) for more information.
 
 Create a node, with the service "webapp":
 
