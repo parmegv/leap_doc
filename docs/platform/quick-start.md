@@ -283,15 +283,16 @@ If you prefer, you can initalize each node, one at a time:
 Deploy the LEAP platform to the nodes
 --------------------
 
-Now you should deploy the platform recipes to the nodes. Deployment can take a while to run, especially on the first run, as it needs to update the packages on the new machine:
+Now you should deploy the platform recipes to the nodes. Deployment can take a while to run, especially on the first run, as it needs to update the packages on the new machine.
+Note that currently, nodes must be deployed in a certain order. The underlying couch database node(s) must be deployed first, and then all other nodes.
 
-    $ leap deploy web1
+    $ leap deploy couch1
 
 Watch the output for any errors (in red), if everything worked fine, you should now have your first running node. If you do have errors, try doing the deploy again. 
 
 However, to deploy our three-node openvpn setup, we need the database and LEAP web application requires a database to run, so let's deploy to the couchdb and openvpn nodes:
 
-    $ leap deploy couch1
+    $ leap deploy web1
     $ leap deploy vpn1
 
 NOTE: the output from deploying can be quite busy, so we often do them each node one by one.
