@@ -56,6 +56,8 @@ Deploying
 
 . When running a deploy at a verbosity level of 2 and above, you will notice puppet deprecation warnings, these are known and we are working on fixing them
 
+. Currently, the Webapp node needs to be deployed *after* the couchdb node (see https://leap.se/code/issues/3599)
+
 Special Environments
 --------------------
 
