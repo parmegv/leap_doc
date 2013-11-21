@@ -105,10 +105,15 @@ Or from the github mirror :
     $ git clone https://github.com/leapcode/bitmask_client.git
 
 Once you have grabbed a copy of the sources, and installed all the base
-dependencies, you can install it into your site-packages easily :
+dependencies, the recommended way to proceed is to install things in a virtualenv.
+
+    $ virtualenv bitmask && source bitmask/bin/activate
+    $ make  # compile the resources
+    $ python2 setup.py install
+
+Or you can install it into your global site-packages easily :
 
     $ make  # compile the resources
     $ sudo python2 setup.py install
 
-Although, like always, it is a better idea to install things in a
-virtualenv.
+WARNING: installing a package in the global site-packages can be harmful because the dependency installation can overwrite some of the existing packages.
