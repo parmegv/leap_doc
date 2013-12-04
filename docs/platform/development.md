@@ -154,10 +154,11 @@ You can connect to your local nodes just like you do with normal LEAP nodes, by 
 
 However, if you cannot connect to your local node, because the networking is not setup properly, or you have deployed a firewall that locks you out, you may need to access the graphical console.
 
-In order to do that, you will need to configure Vagrant to launch a graphical console and then you can login as root there to diagnose the networking problem. To do this, add the following to your
-$HOME/.leaprc:
+In order to do that, you will need to configure Vagrant to launch a graphical console and then you can login as root there to diagnose the networking problem. To do this, add the following to your $HOME/.leaprc:
 
-    @custom_vagrant_vm_line = 'config.vm.boot_mode = :gui'
+    @custom_vagrant_vm_line = 'config.vm.provider "virtualbox" do |v|
+      v.gui = true
+end'
 
 and then start, or restart, your local Vagrant node. You should get a VirtualBox graphical interface presented to you showing you the bootup and eventually the login.
 
