@@ -158,7 +158,7 @@ In order to do that, you will need to configure Vagrant to launch a graphical co
 
     @custom_vagrant_vm_line = 'config.vm.provider "virtualbox" do |v|
       v.gui = true
-end'
+    end'
 
 and then start, or restart, your local Vagrant node. You should get a VirtualBox graphical interface presented to you showing you the bootup and eventually the login.
 
