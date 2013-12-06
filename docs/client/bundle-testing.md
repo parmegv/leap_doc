@@ -1,9 +1,6 @@
 @nav_title = "Bundle QA"
 @title = "Guidelines for bundle QA"
 
-Bundle functionality test
-=========================
-
 Recommended setup
 -----------------
 
