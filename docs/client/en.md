@@ -47,9 +47,11 @@ Supported OSs
 -------------
 
 Currently supported OSs (32 and 64 bits) are:
+
 * Debian 7 (32bits lxde and 64 bits gnome3)
 * Ubuntu 12.04 (LTS, unity)
 * Ubuntu 13.10 (latest, unity)
 * Mac OSX >= 10.8
 * Windows 7 (32 bits only)
 * Windows 8 (planned)
+
