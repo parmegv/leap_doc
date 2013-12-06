@@ -27,4 +27,5 @@ docs
     user-install
     user-running
     testers-howto
+    bundle-qa
     dev-environment
