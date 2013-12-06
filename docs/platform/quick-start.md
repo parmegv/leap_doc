@@ -74,9 +74,9 @@ NOTE: leap_cli should work with ruby1.8, but has only been tested using ruby1.9.
 
 
 Install the LEAP command-line utility
----------------------
+-------------------------------------------------
 
-<!--Install the `leap` command as a gem:
+Install the `leap` command from rubygems.org:
 
     $ sudo gem install leap_cli
 
@@ -85,38 +85,27 @@ Alternately, you can install `leap` from source:
     $ git clone https://leap.se/git/leap_cli
     $ cd leap_cli
     $ rake build
--->
-
-Install `leap` command from source:
-
-    $ git clone https://leap.se/git/leap_cli
-    $ cd leap_cli
-    $ rake build
-
-Then, install as root user (recommended):
-
     $ sudo rake install
 
-Or, install as unprivileged user:
+You can also install from source as an unprivileged user, if you want. For example, instead of `sudo rake install` you can do something like this:
 
     $ rake install
     # watch out for the directory leap is installed to, then i.e.
     $ sudo ln -s ~/.gem/ruby/1.9.1/bin/leap /usr/local/bin/leap
 
-With both methods, you can use now /usr/local/bin/leap, which in most cases will be in your $PATH.
+With either `rake install` or `sudo rake install`, you can use now /usr/local/bin/leap, which in most cases will be in your $PATH.
 
-If you have successfully installed the LEAP cli, then you should be able to do the following:
+If you have successfully installed the `leap` command, then you should be able to do the following:
 
     $ leap --help
 
-and be presented with the command-line help options. If you receive an error when doing this, please read through the README.md in the LEAP cli source to try and resolve any problems before going forwards.
-
+This will list the command-line help options. If you receive an error when doing this, please read through the README.md in the `leap_cli` source to try and resolve any problems before going forwards.
 
 Check out the platform
-----------------------
+--------------------------
 
 The LEAP Platform is a series of puppet recipes and modules that will be used to configure your provider. You will need a local copy of the platform that will be used to setup your nodes and manage your services. To begin with, you will not need to modify the LEAP Platform.
-Until we have a up to date stable release we recommend using the `develop` branch of the platform for all features of LEAP. 
+Until we have a up to date stable release we recommend using the `develop` branch of the platform for all features of LEAP.
 
 First we'll create a directory for LEAP things, and then we'll check out the platform code and initalize the modules:
 
@@ -138,12 +127,12 @@ A provider instance is a directory tree, usually stored in git, that contains ev
 Bootstrap the provider
 -----------------------
 
-Now, we will initialize this directory to make it a provider instance. Your provider instance will need to know where it can find the local copy of the git repository leap_platform, which we setup in the previous step. 
+Now, we will initialize this directory to make it a provider instance. Your provider instance will need to know where it can find the local copy of the git repository leap_platform, which we setup in the previous step.
 
     $ cd ~/leap/example
     $ leap new .
 
-NOTES: 
+NOTES:
  . make sure you include that trailing dot!
 
 The `leap new` command will ask you for several required values:
@@ -288,7 +277,7 @@ Note that currently, nodes must be deployed in a certain order. The underlying c
 
     $ leap deploy couch1
 
-Watch the output for any errors (in red), if everything worked fine, you should now have your first running node. If you do have errors, try doing the deploy again. 
+Watch the output for any errors (in red), if everything worked fine, you should now have your first running node. If you do have errors, try doing the deploy again.
 
 However, to deploy our three-node openvpn setup, we need the database and LEAP web application requires a database to run, so let's deploy to the couchdb and openvpn nodes:
 
@@ -319,7 +308,7 @@ You can run `leap -v2 deploy` to see exactly what commands are being executed.
 Test that things worked correctly
 =================================
 
-You should now have three machines with the LEAP platform deployed to them, one for the web application, one for the database and one for the OpenVPN gateway. 
+You should now have three machines with the LEAP platform deployed to them, one for the web application, one for the database and one for the OpenVPN gateway.
 
 
 Access the web application

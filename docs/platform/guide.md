@@ -1,7 +1,7 @@
 @title = "LEAP Platform Guide"
 @nav_title = "Guide"
 
-Services
+Node types
 ================================
 
 Every node has one or more services that determines the node's function within your provider's infrastructure.
@@ -23,6 +23,27 @@ Brief overview of the services:
 * **monitor**: Internal service to monitor all the other nodes. Currently, you can have zero or one `monitor` nodes.
 * **tor**: Sets up a tor exit node, unconnected to any other service.
 * **dns**: Not yet implemented.
+
+webapp
+-----------------------------------
+
+The webapp node is responsible for both the user face web application and the API that the client interacts with.
+
+Some users can be "admins" with special powers to answer tickets and close accounts. To make an account into an administrator, you need to configure the `webapp.admins` property with an array of user names.
+
+For example, to make users `alice` and `bob` into admins, create a file `services/webapp.json` with the following content:
+
+    {
+      "webapp": {
+        "admins": ["bob", "alice"]
+      }
+    }
+
+And then redeploy to all webapp nodes:
+
+    leap deploy webapp
+
+By putting this in `services/webapp.json`, you will ensure that all webapp nodes inherit the value for `webapp.admins`.
 
 Locations
 ================================
@@ -264,3 +285,22 @@ There are a few cases when we must gather internal data from a node before we ca
 Run `leap help facts update` for more information.
 
 The file `facts.json` should be committed to source control. You might not have a `facts.json` if one is not required for your provider.
+
+Disabling Nodes
+=====================================
+
+There are two ways to temporarily disable a node:
+
+**Option 1: enabled == false**
+
+If a node has a property `enabled` set to false, then the `leap` command will skip over the node and pretend that it does not exist. For example:
+
+    {
+      "ip_address": "1.1.1.1",
+      "services": ["openvpn"],
+      "enabled": false
+    }
+
+**Options 2: no-deploy**
+
+If the file `/etc/leap/no-deploy` exists on a node, then when you run the commmand `leap deploy` it will halt and prevent a deploy from going through (if the node was going to be included in the deploy).
