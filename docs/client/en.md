@@ -19,7 +19,7 @@ User Guide
 ----------
 * [Installing Bitmask](client/user-install)
 * [Running Bitmask](client/user-running)
- 
+
 Tester Guide
 ------------
 
@@ -27,7 +27,7 @@ This part of the documentation details how to fetch the last development
 version and how to report bugs.
 
 * [Howto for testers](client/testers-howto)
- 
+
 Hackers Guide
 -------------
 
@@ -35,9 +35,21 @@ If you want to contribute to the project, we wrote this for you.
 
 * [Setting up a development environment](client/dev-environment)
 
- 
+
 <!--
 * [Running latest code](client/bleeding-edge)
 * [Getting started with development](client/dev-guide)
 * [Configuration](client/configuration)
 * [Client API](client/client-api) -->
+
+
+Supported OSs
+-------------
+
+Currently supported OSs (32 and 64 bits) are:
+- Debian 7 (32bits lxde and 64 bits gnome3)
+- Ubuntu 12.04 (LTS, unity)
+- Ubuntu 13.10 (latest, unity)
+- Mac OSX >= 10.8
+- Windows 7 (32 bits only)
+- Windows 8 (planned)
