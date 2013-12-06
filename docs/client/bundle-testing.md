@@ -70,12 +70,16 @@ Problems report
 ---------------
 
 You should to create an issue with the followinw information:
+
 - OS, version, architecture, desktop environment (if relevant).
 - bitmask.log file located in the root folder of the uncompressed bundle
 - steps to reproduce
 
-NOTE: if you find a problem, try to reproduce and take note of the steps needed to get the same error.
+If you find a problem, try to reproduce and take note of the steps needed to get the same error.
+
 Also, in some cases, a failure appears but if you run again is not there anymore (e.g.: some initialization issue), please report that too.
+
+For more details look at [Reporting bugs](client/testers-howto) section.
 
 
 Utils
