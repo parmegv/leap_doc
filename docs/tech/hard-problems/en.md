@@ -30,6 +30,8 @@ The problem:
 
 If proper key validation is a precondition for secure communication, but it is too difficult for most users, what hope do we have? We have developed a unique federated system called [Nicknym](/nicknym) that automatically discovers and validates public keys allowing the user to take advantage of public key cryptography without knowing anything about keys or signatures.
 
+The standard protocol that exists today to solve this problem is [DANE](https://en.wikipedia.org/wiki/DNS-based_Authentication_of_Named_Entities). DANE might be the better option in the long run, but currently DANE is complex to set up, complex for clients to consume, leaks association information to a network observer, and relies on trusting the DNS root zone and TLD zones.
+
 ### Meta-data problem
 
 The problem:
@@ -66,7 +68,7 @@ In the short term, we are layering forward secret transport for email and chat r
 
 This approach is potentially effective against external network observers, but does not achieve forward secrecy from the service providers themselves.
 
-In the long term, we plan to work with other groups to create new encryption protocol standards that can be both asynchronous and forward secret. :
+In the long term, we plan to work with other groups to create new encryption protocol standards that can be both asynchronous and forward secret:
 
 * [Forward Secrecy Extensions for OpenPGP](http://tools.ietf.org/html/draft-brown-pgp-pfs-03)
 * [Triple elliptical curve Diffie-Hellman handshake](https://whispersystems.org/blog/simplifying-otr-deniability/)
@@ -80,6 +82,8 @@ The problem:
 We have a lot of ideas, but we don't have any solutions yet to fix this. Essentially, the question is how to use existing public key primitives to create strong cryptographic groups, where membership and permissions are based on keys and not arbitrary server-maintained access control lists.
 
 Most of the interesting work in this area has been done by companies working on secure file backup/sync/sharing, such as Wuala and Spideroak. Unfortunately, there are not yet any good open protocols or free software packages that can handle group cryptography.
+
+At the moment, probably the best approach is the simple approach: a protocol where the client encrypts each message to each recipient individually, and has some mechanism to verify the transcript to ensure that all parties received the same messages.
 
 There is some free software work on some of interesting building blocks that could be useful in building group cryptography. For example:
 
@@ -104,9 +108,15 @@ The problem:
 
 > People want to smoothly switch devices, and restore their data if they lose a device, but this very difficult to do securely.
 
-Users today demand the ability to access their data on multiple devices and to have piece of mind that there data will not be lost forever if they lose a device. In the free software world, only Firefox has addressed this problem adequately and in a secure way (with Firefox Sync).
+Users today demand the ability to access their data on multiple devices and to have piece of mind that their data will not be lost forever if they lose a device. In the free software world, only Firefox has addressed this problem adequately and in a secure way (with Firefox Sync).
 
 At LEAP, we have worked to solve the availability problem with a system we call [Soledad](/soledad) (for Synchronization of Locally Encrypted Documents Among Devices). Soledad gives the client application an encrypted, synchronized, searchable document database. All data is client encrypted, both when it is stored on the local device and synced with the cloud. As far as we know, there is nothing else like it, either in the free software or commercial world.
+
+Soledad tries to solve the problem of general data availability, but other initiatives have tried to tackle the more narrow problem of availability of private keys and discovered public keys. These initiatives include:
+
+* Ben Laurie's [proposed protocol for storing secrets in the cloud](http://www.links.org/files/nigori/nigori-protocol-01.html)
+* Experimental [code for similar cloud storage of keys](https://github.com/mettle/nilcat)
+* Phillip Hallam-Baker's [thoughts along similar lines](http://tools.ietf.org/html/draft-hallambaker-prismproof-key-00)
 
 ### Update problem
 
