@@ -47,15 +47,8 @@ For the signature verification you can use :
 
 Asuming that you downloaded the linux 64 bits bundle.
 
-Debian package
---------------
-
-> **warning**
->
-> The debian package that you can currently find in the leap
-> repositories is from the stable, 0.2.0 release, which is now outdated.
-> You are encouraged to install the development version or the
-> standalone bundles while we upload the newest packages.
+Debian / Ubuntu packages
+------------------------
 
 First, you need to bootstrap your apt-key:
 
@@ -64,9 +57,11 @@ First, you need to bootstrap your apt-key:
     # gpg --list-sigs 0x485B12FA218E81EB
     # gpg -a --export 0x1E34A1828E207901  | sudo apt-key add - 
 
-Add the archive to your sources.list:
+Add the archive to your sources.list, replace <suite> below with your Debian or
+Ubuntu suite, which you can find by typing 'lsb_release -c' in a terminal.
+Currently the following are available: sid, jessie, trusty, saucy
 
-    # echo "deb http://deb.leap.se/debian unstable main" >> /etc/apt/sources.list
+    # echo "deb http://deb.leap.se/debian <suite> main" >> /etc/apt/sources.list
     # apt-get update
     # apt-get install leap-keyring
 
