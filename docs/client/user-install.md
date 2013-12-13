@@ -59,7 +59,7 @@ First, you need to bootstrap your apt-key:
 
 Add the archive to your sources.list, replace <suite> below with your Debian or
 Ubuntu suite, which you can find by typing 'lsb_release -c' in a terminal.
-Currently the following are available: sid, jessie, trusty, saucy
+Currently the following are available: sid, jessie, trusty, saucy, raring, quantal
 
     # echo "deb http://deb.leap.se/debian <suite> main" >> /etc/apt/sources.list
     # apt-get update
