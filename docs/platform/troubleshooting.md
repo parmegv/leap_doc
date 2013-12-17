@@ -67,14 +67,17 @@ Bigcouch membership
 
 * All nodes configured for the provider should appear here:
 
-
+<pre>
     curl -s --netrc-file /etc/couchdb/couchdb.netrc -X GET 'http://127.0.0.1:5986/nodes/_all_docs'
+</pre>
 
 * All configured nodes should show up under "cluster_nodes", and the ones online and communicating with each other should appear under "all_nodes". This example output shows the configured cluster nodes `couch1.bitmask.net` and `couch2.bitmask.net`, but `couch2.bitmask.net` is currently not accessible from `couch1.bitmask.net`
 
 
+<pre>
     curl -s --netrc-file /etc/couchdb/couchdb.netrc 'http://127.0.0.1:5984/_membership'
     {"all_nodes":["bigcouch@couch1.bitmask.net"],"cluster_nodes":["bigcouch@couch1.bitmask.net","bigcouch@couch2.bitmask.net"]}
+</pre>
 
 * Sometimes a `/etc/init.d/bigcouch restart` on all nodes is needed, to register new nodes
 
@@ -83,9 +86,11 @@ Databases
 
 * Following output shows all neccessary DBs that should be present. Note that the `user-0123456....` DBs are the data stores for a particular user. 
 
-
+<pre>
     curl -s --netrc-file /etc/couchdb/couchdb.netrc -X GET 'http://127.0.0.1:5984/_all_dbs' 
     ["customers","identities","sessions","shared","tickets","tokens","user-0","user-9d34680b01074c75c2ec58c7321f540c","user-9d34680b01074c75c2ec58c7325fb7ff","users"]
+</pre>
+
 
 
 
@@ -95,7 +100,9 @@ Design Documents
 * Is User `_design doc` available ?
 
 
+<pre>
     curl -s --netrc-file /etc/couchdb/couchdb.netrc -X  GET "http://127.0.0.1:5984/users/_design/User"
+</pre>
 
 
 
@@ -116,15 +123,18 @@ Query leap-mx
 * for useraccount 
 
 
+<pre>
     postmap -v -q  "joe@dev.bitmask.net" tcp:localhost:2244
     ...
     postmap: dict_tcp_lookup: send: get jow@dev.bitmask.net
     postmap: dict_tcp_lookup: recv: 200 
     ...
+</pre>
 
 * for mailalias
 
 
+<pre>
     postmap -v -q  "joe@dev.bitmask.net" tcp:localhost:4242
     ...
     postmap: dict_tcp_lookup: send: get joe@dev.bitmask.net
@@ -132,6 +142,7 @@ Query leap-mx
     postmap: dict_tcp_lookup: found: f01bc1c70de7d7d80bc1ad77d987e73a
     f01bc1c70de7d7d80bc1ad77d987e73a
     ...
+</pre>
 
 
 
@@ -142,13 +153,16 @@ Mailspool
 
 
 
+<pre>
     ls -la /var/mail/vmail/Maildir/cur/
+</pre>
 
 * Any mails in postfix mailspool longer than a few seconds ?
 
-
-
+<pre>
     mailq
+</pre>
+
 
 
 Testing mail delivery
