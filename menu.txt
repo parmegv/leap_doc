@@ -29,3 +29,4 @@ docs
     testers-howto
     bundle-testing
     dev-environment
+    known-issues
