@@ -5,6 +5,15 @@
 
 Here you can find documentation about known issues and potential work-arounds in the current Leap Platform release.
 
+0.5.0rc1
+========
+
+Service separation
+------------------
+
+. You can't deploy all services to one single node. You need at least to seperate the mx and the webapp node. The reason is because they both use haproxy to query the couch db, and haproxy still doesn't have a way to split up its config files in a .d directory (see: https://leap.se/code/issues/3839)
+
+
 0.2.2
 =====
 
