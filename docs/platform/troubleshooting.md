@@ -8,8 +8,8 @@ General
 
 * Please increase verbosity when debugging / filing issues in our issue tracker. You can do this with adding i.e. `-v 5` after the `leap` cmd, i.e. `leap -v 2 deploy`.
 
-Webapp node
-===========
+Webapp
+======
 
 Places to look for errors
 -------------------------
@@ -27,12 +27,17 @@ Is haproxy ok ?
 Is couchdb accessible through stunnel ?
 ---------------------------------------
 
+* Depending on how many couch nodes you have, increase the port for every test
+  (see /etc/haproxy/haproxy.cfg for the server/port mapping):
+
 
     curl -s -X  GET "http://127.0.0.1:4000"
+    curl -s -X  GET "http://127.0.0.1:4001"
+    ... 
 
 
-Check couchdb acl
------------------
+Check couchdb acl as admin
+--------------------------
 
     mkdir /etc/couchdb
     cat /srv/leap/webapp/config/couchdb.yml.admin  # see username and password
@@ -41,6 +46,17 @@ Check couchdb acl
 
     curl -s --netrc-file /etc/couchdb/couchdb-admin.netrc -X GET "http://127.0.0.1:4096"
     curl -s --netrc-file /etc/couchdb/couchdb-admin.netrc -X GET "http://127.0.0.1:4096/_all_dbs"
+
+Check couchdb acl as unpriviledged user 
+---------------------------------------
+
+    cat /srv/leap/webapp/config/couchdb.yml  # see username and password
+    echo "machine 127.0.0.1 login webapp password <PASSWORD>" > /etc/couchdb/couchdb-webapp.netrc
+    chmod 600 /etc/couchdb/couchdb-webapp.netrc
+
+    curl -s --netrc-file /etc/couchdb/couchdb-webapp.netrc -X GET "http://127.0.0.1:4096"
+    curl -s --netrc-file /etc/couchdb/couchdb-webapp.netrc -X GET "http://127.0.0.1:4096/_all_dbs"
+
     
 Check client config files
 -------------------------
@@ -51,8 +67,14 @@ Check client config files
     https://example.net/1/config/eip-service.json
 
 
-Couchdb node
-============
+Soledad
+=======
+
+    /var/log/soledad.log
+
+
+Couchdb
+=======
 
 Places to look for errors
 -------------------------
@@ -106,8 +128,8 @@ Design Documents
 
 
 
-MX node
-=======
+MX
+==
 
 Places to look for errors
 -------------------------
@@ -145,6 +167,21 @@ Query leap-mx
 </pre>
 
 
+Check couchdb acl as unpriviledged user 
+---------------------------------------
+
+
+
+    cat /etc/leap/mx.conf  # see username and password
+    echo "machine 127.0.0.1 login leap_mx password <PASSWORD>" > /etc/couchdb/couchdb-leap_mx.netrc
+    chmod 600 /etc/couchdb/couchdb-leap_mx.netrc
+
+    curl -s --netrc-file /etc/couchdb/couchdb-leap_mx.netrc -X GET "http://127.0.0.1:4096/_all_dbs"   # pick one "user-<hash>" db
+    curl -s --netrc-file /etc/couchdb/couchdb-leap_mx.netrc -X GET "http://127.0.0.1:4096/user-de9c77a3d7efbc779c6c20da88e8fb9c"
+
+
+* you may check multiple times, cause 127.0.0.1:4096 is haproxy load-balancing the different couchdb nodes
+
 
 Mailspool
 ---------
@@ -173,8 +210,8 @@ Testing mail delivery
     swaks -f alice@example.org -t bob@example.net -s mx1.example.net --port 587 --tls
 
 
-VPN node
-========
+VPN
+===
 
 Places to look for errors
 -------------------------
