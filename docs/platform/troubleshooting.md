@@ -126,6 +126,23 @@ Design Documents
     curl -s --netrc-file /etc/couchdb/couchdb.netrc -X  GET "http://127.0.0.1:5984/users/_design/User"
 </pre>
 
+Is couchdb cluster backend accessible through stunnel ?
+-------------------------------------------------------
+
+* Find out how many connections are set up for the couchdb cluster backend:
+
+<pre>
+    grep "accept = 127.0.0.1" /etc/stunnel/*
+</pre>
+
+
+* Now connect to all of those local endpoints to see if they up. All these tests should return "localhost [127.0.0.1] 4000 (?) open"
+
+<pre>
+    nc -v 127.0.0.1 4000
+    nc -v 127.0.0.1 4001
+    ...
+</pre>
 
 
 MX
@@ -138,6 +155,16 @@ Places to look for errors
 * `/var/log/leap_mx.log`
 * `/var/log/syslog` (watch out for stunnel issues)
 
+Is couchdb accessible through stunnel ?
+---------------------------------------
+
+* Depending on how many couch nodes you have, increase the port for every test
+  (see /etc/haproxy/haproxy.cfg for the server/port mapping):
+
+
+    curl -s -X  GET "http://127.0.0.1:4000"
+    curl -s -X  GET "http://127.0.0.1:4001"
+    ... 
 
 Query leap-mx
 -------------
