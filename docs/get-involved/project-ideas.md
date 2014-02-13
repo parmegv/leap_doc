@@ -8,7 +8,7 @@ Interested in helping with LEAP? Not sure where to dive in? This list of project
 
 These are discrete projects that would really be a great benefit to the LEAP development effort, but are separate enough that you can dive right in without stepping on anyone's toes.
 
-If you are interested [contact us on IRC or the mailing list](communication).
+If you are interested [contact us on IRC or the mailing list](communication). We will put you in touch with the contact listed under each project.
 
 If you have your own ideas for projects, we would love to hear about it!
 
@@ -63,14 +63,6 @@ The Bitmask client application is entirely ported to Debian, with every dependen
 
 Mac OS
 -------------------------
-
-### Code signing on Mac
-
-We need to be able to properly sign our OSX bundle app.
-
-* Contact: chiiph
-* Difficulty: Medium
-* Skills: Mac programming
 
 ### Proper privileged execution on Mac
 
@@ -155,6 +147,24 @@ We have support for Windows 32bits, 64bits seems to be able to use that, except 
 * Difficulty: Either hard or really easy.
 * Skills: Windows programming
 
+Android
+----------------------------------------------
+
+### Ensure OpenVPN fails closed
+
+For enhanced security, we would like the VPN on android to have the option of blocking all network traffic if the VPN dies or when it has not yet established a connection. Network traffic would be restored when the user manually turns off the VPN or the VPN connection is restored. Currently, there is no direct way to do this with Android, but we have a few ideas for tackling this problem.
+
+* Contact: meandering-code, parmegv, or richy
+* Difficulty: not sure
+* Skills: Android programming
+
+### Port libraries to Android
+
+Before we can achieve full functionality on Android, we have a lot of Python libraries that need to either be ported to run directly on Android or to rewrite them natively in Java or JNI. We have been pursing both strategies, for different libraries, but we have a lot more work to do.
+
+* Contact: richy, meandering-code, parmegv
+* Difficulty: varies
+* Skills: Android programming, compiling, Python programming.
 
 Installer and Build Process
 ----------------------------------------------
@@ -204,9 +214,9 @@ This idea is basically a simple note pad application that saves all its notes as
 Miscellaneous
 -------------------------------
 
-### Token-based signup
+### Token-based user registration
 
-The idea is to allow or require tokens in the signup process. These tokens might allow to claim a particular username, give you a credit when you sign up, allow you to sign up, etc.
+The idea is to allow or require tokens in the new user signup process. These tokens might allow to claim a particular username, give you a credit when you sign up, allow you to sign up, etc.
 
 * Dependency: token-based signup in webapp API.
 * Contact: elijah, chiiph
@@ -387,7 +397,7 @@ Description: Once the Soledad server quota enforcement code is in place, it woul
 * Difficulty: Easy
 * Skills: Ruby
 
-### Add support for token-based signup
+### Add support for token-based user registration
 
 The idea is to allow or require tokens in the signup process. These tokens might allow to claim a particular username, give you a credit when you sign up, allow you to sign up, etc.
 
