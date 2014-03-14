@@ -4,7 +4,7 @@
 Setting up a development environment
 ====================================
 
-This document covers how to get an enviroment ready to contribute code
+This document covers how to get an environment ready to contribute code
 to Bitmask.
 
 Cloning the repo
@@ -79,7 +79,7 @@ your virtualenv:
     $ virtualenv --site-packages .
 
 After that, you must export `LEAP_VENV_SKIP_PYSIDE` to skip the
-isntallation:
+installation:
 
     $ export LEAP_VENV_SKIP_PYSIDE=1
 
@@ -92,3 +92,21 @@ working environment, they will be installed avoiding the need for
 administrative permissions:
 
     $ pip install -r pkg/requirements.pip
+
+
+Using automagic helper script
+-----------------------------
+
+You can use a helper script that will get you started with bitmask and all the related repos.
+1) install system dependencies
+2) download automagic script
+3) run it :)
+
+Commands so you can copy/paste:
+
+    mkdir bitmask && cd bitmask
+    wget https://raw.githubusercontent.com/leapcode/bitmask_client/develop/pkg/scripts/bootstrap_develop.sh
+    chmod +x bootstrap_develop.sh
+    ./bootstrap_develop.sh init  # use help parameter for more information
+
+This script allows you to get started, update and run the bitmask app with all its repositories.
