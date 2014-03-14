@@ -4,86 +4,16 @@
 Installation
 ============
 
-This part of the documentation covers the installation of Bitmask. We
-assume that you want to get it properly installed before being able to
-use it. But we can we wrong.
-
-Standalone bundle
------------------
-
-Maybe the quickest way of running Bitmask in your machine is using the
-standalone bundle. That is the recommended way to use Bitmask for the
-time being.
-
-You can get the latest bundles, and their matching signatures at [the
-downloads page](https://downloads.leap.se/client/).
-
-### Linux
-
--   [Linux 32 bits
-    bundle](https://downloads.leap.se/client/linux/Bitmask-linux32-latest.tar.bz2)
-    ([signature](https://downloads.leap.se/client/linux/Bitmask-linux32-latest.tar.bz2.asc))
--   [Linux 64 bits
-    bundle](https://downloads.leap.se/client/linux/Bitmask-linux64-latest.tar.bz2)
-    ([signature](https://downloads.leap.se/client/linux/Bitmask-linux64-latest.tar.bz2.asc))
-
-### OSX
-
--   [OSX
-    bundle](https://downloads.leap.se/client/osx/Bitmask-OSX-latest.dmg)
-    ([signature](https://downloads.leap.se/client/osx/Bitmask-OSX-latest.dmg.asc))
-
-### Windows
-
--   [Windows 32 bits
-    bundle](https://downloads.leap.se/client/windows/Bitmask-win32-latest.zip)
-    ([signature](https://downloads.leap.se/client/windows/Bitmask-win32-latest.zip.asc))
-
-### Signature verification
-
-For the signature verification you can use :
-
-    $ gpg --verify Bitmask-linux64-latest.tar.bz2.asc
-
-Asuming that you downloaded the linux 64 bits bundle.
-
-Debian / Ubuntu packages
-------------------------
-
-First, you need to bootstrap your apt-key:
-
-    # gpg --recv-key 0x1E34A1828E207901 0x485B12FA218E81EB
-    # gpg --list-sigs 0x1E34A1828E207901
-    # gpg --list-sigs 0x485B12FA218E81EB
-    # gpg -a --export 0x1E34A1828E207901  | sudo apt-key add - 
-
-Add the archive to your sources.list, replace <suite> below with your Debian or
-Ubuntu suite, which you can find by typing 'lsb_release -c' in a terminal.
-Currently the following are available: sid, jessie, trusty, saucy, raring, quantal
-
-    # echo "deb http://deb.leap.se/debian <suite> main" >> /etc/apt/sources.list
-    # apt-get update
-    # apt-get install leap-keyring
-
-And then you can happily install bitmask:
-
-    apt-get install bitmask
+For download links and installation instructions go to https://dl.bitmask.net/
 
 Distribute & Pip
 ----------------
 
-> **note**
->
-> The rest of the methods described below in this page assume you are
-> familiar with python code, and you can find your way through the
-> process of dependencies install. For more insight, you can also refer
-> to the sections setting up a working environment or
-> fetching latest code for testing.
+**Note**
 
-![image](https://pypip.in/v/leap.bitmask/badge.png%0A%20%20%20%20%20:target:%20https://crate.io/packages/leap.bitmask)
-
-Installing Bitmask is as simple as using
-[pip](http://www.pip-installer.org/) for the already released versions :
+If you are familiar with python code and you can find your way through the
+process of dependencies install, you can installing Bitmask using [pip](http://www.pip-installer.org/)
+for the already released versions :
 
     $ pip install leap.bitmask
 
@@ -99,16 +29,5 @@ Or from the github mirror :
 
     $ git clone https://github.com/leapcode/bitmask_client.git
 
-Once you have grabbed a copy of the sources, and installed all the base
-dependencies, the recommended way to proceed is to install things in a virtualenv.
+For more information go to the [Hacking](client/dev-environment) section :)
 
-    $ virtualenv bitmask && source bitmask/bin/activate
-    $ make  # compile the resources
-    $ python2 setup.py install
-
-Or you can install it into your global site-packages easily :
-
-    $ make  # compile the resources
-    $ sudo python2 setup.py install
-
-WARNING: installing a package in the global site-packages can be harmful because the dependency installation can overwrite some of the existing packages.

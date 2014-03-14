@@ -5,15 +5,11 @@
 Bitmask
 =======
 
-**Bitmask** is the multiplatform desktop client for the services offered by
-[the LEAP Platform](platform).  It is written in python using
-[PySide](http://qt-project.org/wiki/PySide) and licensed under the GPL3. Currently we distribute pre-compiled bundles for Linux and OSX, with Windows bundles following soon.
+**Bitmask** is the multiplatform desktop client for the services offered by [the LEAP Platform](platform).
 
-You can find the complete up-to-date documentation [at the python package documentation
-site.](http://pythonhosted.org/leap.bitmask "Bitmask documentation")
+It is written in python using [PySide](http://qt-project.org/wiki/PySide) and licensed under the GPL3. Currently we distribute pre-compiled bundles for Linux and OSX, with Windows bundles following soon.
 
-We include below some sections of the user guide and the development documentation so
-you can get started.
+We include below some sections of the user guide and the development documentation so you can get started.
 
 User Guide
 ----------
@@ -23,8 +19,7 @@ User Guide
 Tester Guide
 ------------
 
-This part of the documentation details how to fetch the last development
-version and how to report bugs.
+This part of the documentation details how to fetch the last development version and how to report bugs.
 
 * [Howto for testers](client/testers-howto)
 
