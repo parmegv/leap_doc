@@ -41,12 +41,19 @@ If you want to contribute to the project, we wrote this for you.
 Supported OSs
 -------------
 
-Currently supported OSs (32 and 64 bits) are:
+We currently support:
 
-* Debian 7 (32bits lxde and 64 bits gnome3)
-* Ubuntu 12.04 (LTS, unity)
-* Ubuntu 13.10 (latest, unity)
+### Through the bundle
+
+* Debian 7
+* Ubuntu 12.04 (LTS)
+* Ubuntu 13.10 (latest)
 * Mac OSX >= 10.8
-* Windows 7 (32 bits only)
-* Windows 8 (planned)
+* Note: It *should* work in other Debian based distros
 
+### Through the debian package
+
+* Ubuntu 13.04 (Raring Ringtail)
+* Ubuntu 13.10 (Saucy Salamander)
+* Debian 7.0 (Wheezy)
+* Debian 8.0 (Jessie)
