@@ -98,9 +98,10 @@ Using automagic helper script
 -----------------------------
 
 You can use a helper script that will get you started with bitmask and all the related repos.
-1) install system dependencies
-2) download automagic script
-3) run it :)
+
+1. install system dependencies
+2. download automagic script
+3. run it :)
 
 Commands so you can copy/paste:
 

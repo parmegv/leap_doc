@@ -96,7 +96,7 @@ development code.
 
 We have put together a script to allow rapid testing in different
 platforms for the brave souls like you. Check it out in the
-*Setting up a Work Enviroment* section of the
+*Using automagic helper script* section of the
 [Hacking](client/dev-environment) page only that in a more compact
 way suitable (ahem) also for non developers.
 
