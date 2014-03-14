@@ -18,27 +18,22 @@ Cloning the repo
     git clone https://leap.se/git/bitmask_client
     git checkout develop
 
-Base Dependencies
------------------
+Dependencies
+------------
 
 Bitmask depends on these libraries:
 
--   python 2.6 or 2.7
--   qt4 libraries (see also
-    Troubleshooting PySide install \<pysidevirtualenv\> about how to
-    install inside your virtualenv)
--   openssl
--   [openvpn](http://openvpn.net/index.php/open-source/345-openvpn-project.html)
+- python 2.6 or 2.7
+- qt4 libraries
+- openssl
+- [openvpn](http://openvpn.net/index.php/open-source/345-openvpn-project.html)
 
-### Debian
+### Install dependencies in a Debian based distro
 
 In debian-based systems:
 
-    $ apt-get install openvpn python-pyside python-openssl
+    sudo apt-get install git python-dev python-setuptools python-virtualenv python-pip libssl-dev python-openssl libsqlite3-dev g++ openvpn pyside-tools python-pyside libffi-dev
 
-To install the software from sources:
-
-    $ apt-get install python-pip python-dev
 
 Working with virtualenv
 -----------------------
@@ -49,23 +44,16 @@ Working with virtualenv
 
 It is a tool to create isolated Python environments.
 
-The basic problem being addressed is one of dependencies and versions,
+> The basic problem being addressed is one of dependencies and versions,
 and indirectly permissions. Imagine you have an application that needs
 version 1 of LibFoo, but another application requires version 2. How can
 you use both these applications? If you install everything into
-/usr/lib/python2.7/site-packages (or whatever your platform's standard
+`/usr/lib/python2.7/site-packages` (or whatever your platform's standard
 location is), it's easy to end up in a situation where you
 unintentionally upgrade an application that shouldn't be upgraded.
 
 Read more about it in the [project documentation
-page](http://pypi.python.org/pypi/virtualenv/).
-
-> **note**
->
-> this section could be completed with useful options that can be passed
-> to the virtualenv command (e.g., to make portable paths,
-> site-packages, ...). We also should document how to use
-> virtualenvwrapper.
+page](http://www.virtualenv.org/en/latest/virtualenv.html).
 
 ### Create and activate your dev environment
 
@@ -104,41 +92,3 @@ working environment, they will be installed avoiding the need for
 administrative permissions:
 
     $ pip install -r pkg/requirements.pip
-
-Copy script files
------------------
-
-The openvpn invocation expects some files to be in place. If you have
-not installed bitmask from a debian package, you must copy these files
-manually by now:
-
-    $ sudo mkdir -p /etc/leap
-    $ sudo cp pkg/linux/resolv-update /etc/leap
-
-Running openvpn without root privileges
----------------------------------------
-
-In linux, we are using `policykit` to be able to run openvpn without
-root privileges, and a policy file is needed to be installed for that to
-be possible. The setup script tries to install the policy file when
-installing bitmask system-wide, so if you have installed bitmask in your
-global site-packages at least once it should have copied this file for
-you.
-
-If you *only* are running bitmask from inside a virtualenv, you will
-need to copy this file by hand:
-
-    $ sudo cp pkg/linux/polkit/net.openvpn.gui.leap.policy /usr/share/polkit-1/actions/
-
-### Missing Authentication agent
-
-If you are using linux and running a desktop other than unity or gnome,
-you might get an error saying that you are not running the
-authentication agent. For systems with gnome libraries installed you can
-launch it like this:
-
-    /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
-
-or if you are a kde user:
-
-    /usr/lib/kde4/libexec/polkit-kde-authentication-agent-1 &
