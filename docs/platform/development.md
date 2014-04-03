@@ -11,6 +11,7 @@ Requirements
 * Be a real machine with virtualization support in the CPU (VT-x or AMD-V). In other words, not a virtual machine.
 * Have at least 4gb of RAM.
 * Have a fast internet connection (because you will be downloading a lot of big files, like virtual machine images).
+* You should do everything described below as an unprivileged user, and only run those commands as root that are noted with *sudo* in front of them. Other than those commands, there is no need for privileged access to your machine, and in fact things may not work correctly.
 
 Install prerequisites
 --------------------------------
