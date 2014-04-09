@@ -32,7 +32,7 @@ Bitmask depends on these libraries:
 
 In debian-based systems:
 
-    sudo apt-get install git python-dev python-setuptools python-virtualenv python-pip libssl-dev python-openssl libsqlite3-dev g++ openvpn pyside-tools python-pyside libffi-dev
+    $ sudo apt-get install git python-dev python-setuptools python-virtualenv python-pip libssl-dev python-openssl libsqlite3-dev g++ openvpn pyside-tools python-pyside libffi-dev
 
 
 Working with virtualenv
@@ -57,8 +57,14 @@ page](http://www.virtualenv.org/en/latest/virtualenv.html).
 
 ### Create and activate your dev environment
 
-    $ virtualenv </path/to/new/environment>
-    $ source </path/to/new/environment>/bin/activate
+You first create a virtualenv in any directory that you like:
+
+    $ mkdir ~/Virtualenvs
+    $ virtualenv ~/Virtualenvs/bitmask
+    $ source ~/Virtualenvs/bitmask/bin/activate
+    (bitmask)$
+
+Note the change in the prompt.
 
 ### Avoid compiling PySide inside a virtualenv
 
@@ -72,11 +78,11 @@ the recommended way if you are running a debian-based system*):
     $ pkg/postmkvenv.sh
 
 A second option if that does not work for you would be to install PySide
-globally and pass the `--site-packages` option when you are creating
+globally and pass the `--system-site-packages` option when you are creating
 your virtualenv:
 
     $ apt-get install python-pyside
-    $ virtualenv --site-packages .
+    $ virtualenv --system-site-packages .
 
 After that, you must export `LEAP_VENV_SKIP_PYSIDE` to skip the
 installation:
@@ -93,6 +99,75 @@ administrative permissions:
 
     $ pip install -r pkg/requirements.pip
 
+This step is not strictly needed, since the `setup.py develop` in the next
+paragraph with also fetch the needed dependencies. But you need to know abou it:
+when you or any person in the development team will be adding a new dependency,
+you will have to repeat this command so that the new dependencies are installed
+inside your virtualenv.
+
+Install Bitmask
+---------------
+
+Normally we would install the `leap.bitmask` package as any other package
+inside the virtualenv.
+But, instead, we will be using setuptools **development mode**. The difference
+is that, instead of installing the package in a permanent location in your
+regular installed packages path, it will create a link from the local
+site-packages to your working directory. In this way, your changes will always
+be in the installation path without need to install the package you are working
+on.::
+
+    (bitmask)$ python2 setup.py develop
+
+After this step, your Bitmask launcher will be located at
+`~/Virtualenvs/bitmask/bin/bitmask`, and it will be in the path as long as you
+have sourced your virtualenv.
+
+Make resources
+--------------
+
+We also need to compile the resource files::
+
+    (bitmask)$ make resources
+
+You need to repeat this step each time you change a `.ui` file.
+
+Copy script files
+-----------------
+
+The openvpn invocation expects some files to be in place. If you have not
+installed `bitmask` from a debian package, you must copy these files manually
+by now:
+
+    $ sudo mkdir -p /etc/leap
+    $ sudo cp pkg/linux/resolv-update /etc/leap
+
+
+Running openvpn without root privileges
+---------------------------------------
+
+In linux, we are using `policykit` to be able to run openvpn without root
+privileges, and a policy file is needed to be installed for that to be
+possible.
+The setup script tries to install the policy file when installing bitmask
+system-wide, so if you have installed bitmask in your global site-packages at
+least once it should have copied this file for you.
+
+If you *only* are running bitmask from inside a virtualenv, you will need to
+copy this file by hand:
+
+    $ sudo cp pkg/linux/polkit/net.openvpn.gui.leap.policy /usr/share/polkit-1/actions/
+
+
+Running!
+--------
+
+If everything went well, you should be able to run your client by invoking
+`bitmask`. If it does not get launched, or you just want to see more verbose
+output, try the debug mode:
+
+   (bitmask)$ bitmask --debug
+
 
 Using automagic helper script
 -----------------------------
@@ -105,9 +180,9 @@ You can use a helper script that will get you started with bitmask and all the r
 
 Commands so you can copy/paste:
 
-    mkdir bitmask && cd bitmask
-    wget https://raw.githubusercontent.com/leapcode/bitmask_client/develop/pkg/scripts/bootstrap_develop.sh
-    chmod +x bootstrap_develop.sh
-    ./bootstrap_develop.sh init  # use help parameter for more information
+    $ mkdir bitmask && cd bitmask
+    $ wget https://raw.githubusercontent.com/leapcode/bitmask_client/develop/pkg/scripts/bootstrap_develop.sh
+    $ chmod +x bootstrap_develop.sh
+    $ ./bootstrap_develop.sh init  # use help parameter for more information
 
 This script allows you to get started, update and run the bitmask app with all its repositories.
