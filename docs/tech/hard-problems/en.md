@@ -11,7 +11,7 @@ If you take a survey of interesting initiatives to create more secure communicat
 3. **Asynchronous problem**: For encrypted communication, you must currently choose between forward secrecy or the ability to communicate asynchronously.
 4. **Group problem**: In practice, people work in groups, but public key cryptography doesn't.
 5. **Resource problem**: There are no open protocols to allow users to securely share a resource.
-6. **Availability problem**: People want to smoothly switch devices, and restore their data if they lose a device, but this very difficult to do securely.
+6. **Availability problem**: People want to smoothly switch devices, and restore their data if they lose a device, but this is very difficult to do securely.
 7. **Update problem**: Almost universally, software updates are done in ways that invite attacks and device compromises.
 
 These problems appear to be present regardless of which architectural approach you take (centralized authority, distributed peer-to-peer, or federated servers).
