@@ -7,7 +7,7 @@
 Se você pesquisar iniciativas interessantes para a criação de formas mais seguras de comunicação, verá que surge um padrão: aparentemente toda tentativa séria de construir um sistema para transmissão de mensagens seguras eventualmente se depara com a seguinte lista de sete problemas difíceis:
 
 1. **Problema da autenticidade**: a validação de chaves públicas é muito difícil para ser gerenciada por usuários, mas sem isso não é possível obter confidencialidade.
-2. **Problma dos metadados**: os protocolos existentes são vulneráveis à análise de metadados, mesmo que os metadados muitas vezes sejam mais sensíveis do que o conteúdo da comunicação.
+2. **Problema dos metadados**: os protocolos existentes são vulneráveis à análise de metadados, mesmo que os metadados muitas vezes sejam mais sensíveis do que o conteúdo da comunicação.
 3. **Problema da assincronicidade**: para estabelecer comunicação criptografada, atualmente é necessário escolher entre sigilo futuro (forward secrecy) e a habilidade de se comunicar de forma assíncrona.
 4. **Problema do grupo**: na prática, pessoas trabalham em grupos, mas a criptografia de chave pública não.
 5. **Problema dos recursos**: não existem protocolos abertos que permitam aos usuários compartilharem um recurso de forma segura.
