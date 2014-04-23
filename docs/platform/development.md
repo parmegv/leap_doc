@@ -34,12 +34,29 @@ Install Vagrant in order to be able to test with local virtual machines (typical
 
     sudo apt-get install vagrant virtualbox
 
-<!--
-*Mac OS*
 
-1. Install rubygems from https://rubygems.org/pages/download (unless the `gem` command is already installed).
-2. Install Vagrant.dmg from http://downloads.vagrantup.com/
--->
+*Mac OS X 10.9 (Mavericks)*
+
+Install Homebrew package manager from http://brew.sh/ and enable the [System Duplicates Repository](https://github.com/Homebrew/homebrew/wiki/Interesting-Taps-&-Branches) (needed to update old software versions delivered by Apple) with
+
+    brew tap homebrew/dupes
+
+Update OpenSSH to support ECDSA keys. Follow [this guide](http://www.dctrwatson.com/2013/07/how-to-update-openssh-on-mac-os-x/) to let your system use the Homebrew binary.
+
+    brew install openssh --with-brewed-openssl --with-keychain-support
+
+The certtool provided by Apple it's really old, install the one provided by GnuTLS and shadow the system's default.
+
+    sudo brew install gnutls
+    ln -sf /usr/local/bin/gnutls-certtool /usr/local/bin/certool
+
+Install the Vagrant and VirtualBox packages for OS X from their respective Download pages.
+
+* http://www.vagrantup.com/downloads.html
+* https://www.virtualbox.org/wiki/Downloads
+
+
+2. Install 
 
 
 Adding development nodes to your provider
