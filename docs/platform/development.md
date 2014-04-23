@@ -89,7 +89,7 @@ In order to test the node "web1" we need to start it. Starting a node for the fi
 
 NOTE: Many people have difficulties getting Vagrant working. If the following commands do not work, please see the Vagrant section below to troubleshoot your Vagrant install before proceeding.
 
-    $ leap local start web
+    $ leap local start web1
      = created test/
      = created test/Vagrantfile
      = installing vagrant plugin 'sahara'
