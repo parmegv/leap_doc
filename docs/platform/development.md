@@ -236,6 +236,11 @@ Ubuntu Raring 13.04
 
 * `virtualbox 4.2.10-dfsg-0ubuntu2.1` from Ubuntu raring and `vagrant 1.2.2` from vagrantup.com
 
+Mac OS X 10.9
+-------------
+
+* `VirtualBox 4.3.10` from virtualbox.org and `vagrant 1.5.4` from vagrantup.com
+
 
 Using Vagrant with libvirt/kvm
 ==============================
