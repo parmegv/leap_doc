@@ -39,16 +39,17 @@ The problem of public keys breaks down into five discrete issues:
 
 Of these problems, key validation is the most difficult and most central to proper key management. The two traditional methods of key validation are either the X.509 Certificate Authority (CA) system or the decentralized "Web of Trust" (WoT). Recently, these schemes have come under intense criticism. Repeated security lapses at many of the Certificate Authorities have revealed serious flaws in the CA system. On the other hand, in an age where we better understand the power of social network analysis and the sensitivity of the social graph, the exposure of metadata by a "Web of Trust" is no longer acceptable from a security standpoint.
 
-An alternative method of key validation is called TOFU for Trust On First Use. With TOFU, a key is assumed to be the right key the first time it is used. TOFU can work well for long term associations and for people who are not being targeted for attack, but its security relies on the security of the discovery transport and the application's ability to retain a memory of discovered keys. TOFU can break down in many real-world situations where a user might need to generate new keys or securely communicate with a new contact.
+An alternative method of key validation is called TOFU for Trust On First Use. With TOFU, a public key is assumed to be the right key the first time it is used. TOFU can work well for long term associations and for people who are not being targeted for attack, but its security relies on the security of the discovery transport and the application's ability to retain a memory of discovered keys. TOFU can break down in many real-world situations where a user might need to generate new keys or securely communicate with a new contact.
 
 Other strategies for addressing parts of the key management problem include:
 
-1. Inline Keys: Many projects plan to faciliate discovery by simply including the user's public key in every outgoing message (as an attachment, in a footer, or in a header).
+1. Inline Keys: Many projects plan to facilitate discovery by simply including the user's public key in every outgoing message (as an attachment, in a footer, or in a header).
 1. DNS: Key distributed via DNSSEC, where a service provider adds a DNS entry for each user containing the user's public key or fingerprint.
 1. Append-only log: There is a proposal to modify Certificate Transparency to handle user accounts, where audits are performed against append-only logs.
 1. Network perspective: Validation by key endorsement (third party signatures), with audits performed via network perspective.
 1. Introductions: Discovery and validation of keys through acquaintance introduction.
 1. Mobile: Although too lengthy to manually transcribe, an app on a mobile device can be used to easily exchange keys in person (for example, via a QR code or bluetooth connection).
+1. Biometric feedback: In the one case of voice communication, you can use recognition of the other person's voice as a means to validate the key (when used in combination with a Short Authentication String). This is how ZRTP works.
 
 For LEAP, we have developed a unique federated system called [Nicknym](/nicknym) that automatically discovers and validates public keys allowing the user to take advantage of public key cryptography without knowing anything about keys or signatures. Nicknym uses a combination of TOFU, provider endorsement, and network perspective.
 
