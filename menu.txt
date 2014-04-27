@@ -9,6 +9,7 @@ docs
     hard-problems
     limitations
     routing
+    secure-email
   design
     overview
     nicknym
