@@ -6,7 +6,7 @@
 
 If you take a survey of interesting initiatives to create more secure communication, a pattern starts to emerge: it seems that any serious attempt to build a system for secure message communication eventually comes up against the following list of seven hard problems.
 
-1. **Authenticity problem**: Public key validation is very difficult for users to manage, but without it you cannot have confidentiality.
+1. **Public key problem**: Public key validation is very difficult for users to manage, but without it you cannot have confidentiality.
 2. **Meta-data problem**: Existing protocols are vulnerable to meta-data analysis, even though meta-data is often much more sensitive than content.
 3. **Asynchronous problem**: For encrypted communication, you must currently choose between forward secrecy or the ability to communicate asynchronously.
 4. **Group problem**: In practice, people work in groups, but public key cryptography doesn't.
@@ -22,15 +22,35 @@ It is possible to safely ignore many of these problems if you don't particularly
 
 In our work, LEAP has tried to directly face down these seven problems. In some cases, we have come up with solid solutions. In other cases, we are moving forward with temporary stop-gap measures and investigating long term solutions. In two cases, we have no current plan for addressing the problems.
 
-### Authenticity problem
+### Public key problem
 
 The problem:
 
-> Public key validation is very difficult for users to manage, but without it you cannot have confidentiality.
+> Public keys is very difficult for users to manage, but without it you cannot have confidentiality.
 
-If proper key validation is a precondition for secure communication, but it is too difficult for most users, what hope do we have? We have developed a unique federated system called [Nicknym](/nicknym) that automatically discovers and validates public keys allowing the user to take advantage of public key cryptography without knowing anything about keys or signatures.
+If proper key management is a precondition for secure communication, but it is too difficult for most users, what hope do we have?
 
-The standard protocol that exists today to solve this problem is [DANE](https://en.wikipedia.org/wiki/DNS-based_Authentication_of_Named_Entities). DANE might be the better option in the long run, but currently DANE is complex to set up, complex for clients to consume, leaks association information to a network observer, and relies on trusting the DNS root zone and TLD zones.
+The problem of public keys breaks down into five discrete issues:
+
+* **Key discovery** is the process of obtaining the public key for a particular user identifier. Currently, there is no commonly accepted standard for mapping an identifier to a public key. For OpenPGP, many people use keyservers for this (although the keyserver infrastructure was not designed to be used in this way). A related problem is how a client can discover public key information for all the contacts in their addressbook for phonebook without revealing this information to a third party.
+* **Key validation** is the process ensuring that a public key really does map to a particular user identifier. This is also called the "binding problem" in computer science. Traditional methods of key validation have recently become discredited.
+* **Key availability** is the assurance that the user will have access, whenever needed, to their keys and the keys of other users. Almost every attempt to solve the key validation problem turns into a key availability problem, because once you have validated a public key, you need to make sure that this validation is available to the user on all the possible devices they might want to send or receive messages on.
+* **Key revocation** is the process of ensuring that people do not use an old public key that has been superseded by a new one.
+
+Of these problems, key validation is the most difficult and most central to proper key management. The two traditional methods of key validation are either the X.509 Certificate Authority (CA) system or the decentralized "Web of Trust" (WoT). Recently, these schemes have come under intense criticism. Repeated security lapses at many of the Certificate Authorities have revealed serious flaws in the CA system. On the other hand, in an age where we better understand the power of social network analysis and the sensitivity of the social graph, the exposure of metadata by a "Web of Trust" is no longer acceptable from a security standpoint.
+
+An alternative method of key validation is called TOFU for Trust On First Use. With TOFU, a key is assumed to be the right key the first time it is used. TOFU can work well for long term associations and for people who are not being targeted for attack, but its security relies on the security of the discovery transport and the application's ability to retain a memory of discovered keys. TOFU can break down in many real-world situations where a user might need to generate new keys or securely communicate with a new contact.
+
+Other strategies for addressing parts of the key management problem include:
+
+1. Inline Keys: Many projects plan to faciliate discovery by simply including the user's public key in every outgoing message (as an attachment, in a footer, or in a header).
+1. DNS: Key distributed via DNSSEC, where a service provider adds a DNS entry for each user containing the user's public key or fingerprint.
+1. Append-only log: There is a proposal to modify Certificate Transparency to handle user accounts, where audits are performed against append-only logs.
+1. Network perspective: Validation by key endorsement (third party signatures), with audits performed via network perspective.
+1. Introductions: Discovery and validation of keys through acquaintance introduction.
+1. Mobile: Although too lengthy to manually transcribe, an app on a mobile device can be used to easily exchange keys in person (for example, via a QR code or bluetooth connection).
+
+For LEAP, we have developed a unique federated system called [Nicknym](/nicknym) that automatically discovers and validates public keys allowing the user to take advantage of public key cryptography without knowing anything about keys or signatures. Nicknym uses a combination of TOFU, provider endorsement, and network perspective.
 
 ### Meta-data problem
 
@@ -51,6 +71,9 @@ In the long term, we plan to adopt one of several different schemes for securely
 * Onion-routing-headers: A message from user A to user B is encoded so that the "to" routing information only contains the name of B's server. When B's server receives the message, it unwraps (unencrypts) a supplementary header that contains the actual user "B". Like aliases, this provides no benefit if both users are on the same server. As an improvement, the message could be routed through intermediary servers.
 * Third-party-dropbox: To exchange messages, user A and user B negotiate a unique "dropbox" URL for depositing messages, potentially using a third party. To send a message, user A would post the message to the "dropbox". To receive a message, user B would regularly polls this URL to see if there are new messages.
 * Mixmaster-with-signatures: Messages are bounced through a mixmaster-like set of anonymization relays and then finally delivered to the recipient's server. The user's client only displays the message if it is encrypted, has a valid signature, and the user has previously added the sender to a 'allow list' (perhaps automatically generated from the list of validated public keys).
+* Tor: One scheme employed by Pond is to simply allow for direct delivery over Tor from the sender's device to the recipient's server. This is fairly simple, and places all the work on the existing Tor network.
+
+In all of these cases, meta-data protected routing can make abuse prevention more difficult. For this reason, it probably makes sense to only allow once of these options once both parties have already exchanged key material, in order to prevent the user being flooded with anonymous spam.
 
 For a great discussion comparing mix networks and onion routing, see [Tom Ritter's blog post on the topic](https://ritter.vg/blog-mix_and_onion_networks.html).
 
