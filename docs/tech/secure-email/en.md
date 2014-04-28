@@ -11,7 +11,7 @@ Contents:
    1. [Forward Secrecy](#forward-secrecy)
    1. [Data Availability](#data-availability)
    1. [Secure Authentication](#secure-authentication)
-2. [Web Mail](#web-mail)
+1. [Web Mail](#web-mail)
    1. [Lavaboom](#lavaboom)
    1. [Mega](#mega)
    1. [PrivateSky](#privatesky)
@@ -28,6 +28,7 @@ Contents:
    1. [Dark Mail Alliance](#self-hosted-dark-mail)
    1. [FreedomBox](#freedombox)
    1. [Mailpile](#self-hosted-mailpile)
+   1. [Mail-in-a-box](#mail-in-a-box)
    1. [kinko](#kinko)
 1. [Email Infrastructure](#email-infrastructure)
    1. [Dark Mail Alliance](#dark-mail-alliance)
@@ -326,6 +327,21 @@ From its early conception, part of FreedomBox was "email and telecommunications 
 -----------------------------------------------------------
 
 Although Mailpile is primarily a mail client, the background Python component can read the Maildir format for email. This means you could install Mailpile on your own server running a Mail Transfer Agent (MTA) like postfix or qmail. You would then access your mail remotely by connecting to your server via a web browser.
+
+<a name="Mail-in-a-box"></a>Mail-in-a-box
+-----------------------------------------------------------
+
+<a href="https://github.com/JoshData/mailinabox">github.com/JoshData/mailinabox</a>
+
+Mail-in-a-box helps people set up self-hosted email for linux hobbyists and email developers. It will install and configure the necessary Debian packages required to turn a machine running Ubuntu into a self-hosted email server. It provides a fairly straightforward, standard email server with IMAP, SMTP, greylisting, DKIM and SPF. It also includes a command line tool for adding and removing accounts.
+
+**Advantages:** Something quick for anyone with some linux skill who wants to experiment with email.
+
+**Limitations:** Setting up an email server is the easy part, maintaining the service over time is the tricky part. Without any automation recipes using something like Puppet, Chef, Salt, or CFEngine, mail-in-a-box is unlikely to be useful to anyone but the curious hobbyist.
+
+* Written in: Bash
+* Source code: https://github.com/JoshData/mailinabox
+* License: CC0 1.0 Universal
 
 <a name="kinko"></a>kinko
 -----------------------------------------------------------
