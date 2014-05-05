@@ -232,7 +232,7 @@ After securing the couch design documents need to be deployed with admin permiss
 
 The before_script block in .travis.yml illustrates how to do this:
 
-```bash
+```
 mv test/config/couchdb.yml.admin config/couchdb.yml  # use admin privileges
 bundle exec rake couchrest:migrate_with_proxies      # run the migrations
 bundle exec rake couchrest:migrate_with_proxies      # looks like this needs to run twice
@@ -243,7 +243,7 @@ mv test/config/couchdb.yml.user config/couchdb.yml   # drop admin privileges
 
 First of all we get the design docs as files:
 
-```bash
+```
 # put design docs in /tmp/design
 bundle exec rake couchrest:dump
 ```
