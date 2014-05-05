@@ -158,7 +158,8 @@ The LEAP Web App provides the following functions:
 * Help tickets
 * Client certificate renewal
 * Webfinger access to user's public keys
-* Email alias and forwarding
+* Email aliases and forwarding
+* Localized and Customizable documentation
 
 Written in: Ruby, Rails.
 

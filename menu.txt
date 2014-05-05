@@ -15,6 +15,7 @@ docs
     nicknym
     soledad
     tapicero
+    webapp
   platform
     quick-start
     guide
