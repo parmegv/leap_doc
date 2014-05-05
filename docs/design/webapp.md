@@ -209,14 +209,14 @@ Please make sure your deploy includes the following files:
 We recommend against using an admin user for running the webapp. To avoid this couch design documents need to be created ahead of time and the auto update mechanism needs to be disabled.
 Take a look at test/setup_couch.sh for an example of securing the couch.
 
-### DESIGN DOCUMENTS ###
+## Design Documents ##
 
 After securing the couch design documents need to be deployed with admin permissions. There are two ways of doing this:
  * rake couchrest:migrate_with_proxies
  * dump the documents as files with `rake couchrest:dump` and deploy them
    to the couch by hand or with the platform.
 
-#### CouchRest::Migrate ####
+### CouchRest::Migrate ###
 
 The before_script block in .travis.yml illustrates how to do this:
 
@@ -225,7 +225,7 @@ The before_script block in .travis.yml illustrates how to do this:
     bundle exec rake couchrest:migrate_with_proxies      # looks like this needs to run twice
     mv test/config/couchdb.yml.user config/couchdb.yml   # drop admin privileges
 
-#### Deploy design docs from CouchRest::Dump ####
+### Deploy design docs from CouchRest::Dump ###
 
 First of all we get the design docs as files:
 
