@@ -273,8 +273,8 @@ If you prefer, you can initalize each node, one at a time:
 Deploy the LEAP platform to the nodes
 --------------------
 
-Now you should deploy the platform recipes to the nodes. Deployment can take a while to run, especially on the first run, as it needs to update the packages on the new machine.
-Note that currently, nodes must be deployed in a certain order. The underlying couch database node(s) must be deployed first, and then all other nodes.
+Now you should deploy the platform recipes to the nodes. [Deployment can take a while to run](http://xkcd.com/303/), especially on the first run, as it needs to update the packages on the new machine. 
+*Important notes:* currently nodes must be deployed in a certain order. The underlying couch database node(s) must be deployed first, and then all other nodes. Also you need to configure and deploy all of the couchdb nodes that you plan to use at this time, as currently you cannot add more of them later later ([See](https://leap.se/es/docs/platform/known-issues#CouchDB.Sync)).
 
     $ leap deploy couch1
 
