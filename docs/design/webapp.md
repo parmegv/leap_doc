@@ -75,28 +75,22 @@ Typically, this application is installed automatically as part of the LEAP Platf
 
 Install git, ruby 1.9, rubygems and couchdb on your system. Then run
 
-```
-gem install bundler
-git clone https://leap.se/git/leap_web
-cd leap_web
-git submodule update --init
-bundle install --binstubs
-bin/rails server
-```
+    gem install bundler
+    git clone https://leap.se/git/leap_web
+    cd leap_web
+    git submodule update --init
+    bundle install --binstubs
+    bin/rails server
 
 ### Install system requirements
 
 First of all you need to install ruby, git and couchdb. On debian based systems this would be achieved by something like
 
-```
     sudo apt-get install git ruby1.9.3 rubygems couchdb
-```
 
 We install most gems we depend upon through [bundler](http://gembundler.com). So first install bundler
 
-```
     sudo gem install bundler
-```
 
 On Debian Wheezy or later, there is a Debian package for bundler, so you can alternately run ``sudo apt-get install bundler``.
 
@@ -104,18 +98,14 @@ On Debian Wheezy or later, there is a Debian package for bundler, so you can alt
 
 Simply clone the git repository:
 
-```
     git clone git://leap.se/leap_web
     cd leap_web
-```
 
 ### SRP Submodule
 
 We currently use a git submodule to include srp-js. This will soon be replaced by a ruby gem. but for now you need to run
 
-```
   git submodule update --init
-```
 
 ### Install required ruby libraries
 
@@ -157,10 +147,8 @@ If you want to use that functionality please add your provider files the public/
 Running
 -----------------------------
 
-```
-cd leap_web
-bin/rails server
-```
+    cd leap_web
+    bin/rails server
 
 You will find Leap Web running on `localhost:3000`
 
@@ -232,21 +220,17 @@ After securing the couch design documents need to be deployed with admin permiss
 
 The before_script block in .travis.yml illustrates how to do this:
 
-```
-mv test/config/couchdb.yml.admin config/couchdb.yml  # use admin privileges
-bundle exec rake couchrest:migrate_with_proxies      # run the migrations
-bundle exec rake couchrest:migrate_with_proxies      # looks like this needs to run twice
-mv test/config/couchdb.yml.user config/couchdb.yml   # drop admin privileges
-```
+    mv test/config/couchdb.yml.admin config/couchdb.yml  # use admin privileges
+    bundle exec rake couchrest:migrate_with_proxies      # run the migrations
+    bundle exec rake couchrest:migrate_with_proxies      # looks like this needs to run twice
+    mv test/config/couchdb.yml.user config/couchdb.yml   # drop admin privileges
 
 #### Deploy design docs from CouchRest::Dump ####
 
 First of all we get the design docs as files:
 
-```
-# put design docs in /tmp/design
-bundle exec rake couchrest:dump
-```
+    # put design docs in /tmp/design
+    bundle exec rake couchrest:dump
 
 Then we add them to files/design in the site_couchdb module in leap_platform so they get deployed with the couch. You could also upload them using curl or sth. similar.
 
