@@ -125,7 +125,17 @@ These are the databases we currently use:
 * tickets -- help tickets issued in the webapp
 * tokens -- created by the webapp on login, used by soledad to authenticate
 * users -- user records used by the webapp including the authentication data
-* user-...id... -- client-encrypted data for the user with the given id accessed from the client via soledad
+* user-...id... -- client-encrypted user data accessed from the client via soledad
+
+### Database Setup
+
+The main couch databases are initially created, seeded and updated when deploying the platform.
+
+The site_couchdb module contains the database description and security settings in `manifests/create_dbs.pp`. The design docs are seeded from the files in `files/designs/:db_name`. If these files change the next puppet deploy will update the databases accordingly. Both the webapp and soledad have scripts that will dump the required design docs so they can be included here.
+
+The per-user databases are created upon user registration by [Tapicero](https://leap.se/docs/design/tapicero). Tapicero also adds security and design documents. The design documents for per-user databases are stored in the [tapicero repository](https://github.com/leapcode/tapicero) in `designs`. Tapicero can be used to update existing user databases with new security settings and design documents.
+
+### BigCouch
 
 Like many NoSQL databases, BigCouch is inspired by [Amazon's Dynamo paper](http://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf) and works by sharding each database among many servers using a circular ring hash. The number of shards might be greater than the number of servers, in which case each server would have multiple shards of the same database. Each server in the BigCouch cluster appears to contain the entire database, but actually it will just proxy the request to the actual database that has the content (if it does not have the document itself).
 
