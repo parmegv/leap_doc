@@ -10,7 +10,7 @@ If you are curious how this will look like without trying it out yourself, you c
 Our goal
 ------------------
 
-We are going to create a minimal LEAP provider offering OpenVPN service. This basic setup can be expanded by adding more OpenVPN nodes to increase capacity, or more webapp and couchdb nodes to increase availability (performance wise, a single couchdb and a single webapp are more than enough for most usage, since they are only lightly used, but you might want redundancy).
+We are going to create a minimal LEAP provider offering OpenVPN service. This basic setup can be expanded by adding more OpenVPN nodes to increase capacity, or more webapp and couchdb nodes to increase availability (performance wise, a single couchdb and a single webapp are more than enough for most usage, since they are only lightly used, but you might want redundancy). Please note: currently it is not possible to safely add additional couchdb nodes at a later point. They should all be added in the beginning, so please consider carefully if you would like more before proceeding.
 
 Our goal is something like this:
 
@@ -27,8 +27,8 @@ Requirements
 
 In order to complete this Quick Start, you will need a few things:
 
-* You will need three real or paravirtualized virtual machines (KVM, Xen, Openstack, Amazon, but not Vagrant - sorry) that have a basic Debian Stable installed. If you allocate 10G to each node, that should be plenty.
-* You should be able to SSH into them remotely, and know their IP addresses and their SSH host keys
+* You will need three real or paravirtualized virtual machines (KVM, Xen, Openstack, Amazon, but not Vagrant - sorry) that have a basic Debian Stable installed. If you allocate 20G of disk space to each node for the system, after this process is completed, you will have used less than 10% of that disk space. If you allocate 2 CPUs and 8G of memory to each node, that should be more than enough to begin with.
+* You should be able to SSH into them remotely, and know their root password, IP addresses and their SSH host keys
 * You will need four different IPs, one for each node, and a second one for the VPN gateway
 * The ability to create/modify DNS entries for your domain is preferable, but not needed. If you don't have access to DNS, you can workaround this by modifying your local resolver, i.e. editing `/etc/hosts`.
 * You need to be aware that this process will make changes to your systems, so please be sure that these machines are a basic install with nothing configured or running for other purposes
