@@ -1,4 +1,5 @@
-@title = "Secure Email"
+@title = "Secure Email Report"
+@summary = "A report on the state of the art in secure email projects"
 @toc = false
 
 There are an increasing number of projects working on next generation secure email or email-like communication. This is an initial draft report highlighting the projects and comparing the approaches. Please help us fill in the missing details and correct any inaccuracies. To contribute to this document, fork repository found at https://github.com/OpenTechFund/secure-email and issue a pull request.
