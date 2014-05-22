@@ -30,7 +30,7 @@ Install core prerequisites:
 
     sudo apt-get install git ruby ruby-dev rsync openssh-client openssl rake make
 
-Install Vagrant in order to be able to test with local virtual machines (typically optional, but required for this tutorial):
+Install Vagrant in order to be able to test with local virtual machines (typically optional, but required for this tutorial). You probably want a more recent version directly from [vagrant.](https://www.vagrantup.com/downloads.htm)
 
     sudo apt-get install vagrant virtualbox
 
