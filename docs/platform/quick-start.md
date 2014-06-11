@@ -10,7 +10,7 @@ If you are curious how this will look like without trying it out yourself, you c
 Our goal
 ------------------
 
-We are going to create a minimal LEAP provider offering OpenVPN service. This basic setup can be expanded by adding more OpenVPN nodes to increase capacity, or more webapp and couchdb nodes to increase availability (performance wise, a single couchdb and a single webapp are more than enough for most usage, since they are only lightly used, but you might want redundancy).
+We are going to create a minimal LEAP provider offering OpenVPN service. This basic setup can be expanded by adding more OpenVPN nodes to increase capacity, or more webapp and couchdb nodes to increase availability (performance wise, a single couchdb and a single webapp are more than enough for most usage, since they are only lightly used, but you might want redundancy). Please note: currently it is not possible to safely add additional couchdb nodes at a later point. They should all be added in the beginning, so please consider carefully if you would like more before proceeding.
 
 Our goal is something like this:
 
@@ -27,13 +27,14 @@ Requirements
 
 In order to complete this Quick Start, you will need a few things:
 
-* You will need three real or paravirtualized virtual machines (KVM, Xen, Openstack, Amazon, but not Vagrant - sorry) that have a basic Debian Stable installed. If you allocate 10G to each node, that should be plenty.
-* You should be able to SSH into them remotely, and know their IP addresses and their SSH host keys
+* You will need three real or paravirtualized virtual machines (KVM, Xen, Openstack, Amazon, but not Vagrant - sorry) that have a basic Debian Stable installed. If you allocate 20G of disk space to each node for the system, after this process is completed, you will have used less than 10% of that disk space. If you allocate 2 CPUs and 8G of memory to each node, that should be more than enough to begin with.
+* You should be able to SSH into them remotely, and know their root password, IP addresses and their SSH host keys
 * You will need four different IPs, one for each node, and a second one for the VPN gateway
 * The ability to create/modify DNS entries for your domain is preferable, but not needed. If you don't have access to DNS, you can workaround this by modifying your local resolver, i.e. editing `/etc/hosts`.
 * You need to be aware that this process will make changes to your systems, so please be sure that these machines are a basic install with nothing configured or running for other purposes
 * Your machines will need to be connected to the internet, and not behind a restrictive firewall.
 * You should work locally on your laptop/workstation (one that you trust and that is ideally full-disk encrypted) while going through this guide. This is important because the provider configurations you are creating contain sensitive data that should not reside on a remote machine. The leap cli utility will login to your servers and configure the services.
+* You should do everything described below as an unprivileged user, and only run those commands as root that are noted with *sudo* in front of them. Other than those commands, there is no need for privileged access to your machine, and in fact things may not work correctly.
 
 All the commands in this tutorial are run on your sysadmin machine. In order to complete the tutorial, the sysadmin will do the following:
 
@@ -272,8 +273,8 @@ If you prefer, you can initalize each node, one at a time:
 Deploy the LEAP platform to the nodes
 --------------------
 
-Now you should deploy the platform recipes to the nodes. Deployment can take a while to run, especially on the first run, as it needs to update the packages on the new machine.
-Note that currently, nodes must be deployed in a certain order. The underlying couch database node(s) must be deployed first, and then all other nodes.
+Now you should deploy the platform recipes to the nodes. [Deployment can take a while to run](http://xkcd.com/303/), especially on the first run, as it needs to update the packages on the new machine. 
+*Important notes:* currently nodes must be deployed in a certain order. The underlying couch database node(s) must be deployed first, and then all other nodes. Also you need to configure and deploy all of the couchdb nodes that you plan to use at this time, as currently you cannot add more of them later later ([See](https://leap.se/es/docs/platform/known-issues#CouchDB.Sync)).
 
     $ leap deploy couch1
 

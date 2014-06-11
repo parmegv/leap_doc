@@ -113,13 +113,29 @@ Databases
 
 All user data is stored using BigCouch, a decentralized and high-availability version of CouchDB.
 
-There are three "main" databases:
+The databases are used by the different services and sometimes work as communication channels between the services.
 
-* users -- stores basic information about each user, such as their username, a SRP password verifier, and any email aliases or forwards.
-* tickets -- database of help desk tickets.
-* client_certificates -- a pool of short-lived client x.509 certificates that are distributed to authenticated clients when their client certificate has expired.
+These are the databases we currently use:
 
-Additionally, each user may have multiple databases for storing client-encrypted data, such as email messages.
+* customers -- payment information for the webapp
+* identities -- alias information, written by the webapp, read by leap_mx and nickserver
+* keycache -- used by the nickserver
+* sessions -- web session persistance for the webapp
+* shared -- used by soledad
+* tickets -- help tickets issued in the webapp
+* tokens -- created by the webapp on login, used by soledad to authenticate
+* users -- user records used by the webapp including the authentication data
+* user-...id... -- client-encrypted user data accessed from the client via soledad
+
+### Database Setup
+
+The main couch databases are initially created, seeded and updated when deploying the platform.
+
+The site_couchdb module contains the database description and security settings in `manifests/create_dbs.pp`. The design docs are seeded from the files in `files/designs/:db_name`. If these files change the next puppet deploy will update the databases accordingly. Both the webapp and soledad have scripts that will dump the required design docs so they can be included here.
+
+The per-user databases are created upon user registration by [Tapicero](https://leap.se/docs/design/tapicero). Tapicero also adds security and design documents. The design documents for per-user databases are stored in the [tapicero repository](https://github.com/leapcode/tapicero) in `designs`. Tapicero can be used to update existing user databases with new security settings and design documents.
+
+### BigCouch
 
 Like many NoSQL databases, BigCouch is inspired by [Amazon's Dynamo paper](http://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf) and works by sharding each database among many servers using a circular ring hash. The number of shards might be greater than the number of servers, in which case each server would have multiple shards of the same database. Each server in the BigCouch cluster appears to contain the entire database, but actually it will just proxy the request to the actual database that has the content (if it does not have the document itself).
 
@@ -142,7 +158,8 @@ The LEAP Web App provides the following functions:
 * Help tickets
 * Client certificate renewal
 * Webfinger access to user's public keys
-* Email alias and forwarding
+* Email aliases and forwarding
+* Localized and Customizable documentation
 
 Written in: Ruby, Rails.
 
@@ -151,6 +168,7 @@ The Web App communicates with:
 * CouchDB is used for all data storage.
 * Web browsers of users accessing the user interface in order to edit their settings or fill out help tickets. Additionally, admins may delete users.
 * LEAP Clients access the web app's REST API in order to register new users, authenticate existing ones, and renew client certificates.
+* tokens are stored upon successful authentication to allow the client to authenticate against other services
 
 Nickserver
 ------------------------------
@@ -185,7 +203,7 @@ A LEAP service provider might also run servers with the following services:
 
 * git -- private git repository hosting.
 * Domain Name Server -- Authoritative name server for the provider's domain.
-* CA Daemon -- headless daemon that generates x.509 certificates and puts them in the distributed database.
+* Tapicero -- headless daemon that watches couch changes for new users and creates their databases
 
 Client-side Components
 ======================================

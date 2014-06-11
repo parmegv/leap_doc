@@ -11,6 +11,7 @@ Requirements
 * Be a real machine with virtualization support in the CPU (VT-x or AMD-V). In other words, not a virtual machine.
 * Have at least 4gb of RAM.
 * Have a fast internet connection (because you will be downloading a lot of big files, like virtual machine images).
+* You should do everything described below as an unprivileged user, and only run those commands as root that are noted with *sudo* in front of them. Other than those commands, there is no need for privileged access to your machine, and in fact things may not work correctly.
 
 Install prerequisites
 --------------------------------
@@ -29,16 +30,33 @@ Install core prerequisites:
 
     sudo apt-get install git ruby ruby-dev rsync openssh-client openssl rake make
 
-Install Vagrant in order to be able to test with local virtual machines (typically optional, but required for this tutorial):
+Install Vagrant in order to be able to test with local virtual machines (typically optional, but required for this tutorial). You probably want a more recent version directly from [vagrant.](https://www.vagrantup.com/downloads.htm)
 
     sudo apt-get install vagrant virtualbox
 
-<!--
-*Mac OS*
 
-1. Install rubygems from https://rubygems.org/pages/download (unless the `gem` command is already installed).
-2. Install Vagrant.dmg from http://downloads.vagrantup.com/
--->
+*Mac OS X 10.9 (Mavericks)*
+
+Install Homebrew package manager from http://brew.sh/ and enable the [System Duplicates Repository](https://github.com/Homebrew/homebrew/wiki/Interesting-Taps-&-Branches) (needed to update old software versions delivered by Apple) with
+
+    brew tap homebrew/dupes
+
+Update OpenSSH to support ECDSA keys. Follow [this guide](http://www.dctrwatson.com/2013/07/how-to-update-openssh-on-mac-os-x/) to let your system use the Homebrew binary.
+
+    brew install openssh --with-brewed-openssl --with-keychain-support
+
+The certtool provided by Apple it's really old, install the one provided by GnuTLS and shadow the system's default.
+
+    sudo brew install gnutls
+    ln -sf /usr/local/bin/gnutls-certtool /usr/local/bin/certool
+
+Install the Vagrant and VirtualBox packages for OS X from their respective Download pages.
+
+* http://www.vagrantup.com/downloads.html
+* https://www.virtualbox.org/wiki/Downloads
+
+
+2. Install 
 
 
 Adding development nodes to your provider
@@ -71,7 +89,7 @@ In order to test the node "web1" we need to start it. Starting a node for the fi
 
 NOTE: Many people have difficulties getting Vagrant working. If the following commands do not work, please see the Vagrant section below to troubleshoot your Vagrant install before proceeding.
 
-    $ leap local start web
+    $ leap local start web1
      = created test/
      = created test/Vagrantfile
      = installing vagrant plugin 'sahara'
@@ -217,6 +235,11 @@ Ubuntu Raring 13.04
 -------------------
 
 * `virtualbox 4.2.10-dfsg-0ubuntu2.1` from Ubuntu raring and `vagrant 1.2.2` from vagrantup.com
+
+Mac OS X 10.9
+-------------
+
+* `VirtualBox 4.3.10` from virtualbox.org and `vagrant 1.5.4` from vagrantup.com
 
 
 Using Vagrant with libvirt/kvm

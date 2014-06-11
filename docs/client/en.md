@@ -5,15 +5,11 @@
 Bitmask
 =======
 
-**Bitmask** is the multiplatform desktop client for the services offered by
-[the LEAP Platform](platform).  It is written in python using
-[PySide](http://qt-project.org/wiki/PySide) and licensed under the GPL3. Currently we distribute pre-compiled bundles for Linux and OSX, with Windows bundles following soon.
+**Bitmask** is the multiplatform desktop client for the services offered by [the LEAP Platform](platform).
 
-You can find the complete up-to-date documentation [at the python package documentation
-site.](http://pythonhosted.org/leap.bitmask "Bitmask documentation")
+It is written in python using [PySide](http://qt-project.org/wiki/PySide) and licensed under the GPL3. Currently we distribute pre-compiled bundles for Linux and OSX, with Windows bundles following soon.
 
-We include below some sections of the user guide and the development documentation so
-you can get started.
+We include below some sections of the user guide and the development documentation so you can get started.
 
 User Guide
 ----------
@@ -23,8 +19,7 @@ User Guide
 Tester Guide
 ------------
 
-This part of the documentation details how to fetch the last development
-version and how to report bugs.
+This part of the documentation details how to fetch the last development version and how to report bugs.
 
 * [Howto for testers](client/testers-howto)
 
@@ -46,12 +41,19 @@ If you want to contribute to the project, we wrote this for you.
 Supported OSs
 -------------
 
-Currently supported OSs (32 and 64 bits) are:
+We currently support:
 
-* Debian 7 (32bits lxde and 64 bits gnome3)
-* Ubuntu 12.04 (LTS, unity)
-* Ubuntu 13.10 (latest, unity)
+### Through the bundle
+
+* Debian 7
+* Ubuntu 12.04 (LTS)
+* Ubuntu 13.10 (latest)
 * Mac OSX >= 10.8
-* Windows 7 (32 bits only)
-* Windows 8 (planned)
+* Note: It *should* work in other Debian based distros
 
+### Through the debian package
+
+* Ubuntu 13.04 (Raring Ringtail)
+* Ubuntu 13.10 (Saucy Salamander)
+* Debian 7.0 (Wheezy)
+* Debian 8.0 (Jessie)

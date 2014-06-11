@@ -9,10 +9,13 @@ docs
     hard-problems
     limitations
     routing
+    secure-email
   design
     overview
     nicknym
     soledad
+    tapicero
+    webapp
   platform
     quick-start
     guide

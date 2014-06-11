@@ -150,19 +150,27 @@ We have support for Windows 32bits, 64bits seems to be able to use that, except 
 Android
 ----------------------------------------------
 
+### Dynamic OpenVPN configuration
+
+Currently the Android app chooses which VPN gateway to connect to based on the least difference of timezones and establishes a configuration for connecting to it by a biased selection of options (port, proto, etc) from the set declared by the provider through the API.  For cases where a gateway is unavailable or a network is restricting traffic that our configuration matches (e.g. UDP out to port 443), being able to attempt different configurations or gateways would help finding a configuration that worked.
+
+* Contact: meanderingcode, parmegv, or richy
+* Difficulty: Easy to medium
+* Skills: Android programming
+
 ### Ensure OpenVPN fails closed
 
 For enhanced security, we would like the VPN on android to have the option of blocking all network traffic if the VPN dies or when it has not yet established a connection. Network traffic would be restored when the user manually turns off the VPN or the VPN connection is restored. Currently, there is no direct way to do this with Android, but we have a few ideas for tackling this problem.
 
-* Contact: meandering-code, parmegv, or richy
-* Difficulty: not sure
-* Skills: Android programming
+* Contact: meanderingcode, parmegv, or richy
+* Difficulty: Hard (Medium but meticulous, or harder than we think)
+* Skills: Android programming, applicable linux skill like iptables
 
 ### Port libraries to Android
 
 Before we can achieve full functionality on Android, we have a lot of Python libraries that need to either be ported to run directly on Android or to rewrite them natively in Java or JNI. We have been pursing both strategies, for different libraries, but we have a lot more work to do.
 
-* Contact: richy, meandering-code, parmegv
+* Contact: richy, meanderingcode, parmegv
 * Difficulty: varies
 * Skills: Android programming, compiling, Python programming.
 

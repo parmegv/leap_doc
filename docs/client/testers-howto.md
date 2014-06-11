@@ -75,16 +75,16 @@ Attach the logfile to your bug report.
 
 ### Need human interaction?
 
-You can also find us in the `#leap-dev` channel on the [freenode
+You can also find us in the `#leap` channel on the [freenode
 network](https://freenode.net). If you do not have a IRC client at hand,
 you can [enter the channel via
-web](http://webchat.freenode.net/?nick=leaper....&channels=%23leap-dev&uio=d4).
+web](http://webchat.freenode.net/?nick=leaper....&channels=%23leap&uio=d4).
 
 Fetching latest development code
 --------------------------------
 
 Normally, testing the latest client bundles \<standalone-bundle\> should
-be enough. We are engaged in a two-week release cycle with minor
+be enough. We are engaged in a three-week release cycle with minor
 releases that are as stable as possible.
 
 However, if you want to test that some issue has *really* been fixed
@@ -95,85 +95,15 @@ script, keep reading for a way to painlessly fetch the latest
 development code.
 
 We have put together a script to allow rapid testing in different
-platforms for the brave souls like you. It more or less does all the
-steps covered in the Setting up a Work Enviroment \<environment\>
-section, only that in a more compact way suitable (ahem) also for non
-developers.
+platforms for the brave souls like you. Check it out in the
+*Using automagic helper script* section of the
+[Hacking](client/dev-environment) page only that in a more compact
+way suitable (ahem) also for non developers.
 
 > **note**
 >
 > At some point in the near future, we will be using standalone bundles
 > \<standalone-bundle\> with the ability to self-update.
-
-### Install dependencies
-
-First, install all the base dependencies plus git, virtualenv and
-development files needed to compile several extensions:
-
-    apt-get install openvpn git-core python-dev python-pyside python-setuptools python-virtualenv
-
-### Bootstrap script
-
-> **note**
->
-> This will fetch the *develop* branch. If you want to test another
-> branch, just change it in the line starting with *pip install...*.
-> Alternatively, bug kali so she add an option branch to an improved
-> script.
-
-> **note**
->
-> This script could make use of the after\_install hook. Read
-> <http://pypi.python.org/pypi/virtualenv/>
-
-Download and source the following script in the parent folder where you
-want your testing build to be downloaded. For instance, to \`/tmp/:
-
-.. code-block:: bash
-
-   cd /tmp
-   wget https://raw.github.com/leapcode/bitmask\_client/develop/pkg/scripts/bitmask\_bootstrap.sh
-   source bitmask\_bootstrap.sh
-
-Tada! If everything went well, you should be able to run bitmask by typing::
-
-    bitmask --debug
-
-Noticed that your prompt changed? That was \*virtualenv\*. Keep reading...
-
-Activating the virtualenv
-\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^
-The above bootstrap script has fetched latest code inside a virtualenv, which is
-an isolated, \*virtual\* python local environment that avoids messing with your
-global paths. You will notice you are \*inside\* a virtualenv because you will see
-a modified prompt reminding it to you (\*bitmask-testbuild\* in this case).  
-
-Thus, if you forget to \*activate your virtualenv\*, bitmask will not run from the
-local path, and it will be looking for something else in your global path. So,
-\*\*you have to remember to activate your virtualenv\*\* each time that you open a
-new shell and want to execute the code you are testing. You can do this by
-typing::
-
-    \$ source bin/activate
-
-from the directory where you \*sourced\* the bootstrap script.
-
-Refer to :ref:Working with virtualenv \<virtualenv\>\` to learn more
-about virtualenv.
-
-### Copying config files
-
-If you have never installed `bitmask` globally, **you need to copy some
-files to its proper path before running it for the first time** (you
-only need to do this once). This, unless the virtualenv-based
-operations, will need root permissions. See
-copy script files \<copyscriptfiles\> and
-running openvpn without root privileges \<policykit\> sections for more
-info on this. In short:
-
-    $ sudo cp pkg/linux/polkit/net.openvpn.gui.leap.policy /usr/share/polkit-1/actions/
-    $ sudo mkdir -p /etc/leap
-    $ sudo cp pkg/linux/resolv-update /etc/leap
 
 ### Local config files
 
@@ -181,17 +111,6 @@ If you want to start fresh without config files, just move them. In
 linux:
 
     mv ~/.config/leap ~/.config/leap.old
-
-### Pulling latest changes
-
-You should be able to cd into the downloaded repo and pull latest
-changes:
-
-    (bitmask-testbuild)$ cd src/bitmask
-    (bitmask-testbuild)$ git pull origin develop
-
-However, you are encouraged to run the whole bootstrapping process from
-time to time to help us catching install and versioning bugs too.
 
 ### Testing the packages
 
