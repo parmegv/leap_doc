@@ -61,9 +61,15 @@ The problem:
 
 > People want to smoothly switch devices, and restore their data if they lose a device, but this very difficult to do securely.
 
-Users today demand the ability to access their data on multiple devices and to have piece of mind that their data will not be lost forever if they lose a device. In the free software world, only Firefox has addressed this problem adequately and in a secure way (with Firefox Sync).
+Users today demand the ability to access their data on multiple devices and to have piece of mind that their data will not be lost forever if they lose a device.
 
-At LEAP, we have worked to solve the availability problem with a system we call [Soledad](/soledad) (for Synchronization of Locally Encrypted Documents Among Devices). Soledad gives the client application an encrypted, synchronized, searchable document database. All data is client encrypted, both when it is stored on the local device and synced with the cloud. As far as we know, there is nothing else like it, either in the free software or commercial world.
+At LEAP, we have worked to solve the availability problem with a system we call [Soledad](/soledad) (for Synchronization of Locally Encrypted Documents Among Devices). Soledad gives the client application an encrypted, synchronized, searchable document database. All data is client encrypted, both when it is stored on the local device and synced with the cloud. This is very powerful, as it allow the client developer to take advantage of a rich document database without needing to worry about how it is backed up or synchronized.
+
+As far as we know, there is nothing else like it, either in the free software or commercial world. However, there are several projects in a similar problem space:
+
+* [Mylar](http://css.csail.mit.edu/mylar/), for client-encrypting web application data.
+* [Crypton](https://crypton.io/), for client-encrypting web application data.
+* [Firefox Sync](https://wiki.mozilla.org/Services/Sync)
 
 Soledad tries to solve the problem of general data availability, but other initiatives have tried to tackle the more narrow problem of availability of private keys and discovered public keys. These initiatives include:
 
