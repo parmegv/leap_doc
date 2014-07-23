@@ -73,8 +73,9 @@ As far as we know, there is nothing else like it, either in the free software or
 
 Soledad tries to solve the problem of general data availability, but other initiatives have tried to tackle the more narrow problem of availability of private keys and discovered public keys. These initiatives include:
 
+* [Whiteout key sync](https://blog.whiteout.io/2014/07/07/secure-pgp-key-sync-a-proposal/)
+* Nilcat, experimental [code for cloud storage of keys](https://github.com/mettle/nilcat)
 * Ben Laurie's [proposed protocol for storing secrets in the cloud](http://www.links.org/files/nigori/nigori-protocol-01.html)
-* Experimental [code for similar cloud storage of keys](https://github.com/mettle/nilcat)
 * Phillip Hallam-Baker's [thoughts along similar lines](http://tools.ietf.org/html/draft-hallambaker-prismproof-key-00)
 
 ### Update problem
