@@ -53,7 +53,6 @@ We currently support:
 
 ### Through the debian package
 
-* Ubuntu 13.04 (Raring Ringtail)
-* Ubuntu 13.10 (Saucy Salamander)
+* Ubuntu 14.04 (Trusty Tahr)
 * Debian 7.0 (Wheezy)
 * Debian 8.0 (Jessie)
