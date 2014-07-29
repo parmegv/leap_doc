@@ -47,8 +47,8 @@ We currently support:
 
 * Debian 7
 * Ubuntu 12.04 (LTS)
-* Ubuntu 13.10 (latest)
-* Mac OSX >= 10.8
+* Ubuntu 14.04 (LTS, latest)
+* Mac OSX >= 10.8 (coming very soon)
 * Note: It *should* work in other Debian based distros
 
 ### Through the debian package
