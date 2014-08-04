@@ -123,25 +123,14 @@ After this step, your Bitmask launcher will be located at
 `~/Virtualenvs/bitmask/bin/bitmask`, and it will be in the path as long as you
 have sourced your virtualenv.
 
-Make resources
---------------
+Compile Qt resources
+--------------------
 
-We also need to compile the resource files::
+We also need to compile the resource files:
 
-    (bitmask)$ make resources
+    (bitmask)$ make
 
-You need to repeat this step each time you change a `.ui` file.
-
-Copy script files
------------------
-
-The openvpn invocation expects some files to be in place. If you have not
-installed `bitmask` from a debian package, you must copy these files manually
-by now:
-
-    $ sudo mkdir -p /etc/leap
-    $ sudo cp pkg/linux/resolv-update /etc/leap
-
+Note: you need to repeat this step each time you change a `.ui` file.
 
 Running openvpn without root privileges
 ---------------------------------------
@@ -156,7 +145,7 @@ least once it should have copied this file for you.
 If you *only* are running bitmask from inside a virtualenv, you will need to
 copy this file by hand:
 
-    $ sudo cp pkg/linux/polkit/net.openvpn.gui.leap.policy /usr/share/polkit-1/actions/
+    $ sudo cp pkg/linux/polkit/se.leap.bitmask.policy /usr/share/polkit-1/actions/
 
 
 Running!
@@ -186,3 +175,5 @@ Commands so you can copy/paste:
     $ ./bootstrap_develop.sh init  # use help parameter for more information
 
 This script allows you to get started, update and run the bitmask app with all its repositories.
+
+Note: you need to copy the polkit file manually.
