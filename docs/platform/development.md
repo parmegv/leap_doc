@@ -209,6 +209,11 @@ Limitations
 Please consult the known issues for vagrant, see the [Known Issues](known-issues), section *Special Environments*
 
 
+Other useful plugins
+====================
+
+. The vagranr-cachier (plugin http://fgrehm.viewdocs.io/vagrant-cachier/) lets you cache .deb packages on your hosts so they are not downloaded by multiple machines over and over again, after resetting to a previous state.
+
 Troubleshooting Vagrant
 =======================
 
@@ -245,14 +250,18 @@ Mac OS X 10.9
 Using Vagrant with libvirt/kvm
 ==============================
 
-Vagrant can be used with different providers/backends, one of them is [vagrant-libvirt](https://github.com/pradels/vagrant-libvirt). Here are the steps how to use it. Be sure to use a recent vagrant version (>= 1.3).
+Vagrant can be used with different providers/backends, one of them is [vagrant-libvirt](https://github.com/pradels/vagrant-libvirt). Here are the steps how to use it. Be sure to use a recent vagrant version for the vagrant-libvirt plugin (>= 1.5, which can only be fetched from http://www.vagrantup.com/downloads.html at this moment).
 
 Install vagrant-libvirt plugin and add box
 ------------------------------------------
     sudo apt-get install libvirt-bin libvirt-dev
+    # you need to assign the new 'libvirtd' group to your user in a running x session, or logout and login again:
+    newgrp libvirtd
+    # to build the vagrant-libvirt plugin you need the following packages:
+    sudo apt-get install ruby-dev libxslt-dev libxml2-dev libvirt-dev
     vagrant plugin install vagrant-libvirt
     vagrant plugin install sahara
-    vagrant box add leap-wheezy https://downloads.leap.se/leap-debian-libvirt.box
+    vagrant box add leap-wheezy https://downloads.leap.se/leap-debian-libvirt.box --provider libvirt
 
 Remove Virtualbox
 -----------------
