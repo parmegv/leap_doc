@@ -212,7 +212,7 @@ Please consult the known issues for vagrant, see the [Known Issues](known-issues
 Other useful plugins
 ====================
 
-. The vagranr-cachier (plugin http://fgrehm.viewdocs.io/vagrant-cachier/) lets you cache .deb packages on your hosts so they are not downloaded by multiple machines over and over again, after resetting to a previous state.
+. The vagrant-cachier (plugin http://fgrehm.viewdocs.io/vagrant-cachier/) lets you cache .deb packages on your hosts so they are not downloaded by multiple machines over and over again, after resetting to a previous state.
 
 Troubleshooting Vagrant
 =======================
