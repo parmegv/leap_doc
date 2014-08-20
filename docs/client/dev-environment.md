@@ -146,11 +146,15 @@ site-packages to your working directory. In this way, your changes will always
 be in the installation path without need to install the package you are working
 on.::
 
-    (bitmask)$ python2 setup.py develop
+    (bitmask)$ python2 setup.py develop --always-unzip
 
 After this step, your Bitmask launcher will be located at
 `~/Virtualenvs/bitmask/bin/bitmask`, and it will be in the path as long as you
 have sourced your virtualenv.
+
+Note: the `--always-unzip` option prevents some dependencies to be installed in
+a zip/egg, which causes some issues with libraries like 'scrypt' that needs to
+access to the files directly from the filesystem.
 
 Compile Qt resources
 --------------------
