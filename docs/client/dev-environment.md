@@ -1,14 +1,43 @@
 @nav_title = 'Hacking'
 @title = 'Setting up a development environment'
 
-Setting up a development environment
-====================================
+Quick start
+===========
 
-This document covers how to get an environment ready to contribute code
-to Bitmask.
+This document will guide you to get an environment ready to contribute code to
+Bitmask.
 
-Cloning the repo
-----------------
+Using an automagic script
+=========================
+
+You can use a helper script that will get you started with bitmask and all the
+related repos.
+
+1. download automagic script
+2. run it :)
+
+Commands so you can copy/paste:
+
+    $ mkdir bitmask && cd bitmask
+    $ wget https://raw.githubusercontent.com/leapcode/bitmask_client/develop/pkg/scripts/bootstrap_develop.sh
+    $ chmod +x bootstrap_develop.sh
+    $ ./bootstrap_develop.sh help    # check out the options :)
+    $ ./bootstrap_develop.sh deps    # requires sudo
+    $ ./bootstrap_develop.sh init ro
+    $ ./bootstrap_develop.sh helpers # requires sudo
+    $ ./bootstrap_develop.sh run
+
+This script allows you to get started, update and run the bitmask app with all
+its repositories.
+
+Note: the `deps` option is meant to be used in a Debian based Linux distro.
+
+
+Doing the work manually
+=======================
+
+Clone the repo
+--------------
 
 > **note**
 >
@@ -18,8 +47,8 @@ Cloning the repo
     git clone https://leap.se/git/bitmask_client
     git checkout develop
 
-Dependencies
-------------
+Install Dependencies
+--------------------
 
 Bitmask depends on these libraries:
 
@@ -117,11 +146,15 @@ site-packages to your working directory. In this way, your changes will always
 be in the installation path without need to install the package you are working
 on.::
 
-    (bitmask)$ python2 setup.py develop
+    (bitmask)$ python2 setup.py develop --always-unzip
 
 After this step, your Bitmask launcher will be located at
 `~/Virtualenvs/bitmask/bin/bitmask`, and it will be in the path as long as you
 have sourced your virtualenv.
+
+Note: the `--always-unzip` option prevents some dependencies to be installed in
+a zip/egg, which causes some issues with libraries like 'scrypt' that needs to
+access to the files directly from the filesystem.
 
 Compile Qt resources
 --------------------
@@ -147,6 +180,15 @@ copy this file by hand:
 
     $ sudo cp pkg/linux/polkit/se.leap.bitmask.policy /usr/share/polkit-1/actions/
 
+Installing the bitmask EIP helper
+---------------------------------
+
+In linux, we have a `openvpn` and `firewall` helper that is needed to run EIP.
+You need to manually copy it from `bitmask_client/pkg/linux/bitmask-root`.
+Use the following command to do so:
+
+    $ sudo cp bitmask_client/pkg/linux/bitmask-root /usr/sbin/
+
 
 Running!
 --------
@@ -156,24 +198,3 @@ If everything went well, you should be able to run your client by invoking
 output, try the debug mode:
 
    (bitmask)$ bitmask --debug
-
-
-Using automagic helper script
------------------------------
-
-You can use a helper script that will get you started with bitmask and all the related repos.
-
-1. install system dependencies
-2. download automagic script
-3. run it :)
-
-Commands so you can copy/paste:
-
-    $ mkdir bitmask && cd bitmask
-    $ wget https://raw.githubusercontent.com/leapcode/bitmask_client/develop/pkg/scripts/bootstrap_develop.sh
-    $ chmod +x bootstrap_develop.sh
-    $ ./bootstrap_develop.sh init  # use help parameter for more information
-
-This script allows you to get started, update and run the bitmask app with all its repositories.
-
-Note: you need to copy the polkit file manually.
