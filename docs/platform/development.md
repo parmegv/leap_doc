@@ -307,4 +307,7 @@ Known Issues
 * if each call to vagrant ends up with a segfault, it may be because you still have virtualbox around. if so, remove virtualbox to keep only libvirt + KVM. according to https://github.com/pradels/vagrant-libvirt/issues/75 having two virtualization engines installed simultaneously can lead to such weird issues.
 * see the [vagrant-libvirt issue list on github](https://github.com/pradels/vagrant-libvirt/issues)
 * be sure to use vagrant-libvirt >= 0.0.11 and sahara >= 0.0.16 (which are the latest stable gems you would get with `vagrant plugin install [vagrant-libvirt|sahara]`) for proper libvirt support
-* for shared folder support, you need nfs-kernel-server installed on the host machine and set up sudo to allow unpriviledged users to modify /etc/exports and .....
+* for shared folder support, you need nfs-kernel-server installed on the host machine and set up sudo to allow unpriviledged users to modify /etc/exports. See [vagrant-libvirt#synced-folders](https://github.com/pradels/vagrant-libvirt#synced-folders)
+
+
+    sudo apt-get install nfs-kernel-server
