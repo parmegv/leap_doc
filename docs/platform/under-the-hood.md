@@ -5,18 +5,6 @@ This page contains various details on the how the platform is implemented. You c
 Puppet Details
 ======================================
 
-Run stages
-----------
-
-We use two run stages for resource ordering:
-
-* initial: configure hostname, apt-get update + apt-get dist-upgrade
-* main: everything else
-
-Stage initial is run before stage main.
-
-see http://docs.puppetlabs.com/puppet/2.7/reference/lang_run_stages.html for run stage documentation.
-
 Tags
 ----
 
