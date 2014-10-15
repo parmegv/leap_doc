@@ -75,8 +75,8 @@ Soledad's document API is similar to the [API used in U1DB](http://pythonhosted.
 * Document indexing and searching: `create_index()`, `list_indexes()`, `get_from_index()`, `delete_index()`.
 * Document conflict resolution: `get_doc_conflicts()`, `resolve_doc()`.
 
+For example, create a document, modify it and sync:
 
-    # create document, modify it and sync
     sol.create_doc({'my': 'doc'}, doc_id='mydoc')
     doc = sol.get_doc('mydoc')
     doc.content = {'new': 'content'}
@@ -123,7 +123,7 @@ Other variables:
 * `derived_key` is equal to `kdf(user_password, kdf_salt, kdf_length)`.
 * `storage_secret` is equal to `sym_decrypt(cipher, secret, derived_key)`.
 
-When a client application first wants to use Soledad, it must provide the user's password to unlock the `storage_secret`: 
+When a client application first wants to use Soledad, it must provide the user's password to unlock the `storage_secret`:
 
     from leap.soledad.client import Soledad
     sol = Soledad(
@@ -237,7 +237,7 @@ About these fields:
 * `kdf`: the key derivation function to use. Only scrypt is currently supported.
 * `kdf_salt`: the salt used in the kdf. The salt for scrypt is not random, but encodes important parameters like the limits for time and memory.
 * `kdf_length`: the length of the derived key resulting from the kdf.
-* `length`: the length of the secret. 
+* `length`: the length of the secret.
 * `secret`: the encrypted `storage_secret`.
 * `cipher`: what cipher to use to encrypt `secret`. It must match `kdf_length` (i.e. the length of the `derived_key`).
 * `_mac_method`: The method used to calculate the mac above (currently hmac).
