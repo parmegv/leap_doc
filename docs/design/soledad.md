@@ -5,7 +5,7 @@
 Introduction
 =====================
 
-Soledad allows client applications to securely share synchronized document databases. Soledad is based on Ubuntu's U1DB, "a cross-platform, cross-device, syncable database API", but with the addition of client-side encryption of database replicas and documents stored on the server.
+Soledad allows client applications to securely share synchronized document databases. Soledad aims to provide a cross-platform, cross-device, syncable document storage API, with the addition of client-side encryption of database replicas and document contents stored on the server.
 
 Key aspects of Soledad include:
 
@@ -65,43 +65,56 @@ Related software
 Soledad protocol
 ===================================
 
+Document API
+-----------------------------------
+
+Soledad's document API is similar to the [API used in U1DB](http://pythonhosted.org/u1db/reference-implementation.html).
+
+* Document storage: `create_doc()`, `put_doc()`, `get_doc()`.
+* Synchronization with the server replica: `sync()`.
+* Document indexing and searching: `create_index()`, `list_indexes()`, `get_from_index()`, `delete_index()`.
+* Document conflict resolution: `get_doc_conflicts()`, `resolve_doc()`.
+
+
+    # create document, modify it and sync
+    sol.create_doc({'my': 'doc'}, doc_id='mydoc')
+    doc = sol.get_doc('mydoc')
+    doc.content = {'new': 'content'}
+    sol.put_doc(doc)
+    sol.sync()
+
 Storage secret
 -----------------------------------
 
-When a client application first wants to use Soledad, it must provide the user's password to unlock the `storage_secret`. The `storage_secret` is a long, randomly generated symmetric key used to generate encryption keys for both the documents stored on the server and the local replica of these documents.
-
-    from leap.soledad.client import Soledad
-    sol = Soledad('<user_uid>', '<user_passphrase>',
-                  secrets_path='~/.config/leap/soledad/<user_uid>.secret',
-                  local_db_path='~/.config/leap/soledad/<user_uid>.db',
-                  server_url='https://<soledad_server_url>',
-                  cert_file='~/.config/leap/providers/<provider>/keys/ca/cacert.pem',
-                  secret_id='<storage_secret_id>')  # optional argument
-
-The `storage_secret` is saved locally on disk in the file `<user-uid>.secret`, block encrypted using a derived key. The derived key is obtained from the user's password.
-
-The file `<user-uid>.secret` has a field `storage_secrets` that looks like so:
+The `storage_secret` is a long, randomly generated key used to derive encryption keys for both the documents stored on the server and the local replica of these documents. The `storage_secret` is block encrypted using a key derived from the user's password and saved locally on disk in a file called `<user_uid>.secret`, which contains a JSON structure that looks like this:
 
     {
       "storage_secrets": {
         "<secret_id>": {
           "kdf": "scrypt",
-          "kdf_salt": "400$8$5fb$61b499fe3366d947",
-          "kdf_length": 256,
+          "kdf_salt": "<b64 repr of salt>",
+          "kdf_length": <key_length>,
           "cipher": "aes256",
-          "length": 1024,
-          "secret": "<encrypted storage_secret 1>",
+          "length": <secret_length>,
+          "secret": "<encrypted storage_secret>",
         }
       }
+      'kdf': 'scrypt',
+      'kdf_salt': '<b64 repr of salt>',
+      'kdf_length: <key length>,
+      '_mac_method': 'hmac',
+      '_mac': '<mac>'
     }
 
-The `storage_secrets` entry is a map that stores information about each storage key, indexed by the id of each key. For each storage key, the following fields are stored:
+The `storage_secrets` entry is a map that stores information about available storage keys. Currently, Soledad uses only one storage key per provider, but this may change in the future. The `storage_secrets` entry itself is MAC'ed to prevent tampering.
 
-* `secret_id`: a handle used to refer to a particular storage_secret and equal to `sha256(storage_secret)`.
+The following fields are stored for one storage key:
+
+* `secret_id`: a handle used to refer to a particular `storage_secret` and equal to `sha256(storage_secret)`.
 * `kdf`: the key derivation function to use. Only scrypt is currently supported.
 * `kdf_salt`: the salt used in the kdf. The salt for scrypt is not random, but encodes important parameters like the limits for time and memory.
 * `kdf_length`: the length of the derived key resulting from the kdf.
-* `cipher`: what cipher to use to encrypt `storage_secret`. It must match kdf_length (i.e. the length of the derived_key).
+* `cipher`: what cipher to use to encrypt `storage_secret`. It must match `kdf_length` (i.e. the length of the derived_key).
 * `length`: the length of `storage_secret`, when not encrypted.
 * `secret`: the encrypted `storage_secret`, created by `sym_encrypt(cipher, storage_secret, derived_key)` (base64 encoded).
 
@@ -110,37 +123,31 @@ Other variables:
 * `derived_key` is equal to `kdf(user_password, kdf_salt, kdf_length)`.
 * `storage_secret` is equal to `sym_decrypt(cipher, secret, derived_key)`.
 
-The `storage_secret` is shared among all devices with access to a particular user's Soledad database. See [Recovery and bootstrap](#Recovery.and.bootstrap) for how the storage_secret is initially installed on a device.
+When a client application first wants to use Soledad, it must provide the user's password to unlock the `storage_secret`: 
 
-We don't use the derived_key as the storage_secret because we want the user to be able to change their password without needing to re-key.
-
-TO DO: Settle on a block cipher. Define how changes to storage secret are sync'ed.
-
-Document API
------------------------------------
-
-This is unchanged and identical to the [API used in U1DB](http://pythonhosted.org/u1db/reference-implementation.html).
-
-* Document storage: `create_doc()`, `put_doc()`, `get_doc()`.
-* Synchronization between database replicas: `sync()`.
-* Document indexing and searching: `create_index()`, `list_indexes()`, `get_from_index()`, `delete_index()`.
-* Document conflict resolution: `get_doc_conflicts()`, `resolve_doc()`.
+    from leap.soledad.client import Soledad
+    sol = Soledad(
+        uuid='<user_uid>',
+        passphrase='<user_passphrase>',
+        secrets_path='~/.config/leap/soledad/<user_uid>.secret',
+        local_db_path='~/.config/leap/soledad/<user_uid>.db',
+        server_url='https://<soledad_server_url>',
+        cert_file='~/.config/leap/providers/<provider>/keys/ca/cacert.pem',
+        auth_token='<auth_token>',
+        secret_id='<secret_id>')  # optional argument
 
 
-    # create document, change it and sync
-    sol.create_doc({'my': 'doc'}, doc_id='mydoc')
-    doc = sol.get_doc('mydoc')
-    doc.content = {'new': 'content'}
-    sol.put_doc(doc)
-    sol.sync()
+Currently, the `storage_secret` is shared among all devices with access to a particular user's Soledad database. See [Recovery and bootstrap](#Recovery.and.bootstrap) for how the `storage_secret` is initially installed on a device.
+
+We don't use the `derived_key` as the `storage_secret` because we want the user to be able to change their password without needing to re-key.
 
 Document encryption
 ------------------------
 
-Before a JSON document is synced with the server, it is transformed into a document that looks like so:
+Before a JSON document is synced with the server, it is transformed into a document that looks like this:
 
     {
-      "_enc_json": "<encrypted_doc_content>",
+      "_enc_json": "<ciphertext>",
       "_enc_scheme": "symkey",
       "_enc_method": "aes256ctr",
       "_enc_iv": "<initialization_vector>",
@@ -150,18 +157,18 @@ Before a JSON document is synced with the server, it is transformed into a docum
 
 About these fields:
 
-* `_enc_json`: The original JSON document, encrypted and base64 encoded. `ciphertext` is equal to `sym_encrypt(cipher, content, document_secret)`.
-* `_enc_scheme`: Information about the encryption scheme used to encrypt this document (i.e.'pubkey', 'symkey' or 'none').
+* `_enc_json`: The original JSON document, encrypted and hex encoded. `ciphertext` is equal to `hex(sym_encrypt(cipher, content, document_secret))`.
+* `_enc_scheme`: Information about the encryption scheme used to encrypt this document (i.e.`pubkey`, `symkey` or `none`).
 * `_enc_method`: Information about the block cipher that is used to encrypt this document.
 * `_mac`: Defined as `mac(doc_id|rev|ciphertext, document_secret)`. The purpose of this field is to prevent the server from tampering with the stored documents.
 * `_mac_method`: The method used to calculate the mac above (currently hmac).
 
 Other variables:
 
-* `document_secret`: equal to `mac(doc_id, storage_secret)`. This value is unique for every document and only kept in memory. We use document_secret instead of simply storage_secret in order to hinder possible derivation of storage_secret by the server. Every `doc_id` is unique.
+* `document_secret`: equal to `mac(doc_id, storage_secret)`. This value is unique for every document and only kept in memory. We use `document_secret` instead of simply `storage_secret` in order to hinder possible derivation of `storage_secret` by the server. Every `doc_id` is unique.
 * `content`: equal to `sym_decrypt(cipher, ciphertext, document_secret)`.
 
-When receiving a document with the above structure from the server, Soledad client will first verify that `_mac` is correct, then decrypt the `_enc_json` to find `content`, which it saves as a cleartext document in the local database replica.
+When receiving a document with the above structure from the server, Soledad client will first verify that `_mac` is correct, then decrypt the `_enc_json` to find `content`, which it saves as a cleartext document in the local encrypted database replica.
 
 Currently supported encryption ciphers are AES256 (CTR mode) and XSalsa20;
 currently supported MAC method is HMAC.
@@ -171,9 +178,10 @@ Document synchronization
 
 Soledad follows the U1DB synchronization protocol, with some changes:
 
-* Add the ability to flag some documents so they are not synchronized by default.
+* Add the ability to flag some documents so they are not synchronized by default (not fully supported yet).
 * Refuse to synchronize a document if it is encrypted and the MAC is incorrect.
 * Always use `https://<soledad_server_url>/user-<user_uid>` as the synchronization URL.
+
 
     doc = sol.create_doc({'some': 'data'})
     doc.syncable = False
@@ -187,36 +195,59 @@ Like U1DB, Soledad allows the programmer to use whatever ID they choose for each
 Re-keying
 -----------
 
-Sometimes there is a need to change the `storage_secret`. Rather then re-encrypt every document, Soledad implements a system called "lazy revocation" where a new storage_secret is generated and used for all subsequent encryption. The old storage_secret is still retained and used when decrypting older documents that have not yet been re-encrypted with the new storage_secret.
-
-    sol.change_passphrase('<new_passphrase>')
+Sometimes there is a need to change the `storage_secret`. Rather then re-encrypt every document, Soledad implements a system called "lazy revocation" where a new `storage_secret` is generated and used for all subsequent encryption. The old `storage_secret` is still retained and used when decrypting older documents that have not yet been re-encrypted with the new `storage_secret`.
 
 Authentication
 -----------------------
 
 Unlike U1DB, Soledad only supports token authentication and does not support OAuth. Soledad itself does not handle authentication. Instead, this job is handled by a thin HTTP WSGI middleware layer running in front of the Soledad server daemon, which retrieves valid tokens from a certain shared database and compares with the user-provided token. How the session token is obtained is beyond the scope of Soledad.
 
-Recovery and bootstrap
+Bootstrap and recovery
 ------------------------------------------
 
-In order to bootstrap Soledad on a new device, or to recover data if all your devices have been wiped clean, the user has two options:
+Because documents stored on the server's database replica have their contents encrypted with keys based on the `storage_secret`, initial synchronizations of newly configured provider accounts are only possible if the secret is transferred from one device to another. Thus, installation of Soledad in a new device or account recovery after data loss is only possible if specific recovery data has previously been exported and either stored on the provider or imported on a new device.
 
-1. password method: recover by specifying username and password.
-2. recovery code method: recover by specifying username and recovery code.
+Soledad may export a recovery document containing recovery data, which may be password-encrypted and stored in the server, or stored in a safe environment in order to be later imported into a new Soledad installation.
 
-This choice must be made in advance of attempting recovery (e.g. at some point after the user has Soledad successfully running on a device).
+**Recovery document**
 
-**Recovery code**
+An example recovery document:
 
-About the optional recovery code:
+    {
+        'storage_secrets': {
+            '<secret_id>': {
+                'kdf': 'scrypt',
+                'kdf_salt': '<b64 repr of salt>'
+                'kdf_length': <key length>
+                'cipher': 'aes256',
+                'length': <secret length>,
+                'secret': '<encrypted storage_secret>',
+            },
+        },
+        'kdf': 'scrypt',
+        'kdf_salt': '<b64 repr of salt>',
+        'kdf_length: <key length>,
+        '_mac_method': 'hmac',
+        '_mac': '<mac>'
+    }
 
-* The recovery code should be randomly generated, at least 16 characters in length, and contain all lowercase letters (to make it sane to type into mobile devices).
-* The recovery code is not stored by Soledad. When the user needs to bootstrap a new device, a new code is generated. To be used for actual recovery, a user will need to record their recovery code by printing it out or writing it down.
-* The recovery code is independent of the password. In other words, if a recovery code is generated, then a user changes their password, the recovery code is still be sufficient to restore a user's account even if the user has lost the password. This feature is dependent on the server supporting a password reset token. Also, generating a new recovery code does not affect the password.
-* When a new recovery code is created, and new recovery document must be pushed to the recovery database. A code should not be shown to the user before this happens.
-* The recovery code expires when the recovery database record expires (see below).
+About these fields:
 
-The purpose of the recovery code is to prevent a compromised or nefarious Soledad service provider from decrypting a user's storage. The benefit of a recovery code over the user password is that the password has a greater opportunity to be compromised by the server. Even if authentication is performed via Secure Remote Password, the server may still perform a brute force attack to derive the password.
+* `secret_id`: a handle used to refer to a particular `storage_secret` and equal to `sha256(storage_secret)`.
+* `kdf`: the key derivation function to use. Only scrypt is currently supported.
+* `kdf_salt`: the salt used in the kdf. The salt for scrypt is not random, but encodes important parameters like the limits for time and memory.
+* `kdf_length`: the length of the derived key resulting from the kdf.
+* `length`: the length of the secret. 
+* `secret`: the encrypted `storage_secret`.
+* `cipher`: what cipher to use to encrypt `secret`. It must match `kdf_length` (i.e. the length of the `derived_key`).
+* `_mac_method`: The method used to calculate the mac above (currently hmac).
+* `_mac`: Defined as `mac(doc_id|rev|ciphertext, document_secret)`. The purpose of this field is to prevent the server from tampering with the stored documents.
+
+Other fields we might want to include in the future:
+
+* `expires_on`: the month in which this recovery document should be purged from the database. The server may choose to purge documents before their expiration, but it should not let them linger after it.
+* `soledad`: the encrypted `soledad.json`, created by `sym_encrypt(cipher, contents(soledad.json), derived_key)` (base64 encoded).
+* `reset_token`: an optional encrypted password reset token, if supported by the server, created by `sym_encrypt(cipher, password_reset_token, derived_key)` (base64 encoded). The purpose of the reset token is to allow recovery using the recovery code even if the user has forgotten their password. It is only applicable if using recovery code method.
 
 **Recovery database**
 
@@ -231,37 +262,20 @@ Anyone may preform an unauthenticated `get_doc` request. To mitigate the potenti
 
 Although the database is shared, the user must authenticate via the normal means before they are allowed to put a recovery document. Because of this, a nefarious server might potentially record which user corresponds to which recovery documents. A well behaved server, however, will not retain this information. If the server supports authentication via blind signatures, then this will not be an issue.
 
-**Recovery document**
 
-An example recovery document:
+**Recovery code (yet to be implemented)**
 
-    {
-      "doc_id": "xxxxx"
-      "kdf": "scrypt",
-      "kdf_salt": "400$8$5fb$61b499fe3366d947",
-      "kdf_length": 128,
-      "cipher": "aes128",
-      "expires_on": "2014-07",
-      "soledad": "xxxxx",
-      "reset_token": "xxxxx"
-    }
+We intend to offer data recovery by specifying username and a recovery code. The choice of type of recovery (using password or a recovery code) must be made in advance of attempting recovery (e.g. at some point after the user has Soledad successfully running on a device).
 
-About these fields:
+About the optional recovery code:
 
-* `doc_id` is determined by the client and computed from `hmac(username@domain, passcode)`.
-* `kdf`: the key derivation function to use. Only scrypt is currently supported (so for now, this value is ignored).
-* `kdf_salt`: the salt used in the kdf. The salt for scrypt is not random, but encodes important parameters like the limits for time and memory.
-* `kdf_length`: the length of the derived key resulting from the kdf.
-* `cipher`: what cipher to use to encrypt `soledad`. It must match `kdf_length` (i.e. the length of the derived_key).
-* `expires_on`: the month in which this recovery document should be purged from the database. The server may choose to purge documents before their expiration, but it should not let them linger after it.
-* `soledad`: the encrypted `soledad.json`, created by `sym_encrypt(cipher, contents(soledad.json), derived_key)` (base64 encoded).
-* `reset_token`: an optional encrypted password reset token, if supported by the server, created by `sym_encrypt(cipher, password_reset_token, derived_key)` (base64 encoded). The purpose of the reset token is to allow recovery using the recovery code even if the user has forgotten their password. It is only applicable if using recovery code method.
+* The recovery code should be randomly generated, at least 16 characters in length, and contain all lowercase letters (to make it sane to type into mobile devices).
+* The recovery code is not stored by Soledad. When the user needs to bootstrap a new device, a new code is generated. To be used for actual recovery, a user will need to record their recovery code by printing it out or writing it down.
+* The recovery code is independent of the password. In other words, if a recovery code is generated, then a user changes their password, the recovery code is still be sufficient to restore a user's account even if the user has lost the password. This feature is dependent on the server supporting a password reset token. Also, generating a new recovery code does not affect the password.
+* When a new recovery code is created, and new recovery document must be pushed to the recovery database. A code should not be shown to the user before this happens.
+* The recovery code expires when the recovery database record expires (see below).
 
-Other variables:
-
-* `passcode`: either the user password or the recovery code, depending on the option selected by the user.
-* `derived_key`: equal to `kdf(passcode, kdf_salt, kdf_length)`.
-
+The purpose of the recovery code is to prevent a compromised or nefarious Soledad service provider from decrypting a user's storage. The benefit of a recovery code over the user password is that the password has a greater opportunity to be compromised by the server. Even if authentication is performed via Secure Remote Password, the server may still perform a brute force attack to derive the password.
 
 Reference implementation of client
 ===================================
@@ -290,9 +304,9 @@ The SQLCipher backend is responsible for:
 * Guaranteeing secure synchronization:
   * All data being sent to a remote replica is encrypted with a symmetric key before being sent.
   * Ensure that data received from remote replica is indeed encrypted to a symmetric key when it arrives, and then that it is decrypted before being included in the local database replica.
-* Correctly representing and handling new Document properties as sync flag.
+* Correctly representing and handling new Document properties (e.g. the `sync` flag).
 
-The Soledad `storage_key` is used directly as the key for the SQLCipher encryption layer. SQLCipher supports the use of a raw 256 bit keys if provided as a 64 character hex string. This will skip the key derivation step (PBKDF2), which is redundant in our case. For example:
+Part of the Soledad `storage_key` is used directly as the key for the SQLCipher encryption layer. SQLCipher supports the use of a raw 256 bit keys if provided as a 64 character hex string. This will skip the key derivation step (PBKDF2), which is redundant in our case. For example:
 
     sqlite> PRAGMA key = "x'2DD29CA851E7B56E4697B0E1F08507293D761A05CE4D1B628663F411A8086D99'";
 
@@ -300,7 +314,7 @@ The Soledad `storage_key` is used directly as the key for the SQLCipher encrypti
 
 SQLCipher backend classes:
 
-* `SQLCipherDatabase`: An extension of SQLitePartialExpandDatabase used by Soledad Client to store data locally using SQLCipher. It implements the following:
+* `SQLCipherDatabase`: An extension of `SQLitePartialExpandDatabase` used by Soledad Client to store data locally using SQLCipher. It implements the following:
   * Need of a password to instantiate the db.
   * Verify if the db instance is indeed encrypted.
   * Use a LeapSyncTarget for encrypting content before synchronizing over HTTP.
@@ -327,12 +341,7 @@ Provide sync between local and remote replicas:
 
 Synchronization-related classes:
 
-* `LEAPDocument`: an extension of @u1db.Document@ with methods to:
-  * Return a symmetric encrypted version of Documents JSON representation.
-  * Set document's content by symmetric decrypting an encrypted JSON representation.
-* `LEAPSyncTarget`: an extension of `HTTPSyncTarget` with the following modified methods:
-  * `sync_exchange`: request encrypted version of Document's content before sending it to the network.
-  * `_parse_sync_stream`: set Document's content based on encrypted version right after it arrives as a response from the network.
+* `SoledadSyncTarget`: an extension of `HTTPSyncTarget` modified to encrypt documents' content before sending them to the network and to have more control of the syncing process.
 
 Reference implementation of server
 ======================================================
@@ -350,7 +359,7 @@ Dependencies:
 CouchDB backend
 -------------------------------
 
-In the server side, Soledad stores its database replicas in CouchDB servers. Soledad's CouchDB backend implementation is built on top of the reference `InMemory` implementation, but forces storage and fetch of U1DB data on a remote couch server for every write and read operation, respectively.
+In the server side, Soledad stores its database replicas in CouchDB servers. Soledad's CouchDB backend implementation is built on top of U1DB's `CommonBackend`, and stores and fetches data using a remote CouchDB server. It lacks indexing first because we don't need that functionality on server side, but also because if not very well done, it could lack sensitive information about document's contents.
 
 CouchDB backend is responsible for:
 
@@ -358,21 +367,20 @@ CouchDB backend is responsible for:
   * Transaction log.
   * Conflict log.
   * Synchronization log.
-  * Indexes.
 * Mapping the U1DB API to CouchDB API.
 
 **Classes**
 
 * `CouchDatabase`: A backend used by Soledad Server to store data in CouchDB.
 * `CouchSyncTarget`: Just a target for syncing with Couch database.
-* `CouchServerState`: Inteface of the WSGI server with the CouchDB backend.
+* `CouchServerState`: Interface of the WSGI server with the CouchDB backend.
 
 WSGI Server
 -----------------------------------------
 
-The U1DB server reference implementation provides for an HTTP api backed by SQLite databases (of minimal usefulness in production environment!). Soledad extends this with token-based auth HTTP access to CouchDB databases.
+The U1DB server reference implementation provides for an HTTP API backed by SQLite databases. Soledad extends this with token-based auth HTTP access to CouchDB databases.
 
-* Soledad makes use of @twistd@ from Twisted API to serve its WSGI application.
+* Soledad makes use of `twistd` from Twisted API to serve its WSGI application.
 * Authentication is done by means of a token.
 * Soledad implements a WSGI middleware in server side that:
   * Uses the provided token to verify read and write access to each user's private databases and write access to the shared recovery database.
@@ -381,7 +389,7 @@ The U1DB server reference implementation provides for an HTTP api backed by SQLi
 
 **Classes**
 
-* `SoledadAuthMiddleware`: implemnets the WSGI middleware with token based auth as described before.
+* `SoledadAuthMiddleware`: implements the WSGI middleware with token based auth as described before.
 * `SoledadApp`: The WSGI application. For now, not different from `u1db.remote.http_app.HTTPApp`.
 
 **Authentication**
