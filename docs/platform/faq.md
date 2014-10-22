@@ -2,6 +2,14 @@
 @nav_title = 'FAQ'
 @toc = true
 
+APT
+===============
+
+What do I do when unattended upgrades fail?
+--------------------------------------------------
+
+When you receive notification e-mails with a subject of 'unattended-upgrades result for $machinename', that means that some package couldn't be automatically upgraded and needs manual interaction. The reasons vary, so you have to be careful. Most often you can simply login to the affected machine and run `apt-get dist-upgrade`.
+
 Puppet
 ======
 
@@ -24,7 +32,7 @@ How can i customize the leap_platform puppet manifests ?
 --------------------------------------------------------
 
 You can create a custom module `site_custom`.  The class `site_custom::setup` will get
-included in the first part of the deploy process, and `site_custom` during the second part. 
+included in the first part of the deploy process, and `site_custom` during the second part.
 Of cause you can also create a different git branch and change whatever you want, if you are
 familiar wit git.
 
@@ -37,7 +45,7 @@ How can i see custom facts distributed by leap_platform on a node ?
 On the server, export the FACTERLIB env. variable to include the path of the custom fact in question:
 
     export FACTERLIB=/var/lib/puppet/lib/facter:/srv/leap/puppet/modules/stdlib/lib/facter/
-    facter    
+    facter
 
 
 Etc
