@@ -261,7 +261,7 @@ Install vagrant-libvirt plugin and add box
     sudo apt-get install ruby-dev libxslt-dev libxml2-dev libvirt-dev
     vagrant plugin install vagrant-libvirt
     vagrant plugin install sahara
-    vagrant box add leap-wheezy https://downloads.leap.se/leap-debian-libvirt.box --provider libvirt
+    vagrant box add leap-wheezy https://downloads.leap.se/platform/vagrant/libvirt/leap-wheezy.box --provider libvirt
 
 Remove Virtualbox
 -----------------
@@ -271,7 +271,7 @@ Debugging
 ---------
 
 If you get an error in any of the above commands, try to get some debugging information, it will often tell you what is wrong. In order to get debugging logs, you simply need to re-run the command that produced the error but prepend the command with VAGRANT_LOG=info, for example:
-    VAGRANT_LOG=info vagrant box add leap-wheezy https://downloads.leap.se/leap-debian-libvirt.box
+    VAGRANT_LOG=info vagrant box add leap-wheezy https://downloads.leap.se/platform/vagrant/libvirt/leap-wheezy.box
 
 Start it
 --------

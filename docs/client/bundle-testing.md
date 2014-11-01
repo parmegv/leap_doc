@@ -92,7 +92,7 @@ Download, extract and run helper script for linux:
 Script contents:
 
     #!/bin/bash
-    HOST="https://downloads.leap.se/client/linux/"
+    HOST="https://dl.bitmask.net/client/linux/"
     VERSION="0.3.7"
     # FOLDER="Bitmask-linux32-${VERSION}"
     FOLDER="Bitmask-linux64-${VERSION}"
