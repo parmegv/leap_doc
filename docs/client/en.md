@@ -47,12 +47,14 @@ We currently support:
 
 * Debian 7
 * Ubuntu 12.04 (LTS)
-* Ubuntu 14.04 (LTS, latest)
+* Ubuntu 14.04 (LTS)
+* Ubuntu 14.10 (latest)
 * Mac OSX >= 10.8 (coming very soon)
 * Note: It *should* work in other Debian based distros
 
 ### Through the debian package
 
 * Ubuntu 14.04 (Trusty Tahr)
+* Ubuntu 14.10 (Utopic Unicorn)
 * Debian 7.0 (Wheezy)
 * Debian 8.0 (Jessie)
