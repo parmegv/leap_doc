@@ -55,6 +55,6 @@ We currently support:
 ### Through the debian package
 
 * Ubuntu 14.04 (Trusty Tahr)
-* Ubuntu 14.10 (Utopic Unicorn)
+* Ubuntu 14.10 (Utopic Unicorn) coming very soon
 * Debian 7.0 (Wheezy)
 * Debian 8.0 (Jessie)
