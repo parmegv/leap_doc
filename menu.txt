@@ -22,6 +22,7 @@ docs
     config
     commands
     under-the-hood
+    tests
     known-issues
     faq
     troubleshooting
