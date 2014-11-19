@@ -332,7 +332,7 @@ Use the VPN
 You should be able to simply test that the OpenVPN gateway works properly by doing the following:
 
     $ leap test init
-    $ sudo openvpn test/openvpn/unlimited.ovpn
+    $ sudo openvpn test/openvpn/production_unlimited.ovpn
 
 Or, you can use the LEAP client (called "bitmask") to connect to your new provider, create a user and then connect to the VPN.
 
