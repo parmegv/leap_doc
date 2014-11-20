@@ -5,39 +5,18 @@
 
 Here you can find documentation about known issues and potential work-arounds in the current Leap Platform release.
 
-0.5.1
-=====
-CouchDB Sync
-------------
-You can't deploy new couchdb nodes after one or more have been deployed. Make *sure* that you configure and deploy all your couchdb nodes when starting the provider. The problem is that we dont not have a clean way of adding couch nodes after initial creation of the databases, so any nodes added after result in improperly synchronized data. See Bug [#5601](https://leap.se/code/issues/5601) for more information.
-
-
-0.5.0rc1
-========
-
-Service separation
-------------------
-
-. You can't deploy all services to one single node. You need at least to seperate the mx and the webapp node. The reason is because they both use haproxy to query the couch db, and haproxy still doesn't have a way to split up its config files in a .d directory (see: https://leap.se/code/issues/3839)
-
-
-0.2.2
+0.6.0
 =====
 
-In this release the following issues are known, work-arounds are noted when available.
+CouchDB
+-------
+. You can't deploy new couchdb nodes after one or more have been deployed. Make *sure* that you configure and deploy all your couchdb nodes when starting the provider. The problem is that we dont not have a clean way of adding couch nodes after initial creation of the databases, so any nodes added after result in improperly synchronized data. See Bug [#5601](https://leap.se/code/issues/5601) for more information.
 
-General Issues
---------------
+. In some scenarios, such as when certain components are unavailable, the couchdb syncing will be broken. When things are brought back to normal, shortly after restart, the nodes will attempt to resync all their data, and can fail to complete this process because they run out of file descriptors. A symptom of this is the webapp wont allow you to register or login, the /opt/bigcouch/var/log/bigcouch.log is huge with a lot of errors that include (over multiple lines): {error,  emfile}}. We have raised the limits for available file descriptors to bigcouch to try and accommodate for this situation, but if you still experience it, you may need to increase your /etc/sv/bigcouch/run ulimit values and restart bigcouch while monitoring the open file descriptors. We hope that in the next platform release, a newer couchdb will be better at handling these resources.
 
-. This release does *not* anonymize your logs (see: https://leap.se/code/issues/1897)
+You can also see the number of file descriptors in use by doing:
 
-. This release does *not* setup email relaying, so admins will not receive important email notifications. Email service will be part of the next release (see: https://leap.se/code/issues/1683 https://leap.se/code/issues/1905)
-
-. Your openvpn gateway address will be added on the /24 network, and is not configurable in this release (see: https://leap.se/code/issues/1863)
-
-. You must not add a node with an underscore in the name, you also cannot use a hyphen for a vagrant node (see: https://leap.se/code/issues/3087) 
-
-. The nagios website check reports success when the webapp is not functioning but apache is up (see: https://leap.se/code/issues/1629)
+# watch -n1 -d lsof -p `pidof beam`|wc -l
 
 User setup and ssh
 ------------------
@@ -49,8 +28,6 @@ User setup and ssh
   (see: https://leap.se/code/issues/2946 and https://leap.se/code/issues/3002)
 
 . If the ssh host key changes, you need to run node init again (see: https://leap.se/en/docs/platform/guide#Working.with.SSH)
-
-. At the moment, only ECDSA ssh host keys are supported. If you get the following error: `= FAILED ssh-keyscan: no hostkey alg (must be missing an ecdsa public host key)` then you should confirm that you have the following line defined in your server's **/etc/ssh/sshd_config**: `HostKey /etc/ssh/ssh_host_ecdsa_key`. If that file doesn't exist, run `ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ""` in order to create it. If you made a change to your sshd_config, then you need to run `/etc/init.d/ssh restart` (see: https://leap.se/code/issues/2373)
 
 . To remove an admin's access to your servers, please remove the directory for that user under the `users/` subdirectory in your provider directory and then remove that user's ssh keys from files/ssh/authorized_keys. When finished you *must* run a `leap deploy` to update that information on the servers. 
 
