@@ -16,7 +16,7 @@ CouchDB
 
 You can also see the number of file descriptors in use by doing:
 
-# watch -n1 -d lsof -p `pidof beam`|wc -l
+    # watch -n1 -d lsof -p `pidof beam`|wc -l
 
 User setup and ssh
 ------------------
