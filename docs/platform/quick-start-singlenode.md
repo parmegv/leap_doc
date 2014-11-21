@@ -103,7 +103,7 @@ Check out the platform
 --------------------------
 
 The LEAP Platform is a series of puppet recipes and modules that will be used to configure your provider. You will need a local copy of the platform that will be used to setup your nodes and manage your services. To begin with, you will not need to modify the LEAP Platform.
-Until we have a up to date stable release we recommend using the `develop` branch of the platform for all features of LEAP.
+Until we have a up to date stable release we recommend using the `develop` branch of the platform and leap_cli for all features of LEAP.
 
 First we'll create a directory for LEAP things, and then we'll check out the platform code and initalize the modules:
 
