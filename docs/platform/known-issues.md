@@ -8,6 +8,20 @@ Here you can find documentation about known issues and potential work-arounds in
 0.6.0
 =====
 
+openvpn
+-------
+. On deployment to a openvpn node, if the following happens:
+
+    - err: /Stage[main]/Site_openvpn/Service[openvpn]/ensure: change from stopped to running failed: Could not start Service[openvpn]: Execution of '/etc/init.d/openvpn start' returned 1:  at /srv/leap/puppet/modules/site_openvpn/manifests/init.pp:189
+
+this is likely the result of a kernel upgrade that happened during the deployment, requiring that the machine be restarted before this service can start. To confirm this, login to the node (leap ssh <nodename>) and look at the end of the /var/log/daemon.log:
+
+    # tail /var/log/daemon.log
+    Nov 22 19:04:15 snail ovpn-udp_config[16173]: ERROR: Cannot open TUN/TAP dev /dev/net/tun: No such device (errno=19)
+    Nov 22 19:04:15 snail ovpn-udp_config[16173]: Exiting due to fatal error
+
+if you see this error, simply restart the node.
+
 CouchDB
 -------
 . You can't deploy new couchdb nodes after one or more have been deployed. Make *sure* that you configure and deploy all your couchdb nodes when starting the provider. The problem is that we dont not have a clean way of adding couch nodes after initial creation of the databases, so any nodes added after result in improperly synchronized data. See Bug [#5601](https://leap.se/code/issues/5601) for more information.
