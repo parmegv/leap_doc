@@ -31,8 +31,11 @@ Log into your server and issue:
 How can i customize the leap_platform puppet manifests ?
 --------------------------------------------------------
 
-You can create a custom module `site_custom`.  The class `site_custom::setup` will get
-included in the first part of the deploy process, and `site_custom` during the second part.
+You can create custom puppet modules under `files/puppet`. 
+The custom puppet entry point is in class 'custom' which can be put into 
+`files/puppet/modules/custom/manifests/init.pp`. This class gets automatically included 
+by site_config::default, which is applied to all nodes.
+
 Of cause you can also create a different git branch and change whatever you want, if you are
 familiar wit git.
 
