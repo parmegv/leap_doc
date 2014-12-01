@@ -158,13 +158,17 @@ Before a JSON document is synced with the server, it is transformed into a docum
 About these fields:
 
 * `_enc_json`: The original JSON document, encrypted and hex encoded. Calculated as:
+```
     doc_key = hmac(storage_secret[MAC_KEY_LENGTH:], doc_id)
     ciphertext = hex(sym_encrypt(cipher, content, doc_key))
+```
 * `_enc_scheme`: Information about the encryption scheme used to encrypt this document (i.e.`pubkey`, `symkey` or `none`).
 * `_enc_method`: Information about the block cipher that is used to encrypt this document.
 * `_mac`: A MAC to prevent the server from tampering with stored documents. Calculated as:
+```
     mac_key = hmac(storage_secret[:MAC_KEY_LENGTH], doc_id)
     _mac = hmac(doc_id|rev|ciphertext|_enc_scheme|_enc_method|_enc_iv, mac_key)
+```
 * `_mac_method`: The method used to calculate the mac above (currently hmac).
 
 Other variables:
@@ -246,6 +250,13 @@ About these fields:
 * `cipher`: what cipher to use to encrypt `secret`. It must match `kdf_length` (i.e. the length of the `derived_key`).
 * `_mac_method`: The method used to calculate the mac above (currently hmac).
 * `_mac`: Defined as `hmac(doc_id|rev|ciphertext, doc_key)`. The purpose of this field is to prevent the server from tampering with the stored documents.
+
+Currently, scrypt parameters are:
+
+     N (CPU/memory cost parameter) = 2^14 = 16384
+     p (paralelization parameter) = 1
+     r (length of block mixed by SMix()) = 8
+     dkLen (length of derived key) = 32 bytes = 256 bits
 
 Other fields we might want to include in the future:
 
