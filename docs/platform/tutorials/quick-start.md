@@ -1,5 +1,6 @@
 @title = 'LEAP Platform Quick Start'
 @nav_title = 'Quick Start'
+@summary = 'Three node OpenVPN provider.'
 
 Quick Start
 ===========
@@ -14,10 +15,10 @@ We are going to create a minimal LEAP provider offering OpenVPN service. This ba
 Our goal is something like this:
 
     $ leap list
-           NODES   SERVICES           TAGS
-           couch1  couchdb
-           web1    webapp
-           vpn1    openvpn
+         NODES   SERVICES    TAGS
+       cheetah   couchdb     production
+    wildebeest   webapp      production
+       ostrich   openvpn     production
 
 NOTE: You won't be able to run that `leap list` command yet, not until we actually create the node configurations.
 
@@ -28,11 +29,11 @@ In order to complete this Quick Start, you will need a few things:
 
 * You will need three real or paravirtualized virtual machines (KVM, Xen, Openstack, Amazon, but not Vagrant - sorry) that have a basic Debian Stable installed. If you allocate 20G of disk space to each node for the system, after this process is completed, you will have used less than 10% of that disk space. If you allocate 2 CPUs and 8G of memory to each node, that should be more than enough to begin with.
 * You should be able to SSH into them remotely, and know their root password, IP addresses and their SSH host keys
-* You will need four different IPs, one for each node, and a second one for the VPN gateway
+* You will need four different IPs. Each node gets a primary IP, and the OpenVPN gateway additionally needs a gateway IP.
 * The ability to create/modify DNS entries for your domain is preferable, but not needed. If you don't have access to DNS, you can workaround this by modifying your local resolver, i.e. editing `/etc/hosts`.
 * You need to be aware that this process will make changes to your systems, so please be sure that these machines are a basic install with nothing configured or running for other purposes
 * Your machines will need to be connected to the internet, and not behind a restrictive firewall.
-* You should work locally on your laptop/workstation (one that you trust and that is ideally full-disk encrypted) while going through this guide. This is important because the provider configurations you are creating contain sensitive data that should not reside on a remote machine. The leap cli utility will login to your servers and configure the services.
+* You should work locally on your laptop/workstation (one that you trust and that is ideally full-disk encrypted) while going through this guide. This is important because the provider configurations you are creating contain sensitive data that should not reside on a remote machine. The `leap` command will login to your servers and configure the services.
 * You should do everything described below as an unprivileged user, and only run those commands as root that are noted with *sudo* in front of them. Other than those commands, there is no need for privileged access to your machine, and in fact things may not work correctly.
 
 All the commands in this tutorial are run on your sysadmin machine. In order to complete the tutorial, the sysadmin will do the following:
@@ -70,7 +71,7 @@ Install core prerequisites:
 1. Install rubygems from https://rubygems.org/pages/download (unless the `gem` command is already installed).
 -->
 
-NOTE: leap_cli should work with ruby1.8, but has only been tested using ruby1.9.
+NOTE: leap_cli requires ruby 1.9 or later.
 
 
 Install the LEAP command-line utility
@@ -208,21 +209,21 @@ A "node" is a server that is part of your infrastructure. Every node can have on
 
 Create a node, with the service "webapp":
 
-    $ leap node add web1 ip_address:x.x.x.w services:webapp tags:production
+    $ leap node add wildebeest ip_address:x.x.x.w services:webapp tags:production
 
 NOTE: replace x.x.x.w with the actual IP address of this node
 
-This created a node configuration file in `nodes/web1.json`, but it did not do anything else. It also added the 'tag' called 'production' to this node. Tags allow us to conveniently group nodes together. When creating nodes, you should give them the tag 'production' if the node is to be used in your production infrastructure.
+This created a node configuration file in `nodes/wildebeest.json`, but it did not do anything else. It also added the 'tag' called 'production' to this node. Tags allow us to conveniently group nodes together. When creating nodes, you should give them the tag 'production' if the node is to be used in your production infrastructure.
 
 The web application and the VPN nodes require a database, so lets create the database server node:
 
-    $ leap node add couch1 ip_address:x.x.x.x services:couchdb tags:production
+    $ leap node add cheetah ip_address:x.x.x.x services:couchdb tags:production
 
 NOTE: replace x.x.x.x with the actual IP address of this node
 
-Now we need the VPN gateway, so lets create that node:
+Now we need the OpenVPN gateway, so lets create that node:
 
-    $ leap node add vpn1 ip_address:x.x.x.y openvpn.gateway_address:x.x.x.z services:openvpn tags:production
+    $ leap node add ostrich ip_address:x.x.x.y openvpn.gateway_address:x.x.x.z services:openvpn tags:production
 
 NOTE: replace x.x.x.y with the IP address of the machine, and x.x.x.z with the second IP. openvpn gateways must be assigned two IP addresses, one for the host itself and one for the openvpn gateway. We do this to prevent incoming and outgoing VPN traffic on the same IP. Without this, the client might send some traffic to other VPN users in the clear, bypassing the VPN.
 
@@ -235,9 +236,9 @@ Now that you have the nodes configured, you should create the DNS entries for th
 Set up your DNS with these hostnames:
 
     $ leap list --print ip_address,domain.full,dns.aliases
-        couch1  x.x.x.w, couch1.example.org, null
-          web1  x.x.x.x, web1.example.org, api.example.org, nicknym.example.org
-          vpn1  x.x.x.y, vpn1.example.org, null
+       cheetah  x.x.x.w, cheetah.example.org, null
+    wildebeest  x.x.x.x, wildebeest.example.org, api.example.org
+       ostrich  x.x.x.y, ostrich.example.org, null
 
 Alternately, you can adapt this zone file snippet:
 
@@ -245,9 +246,9 @@ Alternately, you can adapt this zone file snippet:
 
 If you cannot edit your DNS zone file, you can still test your provider by adding entries to your local resolver hosts file (`/etc/hosts` for linux):
 
-    x.x.x.w couch1.example.org
-    x.x.x.x web1.example.org api.example.org example.org
-    x.x.x.y vpn1.example.org
+    x.x.x.w cheetah.example.org
+    x.x.x.x wildebeest.example.org api.example.org example.org
+    x.x.x.y ostrich.example.org
 
 Please don't forget about these entries, they will override DNS queries if you setup your DNS later.
 
@@ -263,26 +264,26 @@ This will initialize all nodes with the tag "production". When `leap node init` 
 
 If you prefer, you can initalize each node, one at a time:
 
-    $ leap node init web1
-    $ leap node init couch1
-    $ leap node init vpn1
+    $ leap node init wildebeest
+    $ leap node init cheetah
+    $ leap node init ostrich
 
 Deploy the LEAP platform to the nodes
 --------------------
 
-Now you should deploy the platform recipes to the nodes. [Deployment can take a while to run](http://xkcd.com/303/), especially on the first run, as it needs to update the packages on the new machine. 
+Now you should deploy the platform recipes to the nodes. [Deployment can take a while to run](http://xkcd.com/303/), especially on the first run, as it needs to update the packages on the new machine.
+
 *Important notes:* currently nodes must be deployed in a certain order. The underlying couch database node(s) must be deployed first, and then all other nodes. Also you need to configure and deploy all of the couchdb nodes that you plan to use at this time, as currently you cannot add more of them later later ([See](https://leap.se/es/docs/platform/known-issues#CouchDB.Sync)).
 
-    $ leap deploy couch1
+    $ leap deploy cheetah
 
 Watch the output for any errors (in red), if everything worked fine, you should now have your first running node. If you do have errors, try doing the deploy again.
 
 However, to deploy our three-node openvpn setup, we need the database and LEAP web application requires a database to run, so let's deploy to the couchdb and openvpn nodes:
 
-    $ leap deploy web1
-    $ leap deploy vpn1
+    $ leap deploy wildebeest
+    $ leap deploy ostrich
 
-NOTE: the output from deploying can be quite busy, so we often do them each node one by one.
 
 What is going on here?
 --------------------------------------------
@@ -300,19 +301,21 @@ When you run `leap deploy`, a bunch of things happen, in this order:
 
 You can run `leap -v2 deploy` to see exactly what commands are being executed.
 
-<!-- See [under the hood](under-the-hood) for more details. -->
-
 
 Test that things worked correctly
 =================================
 
 You should now have three machines with the LEAP platform deployed to them, one for the web application, one for the database and one for the OpenVPN gateway.
 
+To run troubleshooting tests:
 
-Access the web application
---------------------------------------------
+    leap test
 
-In order to connect to the web application in your browser, you need to point your domain at the IP address of the web application node (named web1 in this example).
+If you want to confirm for yourself that things are working, you can perform the following manual tests.
+
+### Access the web application
+
+In order to connect to the web application in your browser, you need to point your domain at the IP address of the web application node (named wildebeest in this example).
 
 There are a lot of different ways to do this, but one easy way is to modify your `/etc/hosts` file. First, find the IP address of the webapp node:
 
@@ -326,8 +329,7 @@ Replacing 'leap.example.org' with whatever you specified as the `domain` in the 
 
 Next, you can connect to the web application either using a web browser or via the API using the LEAP client. To use a browser, connect to https://leap.example.org (replacing that with your domain). Your browser will complain about an untrusted cert, but for now just bypass this. From there, you should be able to register a new user and login.
 
-Use the VPN
------------
+### Use the VPN
 
 You should be able to simply test that the OpenVPN gateway works properly by doing the following:
 
@@ -347,7 +349,7 @@ Useful commands
 
 Here are a few useful commands you can run on your new local nodes:
 
-* `leap ssh web1` -- SSH into node web1 (requires `leap node init web1` first).
+* `leap ssh wildebeest` -- SSH into node wildebeest (requires `leap node init wildebeest` first).
 * `leap list` -- list all nodes.
 * `leap list production` -- list only those nodes with the tag 'production'
 * `leap list --print ip_address` -- list a particular attribute of all nodes.
@@ -371,7 +373,7 @@ Examples:
 * `leap list openvpn` -- list all nodes with service openvpn.
 * `leap list openvpn +production` -- only nodes of service type openvpn AND tag production.
 * `leap deploy webapp openvpn` -- deploy to all webapp OR openvpn nodes.
-* `leap node init vpn1` -- just init the node named vpn1.
+* `leap node init ostrich` -- just init the node named ostrich.
 
 Keep track of your provider configurations
 ------------------------------------------

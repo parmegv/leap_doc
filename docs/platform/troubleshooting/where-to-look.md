@@ -1,5 +1,5 @@
-@title = 'Troubleshooting Guide'
-@nav_title = 'Troubleshooting'
+@title = 'Where to look for errors'
+@nav_title = 'Where to look'
 @toc = true
 
 

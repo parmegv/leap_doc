@@ -1,4 +1,5 @@
 @title = "Under the hood"
+@summary = "Various implementation details."
 
 This page contains various details on the how the platform is implemented. You can safely ignore this page, although it may be useful if you plan to make modifications to the platform.
 

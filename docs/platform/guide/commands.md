@@ -1,4 +1,5 @@
 @title = 'Command Line Reference'
+@summary = "A copy of leap --help"
 
 The command "leap" can be used to manage a bevy of servers running the LEAP platform from the comfort of your own home.
 

@@ -1,4 +1,5 @@
 @title = "Configuration Files"
+@summary = "How to edit configuration files."
 
 Files
 -------------------------------------------

@@ -1,9 +1,10 @@
 @title = "Development Environment"
+@summary = "Setting up an environment for modifying the leap_platform."
 @toc = true
 
-If you are wanting to make local changes to your provider, or want to contribute some fixes back to LEAP, we recommend that you follow this guide to build up a development environment to test your changes first. Using this method, you can quickly test your changes without deploying them to your production environment, while benefitting from the convenience of reverting to known good states in order to retry things from scratch. 
+If you are wanting to make local changes to your provider, or want to contribute some fixes back to LEAP, we recommend that you follow this guide to build up a development environment to test your changes first. Using this method, you can quickly test your changes without deploying them to your production environment, while benefitting from the convenience of reverting to known good states in order to retry things from scratch.
 
-This page will walk you through setting up nodes using [Vagrant](http://www.vagrantup.com/) for convenient deployment testing, snapshotting known good states, and reverting to previous snapshots. 
+This page will walk you through setting up nodes using [Vagrant](http://www.vagrantup.com/) for convenient deployment testing, snapshotting known good states, and reverting to previous snapshots.
 
 Requirements
 ============
@@ -56,15 +57,15 @@ Install the Vagrant and VirtualBox packages for OS X from their respective Downl
 * https://www.virtualbox.org/wiki/Downloads
 
 
-2. Install 
+2. Install
 
 
 Adding development nodes to your provider
 =========================================
 
-Now you will add local-only Vagrant development nodes to your provider. 
+Now you will add local-only Vagrant development nodes to your provider.
 
-You do not need to setup a different provider instance for development, in fact it is more convenient if you do not, but you can if you wish.  If you do not have a provider already, you will need to create one and configure it before continuing (it is recommended you go through the [Quick Start](quick-start) before continuing down this path). 
+You do not need to setup a different provider instance for development, in fact it is more convenient if you do not, but you can if you wish.  If you do not have a provider already, you will need to create one and configure it before continuing (it is recommended you go through the [Quick Start](quick-start) before continuing down this path).
 
 
 Create local development nodes
@@ -80,7 +81,7 @@ While in your provider directory, create a local node, with the service "webapp"
      = created files/nodes/web1/web1.key
      = created files/nodes/web1/web1.crt
 
-This command creates a node configuration file in `nodes/web1.json` with the webapp service. 
+This command creates a node configuration file in `nodes/web1.json` with the webapp service.
 
 Starting local development nodes
 --------------------------------
@@ -141,7 +142,7 @@ You now can follow the normal LEAP process and initialize it and then deploy you
 Useful local development commands
 =================================
 
-There are many useful things you can do with a virtualized development environment. 
+There are many useful things you can do with a virtualized development environment.
 
 Listing what machines are running
 ---------------------------------
@@ -168,7 +169,7 @@ It is not recommended that you leave your virtual machines running when you are 
 Connecting to machines
 ----------------------
 
-You can connect to your local nodes just like you do with normal LEAP nodes, by running 'leap ssh node'. 
+You can connect to your local nodes just like you do with normal LEAP nodes, by running 'leap ssh node'.
 
 However, if you cannot connect to your local node, because the networking is not setup properly, or you have deployed a firewall that locks you out, you may need to access the graphical console.
 
@@ -183,7 +184,7 @@ and then start, or restart, your local Vagrant node. You should get a VirtualBox
 Snapshotting machines
 ---------------------
 
-A very useful feature of local Vagrant development nodes is the ability to snapshot the current state and then revert to that when you need. 
+A very useful feature of local Vagrant development nodes is the ability to snapshot the current state and then revert to that when you need.
 
 For example, perhaps the base image is a little bit out of date and you want to get the packages updated to the latest before continuing. You can do that simply by starting the node, connecting to it and updating the packages and then snapshotting the node:
 
@@ -220,7 +221,7 @@ Troubleshooting Vagrant
 To troubleshoot vagrant issues, try going through these steps:
 
 * Try plain vagrant using the [Getting started guide](http://docs.vagrantup.com/v2/getting-started/index.html).
-* If that fails, make sure that you can run virtual machines (VMs) in plain virtualbox (Virtualbox GUI or VBoxHeadless). 
+* If that fails, make sure that you can run virtual machines (VMs) in plain virtualbox (Virtualbox GUI or VBoxHeadless).
   We don't suggest a sepecial howto for that, [this one](http://www.thegeekstuff.com/2012/02/virtualbox-install-create-vm/) seems pretty decent, or you follow the [Oracale Virtualbox User Manual](http://www.virtualbox.org/manual/UserManual.html). There's also specific documentation for [Debian](https://wiki.debian.org/VirtualBox) and for [Ubuntu](https://help.ubuntu.com/community/VirtualBox). If you succeeded, try again if you now can start vagrant nodes using plain vagrant (see first step).
 * If plain vagrant works for you, you're very close to using vagrant with leap ! If you encounter any problems now, please [contact us](https://leap.se/en/about-us/contact) or use our [issue tracker](https://leap.se/code)
 
@@ -295,7 +296,7 @@ Then:
 
 If everything works, you should export libvirt as the VAGRANT_DEFAULT_PROVIDER:
 
-    export VAGRANT_DEFAULT_PROVIDER="libvirt" 
+    export VAGRANT_DEFAULT_PROVIDER="libvirt"
 
 Now you should be able to use the `leap local` commands.
 

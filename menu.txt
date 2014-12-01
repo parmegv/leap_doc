@@ -17,16 +17,23 @@ docs
     tapicero
     webapp
   platform
-    quick-start
     guide
-    config
-    commands
-    under-the-hood
-    tests
-    known-issues
-    faq
+      nodes
+      keys-and-certificates
+      miscellaneous
+      config
+      commands
+    tutorials
+      quick-start
+      single-node
     troubleshooting
-    development
+      tests
+      where-to-look
+      known-issues
+    details
+      faq
+      development
+      under-the-hood
   client
     user-install
     user-running

@@ -1,5 +1,6 @@
-@title = 'LEAP Platform Quick Start - Single node setup'
-@nav_title = 'Quick Start - Single node'
+@title = 'Single node tutorial'
+@nav_title = 'Single node'
+@summary = 'A single node email provider.'
 
 Quick Start - Single node setup
 ===============================
@@ -15,8 +16,8 @@ We are going to create a minimal LEAP provider offering Email service. This basi
 Our goal is something like this:
 
     $ leap list
-        NODES   SERVICES                       TAGS  
-        node1   couchdb, mx, soledad, webapp   local 
+        NODES   SERVICES                       TAGS
+        node1   couchdb, mx, soledad, webapp   local
 
 NOTE: You won't be able to run that `leap list` command yet, not until we actually create the node configurations.
 
@@ -25,7 +26,7 @@ Requirements
 
 In order to complete this Quick Start, you will need a few things:
 
-* You will need one real or paravirtualized virtual machine (Vagrant, KVM, Xen, Openstack, Amazon, …) that have a basic Debian Stable installed. 
+* You will need one real or paravirtualized virtual machine (Vagrant, KVM, Xen, Openstack, Amazon, …) that have a basic Debian Stable installed.
 * You should be able to SSH into them remotely, and know their root password, IP addresses and their SSH host keys
 * The ability to create/modify DNS entries for your domain is preferable, but not needed. If you don't have access to DNS, you can workaround this by modifying your local resolver, i.e. editing `/etc/hosts`.
 * You need to be aware that this process will make changes to your systems, so please be sure that these machines are a basic install with nothing configured or running for other purposes
@@ -226,7 +227,7 @@ Alternately, you can adapt this zone file snippet:
 
 If you cannot edit your DNS zone file, you can still test your provider by adding this entry to your local resolver hosts file (`/etc/hosts` for linux):
 
-    x.x.x.w node1.example.org example.org api.example.org nicknym.example.org 
+    x.x.x.w node1.example.org example.org api.example.org nicknym.example.org
 
 Please don't forget about these entries, they will override DNS queries if you setup your DNS later.
 
@@ -244,7 +245,7 @@ This will initialize the node with the tag "production". When `leap node init` i
 Deploy the LEAP platform to the nodes
 --------------------
 
-Now you should deploy the platform recipes to the nodes. [Deployment can take a while to run](http://xkcd.com/303/), especially on the first run, as it needs to update the packages on the new machine. 
+Now you should deploy the platform recipes to the nodes. [Deployment can take a while to run](http://xkcd.com/303/), especially on the first run, as it needs to update the packages on the new machine.
 
     $ leap deploy
 
