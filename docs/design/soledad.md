@@ -45,8 +45,12 @@ Goals
 
 **Known limitations**
 
-* Currently, the server knows when the contents of a document have changed.
-* Currently, there is no facility for sharing documents among multiple users.
+These are currently known limitations:
+
+* The server knows when the contents of a document have changed.
+* There is no facility for sharing documents among multiple users.
+* Soledad is not able to prevent server from withholding new documents or new revisions of a document.
+* Deleted documents are never deleted, just emptied. Useful for security reasons, but could lead to DB bloat.
 
 **Non-goals**
 
@@ -158,17 +162,13 @@ Before a JSON document is synced with the server, it is transformed into a docum
 About these fields:
 
 * `_enc_json`: The original JSON document, encrypted and hex encoded. Calculated as:
-```
-    doc_key = hmac(storage_secret[MAC_KEY_LENGTH:], doc_id)
-    ciphertext = hex(sym_encrypt(cipher, content, doc_key))
-```
+    * `doc_key = hmac(storage_secret[MAC_KEY_LENGTH:], doc_id)`
+    * `ciphertext = hex(sym_encrypt(cipher, content, doc_key))`
 * `_enc_scheme`: Information about the encryption scheme used to encrypt this document (i.e.`pubkey`, `symkey` or `none`).
 * `_enc_method`: Information about the block cipher that is used to encrypt this document.
 * `_mac`: A MAC to prevent the server from tampering with stored documents. Calculated as:
-```
-    mac_key = hmac(storage_secret[:MAC_KEY_LENGTH], doc_id)
-    _mac = hmac(doc_id|rev|ciphertext|_enc_scheme|_enc_method|_enc_iv, mac_key)
-```
+    * `mac_key = hmac(storage_secret[:MAC_KEY_LENGTH], doc_id)`
+    * `_mac = hmac(doc_id|rev|ciphertext|_enc_scheme|_enc_method|_enc_iv, mac_key)`
 * `_mac_method`: The method used to calculate the mac above (currently hmac).
 
 Other variables:
