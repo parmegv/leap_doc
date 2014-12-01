@@ -157,16 +157,20 @@ Before a JSON document is synced with the server, it is transformed into a docum
 
 About these fields:
 
-* `_enc_json`: The original JSON document, encrypted and hex encoded. `ciphertext` is equal to `hex(sym_encrypt(cipher, content, document_secret))`.
+* `_enc_json`: The original JSON document, encrypted and hex encoded. Calculated as:
+    doc_key = hmac(storage_secret[MAC_KEY_LENGTH:], doc_id)
+    ciphertext = hex(sym_encrypt(cipher, content, doc_key))
 * `_enc_scheme`: Information about the encryption scheme used to encrypt this document (i.e.`pubkey`, `symkey` or `none`).
 * `_enc_method`: Information about the block cipher that is used to encrypt this document.
-* `_mac`: Defined as `mac(doc_id|rev|ciphertext, document_secret)`. The purpose of this field is to prevent the server from tampering with the stored documents.
+* `_mac`: A MAC to prevent the server from tampering with stored documents. Calculated as:
+    mac_key = hmac(storage_secret[:MAC_KEY_LENGTH], doc_id)
+    _mac = hmac(doc_id|rev|ciphertext|_enc_scheme|_enc_method|_enc_iv, mac_key)
 * `_mac_method`: The method used to calculate the mac above (currently hmac).
 
 Other variables:
 
-* `document_secret`: equal to `mac(doc_id, storage_secret)`. This value is unique for every document and only kept in memory. We use `document_secret` instead of simply `storage_secret` in order to hinder possible derivation of `storage_secret` by the server. Every `doc_id` is unique.
-* `content`: equal to `sym_decrypt(cipher, ciphertext, document_secret)`.
+* `doc_key`: This value is unique for every document and only kept in memory. We use `doc_key` instead of simply `storage_secret` in order to hinder possible derivation of `storage_secret` by the server. Every `doc_id` is unique.
+* `content`: equal to `sym_decrypt(cipher, ciphertext, doc_key)`.
 
 When receiving a document with the above structure from the server, Soledad client will first verify that `_mac` is correct, then decrypt the `_enc_json` to find `content`, which it saves as a cleartext document in the local encrypted database replica.
 
@@ -241,7 +245,7 @@ About these fields:
 * `secret`: the encrypted `storage_secret`.
 * `cipher`: what cipher to use to encrypt `secret`. It must match `kdf_length` (i.e. the length of the `derived_key`).
 * `_mac_method`: The method used to calculate the mac above (currently hmac).
-* `_mac`: Defined as `mac(doc_id|rev|ciphertext, document_secret)`. The purpose of this field is to prevent the server from tampering with the stored documents.
+* `_mac`: Defined as `hmac(doc_id|rev|ciphertext, doc_key)`. The purpose of this field is to prevent the server from tampering with the stored documents.
 
 Other fields we might want to include in the future:
 
