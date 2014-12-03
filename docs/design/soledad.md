@@ -62,9 +62,11 @@ Related software
 
 [Crypton](https://crypton.io/) - Similar goals to Soledad, but in javascript for HTML5 applications.
 
-[U1DB](http://pythonhosted.org/u1db/) - Similar API as Soledad, without encryption.
+[Mylar](https://github.com/strikeout/mylar) - Like Crypton, Mylar can be used to write secure HTML5 applications in javascript. Uniquely, it includes support for homomorphic encryption to allow server-side searches.
 
 [Firefox Sync](https://wiki.mozilla.org/Services/Sync) - A client-encrypted data sync from Mozilla, designed to securely synchronize bookmarks and other browser settings.
+
+[U1DB](http://pythonhosted.org/u1db/) - Similar API as Soledad, without encryption.
 
 Soledad protocol
 ===================================
@@ -105,12 +107,10 @@ The `storage_secret` is a long, randomly generated key used to derive encryption
       }
       'kdf': 'scrypt',
       'kdf_salt': '<b64 repr of salt>',
-      'kdf_length: <key length>,
-      '_mac_method': 'hmac',
-      '_mac': '<mac>'
+      'kdf_length: <key length>
     }
 
-The `storage_secrets` entry is a map that stores information about available storage keys. Currently, Soledad uses only one storage key per provider, but this may change in the future. The `storage_secrets` entry itself is MAC'ed to prevent tampering.
+The `storage_secrets` entry is a map that stores information about available storage keys. Currently, Soledad uses only one storage key per provider, but this may change in the future.
 
 The following fields are stored for one storage key:
 
@@ -178,8 +178,9 @@ Other variables:
 
 When receiving a document with the above structure from the server, Soledad client will first verify that `_mac` is correct, then decrypt the `_enc_json` to find `content`, which it saves as a cleartext document in the local encrypted database replica.
 
-Currently supported encryption ciphers are AES256 (CTR mode) and XSalsa20;
-currently supported MAC method is HMAC.
+The document MAC includes the document revision and the client will refuse to download a new document if the document does not include a higher revision. In this way, the server cannot rollback a document to an older revision. The server also cannot delete a document, since document deletion is handled by removing the document contents, marking it as deleted, and incrementing the revision. However, a server can withhold from the client new documents and new revisions of a document (including withholding document deletion).
+
+The currently supported encryption ciphers are AES256 (CTR mode) and XSalsa20. The currently supported MAC method is HMAC with SHA256.
 
 Document synchronization
 -----------------------------------
