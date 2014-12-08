@@ -63,6 +63,12 @@ Deploying
 
 . When running a deploy at a verbosity level of 2 and above, you will notice puppet deprecation warnings, these are known and we are working on fixing them
 
+IPv6
+----
+
+As of this release, IPv6 is not supported by the VPN configuration. If IPv6 is detected on your network as a client, it is blocked and instead it should revert to IPv4. We plan on adding IPv6 support in an upcoming release.
+
+
 Special Environments
 --------------------
 
