@@ -40,9 +40,9 @@ All the commands in this tutorial are run on your sysadmin machine. In order to 
 * Install the LEAP command-line utility
 * Check out the LEAP platform
 * Create a provider and its certificates
-* Setup the provider's nodes and the services that will reside on those nodes
-* Initialize the nodes
-* Deploy the LEAP platform to the nodes
+* Setup the provider's node and the services that will reside on it 
+* Initialize the node
+* Deploy the LEAP platform to the node
 * Test that things worked correctly
 * Some additional commands
 
@@ -75,13 +75,9 @@ NOTE: leap_cli should work with ruby1.8, but has only been tested using ruby1.9.
 Install the LEAP command-line utility
 -------------------------------------------------
 
-Install the `leap` command from rubygems.org:
-
-    $ sudo gem install leap_cli
-
 Alternately, you can install `leap` from source:
 
-    $ git clone https://leap.se/git/leap_cli
+    $ git clone -b develop https://leap.se/git/leap_cli
     $ cd leap_cli
     $ rake build
     $ sudo rake install
@@ -110,10 +106,7 @@ First we'll create a directory for LEAP things, and then we'll check out the pla
 
     $ mkdir ~/leap
     $ cd ~/leap
-    $ git clone https://leap.se/git/leap_platform.git
-    $ cd leap_platform
-    $ git checkout develop
-    $ git submodule sync; git submodule update --init
+    $ git clone -b develop --recursive https://leap.se/git/leap_platform.git
 
 
 Provider Setup
