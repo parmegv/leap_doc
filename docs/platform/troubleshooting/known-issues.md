@@ -17,7 +17,7 @@ Upgrade your leap_platform to 0.6 and make sure you have the latest leap_cli.
 
     cd leap_platform
     git pull
-    git checkout release/0.6
+    git checkout -b 0.6.0 0.6.0 
 
 **Update leap_cli:**
 
