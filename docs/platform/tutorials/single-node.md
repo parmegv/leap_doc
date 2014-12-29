@@ -75,6 +75,10 @@ NOTE: leap_cli should work with ruby1.8, but has only been tested using ruby1.9.
 Install the LEAP command-line utility
 -------------------------------------------------
 
+Install the `leap` command from rubygems.org:
+
+    $ sudo gem install leap_cli
+
 Alternately, you can install `leap` from source:
 
     $ git clone https://leap.se/git/leap_cli
