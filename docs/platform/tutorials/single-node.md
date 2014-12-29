@@ -77,7 +77,7 @@ Install the LEAP command-line utility
 
 Alternately, you can install `leap` from source:
 
-    $ git clone -b develop https://leap.se/git/leap_cli
+    $ git clone https://leap.se/git/leap_cli
     $ cd leap_cli
     $ rake build
     $ sudo rake install
@@ -100,13 +100,12 @@ Check out the platform
 --------------------------
 
 The LEAP Platform is a series of puppet recipes and modules that will be used to configure your provider. You will need a local copy of the platform that will be used to setup your nodes and manage your services. To begin with, you will not need to modify the LEAP Platform.
-Until we have a up to date stable release we recommend using the `develop` branch of the platform and leap_cli for all features of LEAP.
 
 First we'll create a directory for LEAP things, and then we'll check out the platform code and initalize the modules:
 
     $ mkdir ~/leap
     $ cd ~/leap
-    $ git clone -b develop --recursive https://leap.se/git/leap_platform.git
+    $ git clone --recursive https://leap.se/git/leap_platform.git
 
 
 Provider Setup
