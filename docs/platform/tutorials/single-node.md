@@ -207,6 +207,26 @@ NOTE: replace x.x.x.w with the actual IP address of this node
 
 This created a node configuration file in `nodes/node1.json`, but it did not do anything else. It also added the 'tag' called 'production' to this node. Tags allow us to conveniently group nodes together. When creating nodes, you should give them the tag 'production' if the node is to be used in your production infrastructure.
 
+Initialize the nodes
+--------------------
+
+Node initialization only needs to be done once, but there is no harm in doing it multiple times:
+
+    $ leap node init production
+
+This will initialize the node with the tag "production". When `leap node init` is run, you will be prompted to verify the fingerprint of the SSH host key and to provide the root password of the server. You should only need to do this once.
+
+
+Deploy the LEAP platform to the nodes
+--------------------
+
+Now you should deploy the platform recipes to the node. [Deployment can take a while to run](http://xkcd.com/303/), especially on the first run, as it needs to update the packages on the new machine.
+
+    $ leap deploy
+
+Watch the output for any errors (in red), if everything worked fine, you should now have your first running node. If you do have errors, try doing the deploy again.
+
+
 Setup DNS
 ---------
 
@@ -227,27 +247,6 @@ If you cannot edit your DNS zone file, you can still test your provider by addin
 
 Please don't forget about these entries, they will override DNS queries if you setup your DNS later.
 
-
-Initialize the nodes
---------------------
-
-Node initialization only needs to be done once, but there is no harm in doing it multiple times:
-
-    $ leap node init production
-
-This will initialize the node with the tag "production". When `leap node init` is run, you will be prompted to verify the fingerprint of the SSH host key and to provide the root password of the server. You should only need to do this once.
-
-
-Deploy the LEAP platform to the nodes
---------------------
-
-Now you should deploy the platform recipes to the nodes. [Deployment can take a while to run](http://xkcd.com/303/), especially on the first run, as it needs to update the packages on the new machine.
-
-    $ leap deploy
-
-Watch the output for any errors (in red), if everything worked fine, you should now have your first running node. If you do have errors, try doing the deploy again.
-
-NOTE: the output from deploying can be quite busy, so we often do them each node one by one.
 
 What is going on here?
 --------------------------------------------
