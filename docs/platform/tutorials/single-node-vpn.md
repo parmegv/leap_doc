@@ -1,5 +1,5 @@
-@title = 'LEAP Platform Quick Start'
-@nav_title = 'Quick Start'
+@title = 'Single node VPN tutorial'
+@nav_title = 'Single node VPN'
 @summary = 'Three node OpenVPN provider.'
 
 Quick Start
