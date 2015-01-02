@@ -1,5 +1,5 @@
-@title = 'Single node tutorial'
-@nav_title = 'Single node'
+@title = 'Single node email tutorial'
+@nav_title = 'Single node email'
 @summary = 'A single node email provider.'
 
 Quick Start - Single node setup

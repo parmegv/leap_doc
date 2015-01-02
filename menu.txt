@@ -25,7 +25,8 @@ docs
       commands
     tutorials
       quick-start
-      single-node
+      single-node-vpn
+      single-node-email
     troubleshooting
       tests
       where-to-look
