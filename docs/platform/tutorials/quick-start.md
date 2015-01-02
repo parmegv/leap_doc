@@ -10,7 +10,7 @@ There are two ways how you can setup leap platform
 using vagrant.
 
 Use the leap_cli vagrant integration
-====================================
+------------------------------------
 
 Install leap_cli and leap_platform on your host, 
 configure a provider from scratch and use the 
@@ -23,7 +23,7 @@ to setup a single node mail server.
 
 
 Using the Vagrantfile provided by Leap Platform
-===============================================
+-----------------------------------------------
 
 This is by far the easiest way. 
 It will install a single node mail Server in the default
@@ -43,9 +43,11 @@ There are 2 users preconfigured:
 . `testuser`  with pw `hallo123`
 . `testadmin` with pw `hallo123`
 
+Testing your provider
+=====================
 
 Using the bitmask client
-========================
+------------------------
 
 Download the provider ca:
 
@@ -64,11 +66,11 @@ Use i.e. swaks to send a testmail
 
     swaks -f noone@example.org -t testuser@example.org -s example.org
 
-and use 
+and use your favorite mail client to examine your inbox.
+You can also use [offlineimap](http://offlineimap.org/) to fetch mails: 
 
      offlineimap -c vagrant/.offlineimaprc.example.org
 
-to fetch it.
 WARNING: Use offlineimap *only* for testing/debugging, 
 because it will save the mails *decrypted* locally to 
 your disk !
