@@ -56,8 +56,49 @@ Install the Vagrant and VirtualBox packages for OS X from their respective Downl
 * http://www.vagrantup.com/downloads.html
 * https://www.virtualbox.org/wiki/Downloads
 
+Verify vagrantbox download
+--------------------------
 
-2. Install
+Import LEAP archive signing key:
+
+    gpg --search-keys 0x1E34A1828E207901
+
+now, either you already have a trustpath to it through one of the people 
+who signed it, or you can verify this by checking this fingerprint:
+
+    gpg --fingerprint  --list-keys 1E34A1828E207901
+
+      pub   4096R/1E34A1828E207901 2013-02-06 [expires: 2015-02-07]
+            Key fingerprint = 1E45 3B2C E87B EE2F 7DFE  9966 1E34 A182 8E20 7901
+      uid                          LEAP archive signing key <sysdev@leap.se>
+
+if the fingerprint matches, you could locally sign it so you remember the you already
+verified it:
+
+    gpg --lsign-key 1E34A1828E207901
+
+Then download the SHA512SUMS file and it's signature file 
+
+    wget https://downloads.leap.se/platform/SHA512SUMS.sign 
+    wget https://downloads.leap.se/platform/SHA512SUMS
+
+and verify the signature against your local imported LEAP archive signing pubkey
+
+    gpg --verify SHA512SUMS.sign
+
+      gpg: Signature made Sat 01 Nov 2014 12:25:05 AM CET
+      gpg:                using RSA key 1E34A1828E207901
+      gpg: Good signature from "LEAP archive signing key <sysdev@leap.se>"
+
+Make sure that the last line says "Good signature from...", which tells you that your 
+downloaded SHA512SUMS file has the right contents!
+
+Now you can compare the sha512sum of your downloaded vagrantbox with the one in the SHA512SUMS file:
+
+    wget https://downloads.leap.se/platform/vagrant/virtualbox/leap-wheezy.box
+    sha512sum leap-wheezy.box
+    cat SHA512SUMS
+
 
 
 Adding development nodes to your provider
