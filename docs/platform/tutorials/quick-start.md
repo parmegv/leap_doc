@@ -29,8 +29,13 @@ This is by far the easiest way.
 It will install a single node mail Server in the default
 configuration with one single command.
 
+Clone the 0.6.1 platform branch with
+
+    git clone -b 0.6.1 https://github.com/leapcode/leap_platform.git
+
 Start the vagrant box with 
 
+    cd leap_platform
     vagrant up
 
 Follow the instructions how to configure your `/etc/hosts`
