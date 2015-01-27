@@ -20,7 +20,7 @@ Brief overview of the services:
 * **soledad**: Handles the data syncing with clients. Typically combined with `couchdb` service, since it communicates heavily with couchdb.
 * **mx**: Incoming and outgoing MX servers. Communicates with the public internet, clients, and `couchdb` nodes.
 * **openvpn**: OpenVPN gateway for clients. You need at least one, but want as many as needed to support the bandwidth your users are doing. The `openvpn` nodes are autonomous and don't need to communicate with any other nodes. Often combined with `tor` service.
-* **monitor**: Internal service to monitor all the other nodes. Currently, you can have zero or one `monitor` nodes.
+* **monitor**: Internal service to monitor all the other nodes. Currently, you can have zero or one `monitor` service defined. It is required that the monitor be on the webapp node. It was not designed to be run as a separate node service.
 * **tor**: Sets up a tor exit node, unconnected to any other service.
 * **dns**: Not yet implemented.
 
@@ -55,41 +55,49 @@ What nodes do you need for a provider that offers particular services?
 <th>Node Type</th>
 <th>VPN Service</th>
 <th>Email Service</th>
+<th>Notes</th>
 </tr>
 <tr>
 <td>webapp</td>
 <td>required</td>
 <td>required</td>
+<td></td>
 </tr>
 <tr>
 <td>couchdb</td>
 <td>required</td>
 <td>required</td>
+<td></td>
 </tr>
 <tr>
 <td>soledad</td>
 <td>not used</td>
 <td>required</td>
+<td></td>
 </tr>
 <tr>
 <td>mx</td>
 <td>not used</td>
 <td>required</td>
+<td></td>
 </tr>
 <tr>
 <td>openvpn</td>
 <td>required</td>
 <td>not used</td>
+<td></td>
 </tr>
 <tr>
 <td>monitor</td>
 <td>optional</td>
 <td>optional</td>
+<td>This service must be on the webapp node</td>
 </tr>
 <tr>
 <td>tor</td>
 <td>optional</td>
 <td>optional</td>
+<td></td>
 </tr>
 <table>
 
