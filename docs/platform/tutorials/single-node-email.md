@@ -139,7 +139,7 @@ The `leap new` command will ask you for several required values:
 
 You could also have passed these configuration options on the command-line, like so:
 
-    $ leap new --contacts your@email.here --domain leap.example.org --name Example --platform=~/leap/leap_platform .
+    $ leap new --contacts your@email.here --domain example.org --name Example --platform=~/leap/leap_platform .
 
 You may want to poke around and see what is in the files we just created. For example:
 
@@ -278,7 +278,7 @@ Access the web application
 
 In order to connect to the web application in your browser, you need to point your domain at the IP address of your new node.
 
-Next, you can connect to the web application either using a web browser or via the API using the LEAP client. To use a browser, connect to https://leap.example.org (replacing that with your domain). Your browser will complain about an untrusted cert, but for now just bypass this. From there, you should be able to register a new user and login.
+Next, you can connect to the web application either using a web browser or via the API using the LEAP client. To use a browser, connect to https://example.org (replacing that with your domain). Your browser will complain about an untrusted cert, but for now just bypass this. From there, you should be able to register a new user and login.
 
 Testing with leap_cli
 ---------------------
