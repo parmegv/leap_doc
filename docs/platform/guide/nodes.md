@@ -162,7 +162,17 @@ Disabling Nodes
 
 There are two ways to temporarily disable a node:
 
-**Option 1: enabled == false**
+**Option 1: disabled environment**
+
+You can assign an environment to the node that marks it as disabled. Then, if you use environment pinning, the node will be ignored when you deploy. For example:
+
+    {
+      "environment": "disabled"
+    }
+
+Then use `leap env pin ENV` to pin the environment to something other than 'disabled'. This only works if all the other nodes are also assigned to some environment.
+
+**Option 2: enabled == false**
 
 If a node has a property `enabled` set to false, then the `leap` command will skip over the node and pretend that it does not exist. For example:
 
@@ -172,6 +182,6 @@ If a node has a property `enabled` set to false, then the `leap` command will sk
       "enabled": false
     }
 
-**Options 2: no-deploy**
+**Options 3: no-deploy**
 
 If the file `/etc/leap/no-deploy` exists on a node, then when you run the commmand `leap deploy` it will halt and prevent a deploy from going through (if the node was going to be included in the deploy).
